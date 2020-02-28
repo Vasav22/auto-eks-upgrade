@@ -1,0 +1,36 @@
+apiVersion: v1
+entries:
+  opsera-elk-elasticsearch:
+  - apiVersion: v2
+    appVersion: latest
+    created: "2020-02-28T12:12:15.245476179+05:30"
+    description: A Helm chart for Kubernetes
+    digest: fe96ee44b3d955247953c51f757c2edabae80aeafd0b6ff77caa6a66e3d57718
+    name: opsera-elk-elasticsearch
+    type: application
+    urls:
+    - https://gitlab.com/dilnawaz/helmcharts/opsera-elk-elasticsearch-0.1.0.tgz
+    version: 0.1.0
+  opsera-elk-kibana:
+  - apiVersion: v2
+    appVersion: latest
+    created: "2020-02-28T12:12:15.246242897+05:30"
+    description: A Helm chart for Kubernetes
+    digest: 187d753357da5fa58f54cf0ff4f6808f7de021d23789b0f2026e4bfc6f78125d
+    name: opsera-elk-kibana
+    type: application
+    urls:
+    - https://gitlab.com/dilnawaz/helmcharts/opsera-elk-kibana-0.1.0.tgz
+    version: 0.1.0
+  opsera-elk-logstash:
+  - apiVersion: v2
+    appVersion: latest
+    created: "2020-02-28T12:12:15.246756107+05:30"
+    description: A Helm chart for Kubernetes
+    digest: c406a2dd5dcfba2f605898f1d583e0decba48e8cb805191dac468c64bc788af0
+    name: opsera-elk-logstash
+    type: application
+    urls:
+    - https://gitlab.com/dilnawaz/helmcharts/opsera-elk-logstash-0.1.0.tgz
+    version: 0.1.0
+generated: "2020-02-28T12:12:15.24482779+05:30"
