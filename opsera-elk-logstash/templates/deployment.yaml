@@ -1,0 +1,97 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "opsera-elk-logstash.fullname" . }}
+  labels:
+    {{- include "opsera-elk-logstash.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "opsera-elk-logstash.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "opsera-elk-logstash.selectorLabels" . | nindent 8 }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "opsera-elk-logstash.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      # initContainers:
+      # - name: volume-permissions
+      #   image: busybox
+      #   command: ['sh', '-c', 'chmod -R 777 /usr/share/logstash/pipeline']
+      #   volumeMounts:
+      #   - name: logstash-pipeline
+      #     mountPath: /usr/share/logstash/pipeline
+        # - name: logstash-config
+        #   mountPath: /usr/share/logstash/config
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          # command: ["sh", "-c", "ls -l /usr/share/logstash/config" ]
+          ports:
+            - name: http3
+              containerPort: 9600
+              protocol: TCP
+            - name: http1
+              containerPort: 8000
+              protocol: TCP
+            - name: http2
+              containerPort: 5044
+              protocol: TCP
+          env:          
+          - name: "ELASTICSEARCH_PASSWORD"
+            valueFrom:
+              secretKeyRef:
+                key:  password
+                name: {{ include "opsera-elk-logstash.fullname" . }}-auth
+          - name: "ELASTICSEARCH_USER"
+            valueFrom:
+              secretKeyRef:
+                key:  username
+                name: {{ include "opsera-elk-logstash.fullname" . }}-auth
+          - name: "ELASTICSEARCH_URL"
+            value: {{ .Values.elasticSearchUrl }}
+          # volumeMounts:
+          # - name: logstash-pipeline
+          #   mountPath: /usr/share/logstash/pipeline
+          # - name: logstash-config
+          #   mountPath: /usr/share/logstash/config
+
+          # livenessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: http
+          # readinessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      # volumes:
+      #   - name: logstash-pipeline
+      #     persistentVolumeClaim:
+      #       claimName: logstash-pipeline
+        # - name: logstash-config
+        #   persistentVolumeClaim:
+        #     claimName: logstash-config
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

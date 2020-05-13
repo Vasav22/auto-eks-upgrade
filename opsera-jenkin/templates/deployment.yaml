@@ -1,0 +1,95 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "opsera-jenkin.fullname" . }}
+  labels:
+    {{- include "opsera-jenkin.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "opsera-jenkin.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "opsera-jenkin.selectorLabels" . | nindent 8 }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "opsera-jenkin.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+      - name: copy-data
+        image: gcr.io/indigo-union-270905/jenkins-multilang
+        command: ['sh', '-c', 'chmod -R 777  /temp/jenkins_home; cp -r /var/jenkins_home/* /temp/jenkins_home/']
+        volumeMounts:
+        - name: my-disk-claim-1
+          mountPath: /temp/jenkins_home
+      - name: volume-permissions
+        image: busybox
+        command: ['sh', '-c', 'chmod -R 777  /var/jenkins_home; mv -vn /temp/jenkins_home/* /var/jenkins_home/']
+        volumeMounts:
+        - name: jenkins-home
+          mountPath: /var/jenkins_home
+        - name: my-disk-claim-1
+          mountPath: /temp/jenkins_home
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+          - name: JENKINS_ADMIN_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key:  password
+                name: {{ include "opsera-jenkin.fullname" . }}-auth
+          - name: JENKINS_OPTS
+            value: --prefix=/jenkins/jenkin
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          volumeMounts:
+          - mountPath: "/var/jenkins_home"
+            name: jenkins-home
+          - name: dockersock
+            mountPath: "/var/run/docker.sock"
+          readinessProbe:
+            httpGet:
+              path: /jenkins/jenkin/login
+              port: {{ .Values.service.port }}
+            initialDelaySeconds: 120
+            periodSeconds: 60
+          # livenessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+      - name: my-disk-claim-1
+        persistentVolumeClaim:
+          claimName: my-disk-claim-1
+      - name: jenkins-home
+        persistentVolumeClaim:
+          claimName: jenkins-home
+      - name: dockersock
+        hostPath:
+          path: /var/run/docker.sock
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

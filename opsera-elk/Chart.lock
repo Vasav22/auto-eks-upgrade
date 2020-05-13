@@ -1,0 +1,12 @@
+dependencies:
+- name: opsera-elk-elasticsearch
+  repository: https://opsera.jfrog.io/artifactory/helm/
+  version: 0.1.0
+- name: opsera-elk-kibana
+  repository: https://opsera.jfrog.io/artifactory/helm/
+  version: 0.1.0
+- name: opsera-elk-logstash
+  repository: https://opsera.jfrog.io/artifactory/helm/
+  version: 0.1.0
+digest: sha256:24f85413e989669c4e271c18beb6773c59198e5d6eb9bd890fcb04b44b1ca1ff
+generated: "2020-02-28T20:47:36.089243784+05:30"
