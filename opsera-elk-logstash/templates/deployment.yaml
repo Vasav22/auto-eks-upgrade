@@ -38,8 +38,14 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           # command: ["sh", "-c", "ls -l /usr/share/logstash/config" ]
           ports:
-            - name: http
+            - name: http3
               containerPort: 9600
+              protocol: TCP
+            - name: http1
+              containerPort: 8000
+              protocol: TCP
+            - name: http2
+              containerPort: 5044
               protocol: TCP
           env:          
           - name: "ELASTICSEARCH_PASSWORD"

@@ -40,7 +40,7 @@ spec:
           command: ["sh", "-c", "cp -r /tmp/initialKibnaConfig/config/* /usr/share/kibana/config/; /usr/local/bin/kibana-docker" ]
           ports:
             - name: http
-              containerPort: 5601
+              containerPort: {{ .Values.service.port }}
               protocol: TCP
           env:          
           - name: "ELASTICSEARCH_PASSWORD"
@@ -55,20 +55,28 @@ spec:
                 name: {{ include "opsera-elk-kibana.fullname" . }}-auth
           - name: "ELASTICSEARCH_HOSTS"
             value: {{ .Values.elasticSearchUrl }}
+          - name: "SERVER_BASEPATH"
+            value: "/kibana"
+          - name: "SERVER_REWRITEBASEPATH"
+            value: "true"
           volumeMounts:
           - name: kibana-data
             mountPath: /usr/share/kibana/data
           - name: kibana-config
             mountPath: /usr/share/kibana/config
           
-          # livenessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
-          # readinessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
+          livenessProbe:
+            httpGet:
+              path: /kibana/login
+              port: {{ .Values.service.port }}
+            initialDelaySeconds: 60
+            timeoutSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /kibana/login
+              port: {{ .Values.service.port }}
+            initialDelaySeconds: 60
+            timeoutSeconds: 10
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:

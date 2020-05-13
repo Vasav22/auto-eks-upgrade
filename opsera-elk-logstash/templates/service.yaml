@@ -7,9 +7,17 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: http
+    - port: 8000
+      targetPort: 8000
       protocol: TCP
-      name: http
+      name: http1
+    - port: 5044
+      targetPort: 5044
+      protocol: TCP
+      name: http2
+    - port: 9600
+      targetPort: 9600
+      protocol: TCP
+      name: http3
   selector:
     {{- include "opsera-elk-logstash.selectorLabels" . | nindent 4 }}
