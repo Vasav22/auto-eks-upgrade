@@ -21,15 +21,6 @@ spec:
       serviceAccountName: {{ include "opsera-elk-logstash.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-      # initContainers:
-      # - name: volume-permissions
-      #   image: busybox
-      #   command: ['sh', '-c', 'chmod -R 777 /usr/share/logstash/pipeline']
-      #   volumeMounts:
-      #   - name: logstash-pipeline
-      #     mountPath: /usr/share/logstash/pipeline
-        # - name: logstash-config
-        #   mountPath: /usr/share/logstash/config
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -60,29 +51,21 @@ spec:
                 name: {{ include "opsera-elk-logstash.fullname" . }}-auth
           - name: "ELASTICSEARCH_URL"
             value: {{ .Values.elasticSearchUrl }}
-          # volumeMounts:
-          # - name: logstash-pipeline
-          #   mountPath: /usr/share/logstash/pipeline
-          # - name: logstash-config
-          #   mountPath: /usr/share/logstash/config
-
           # livenessProbe:
           #   httpGet:
           #     path: /
-          #     port: http
+          #     port: {{ .Values.service.port }}
+          #   initialDelaySeconds: 60
+          #   timeoutSeconds: 10
           # readinessProbe:
           #   httpGet:
           #     path: /
-          #     port: http
+          #     port: {{ .Values.service.port }}
+          #   initialDelaySeconds: 60
+          #   timeoutSeconds: 10
+
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-      # volumes:
-      #   - name: logstash-pipeline
-      #     persistentVolumeClaim:
-      #       claimName: logstash-pipeline
-        # - name: logstash-config
-        #   persistentVolumeClaim:
-        #     claimName: logstash-config
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

@@ -5,7 +5,8 @@
 replicaCount: 1
 
 image:
-  repository: gcr.io/indigo-union-270905/dev-elasticsearch
+  repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/dev-elasticsearch
+  # repository: gcr.io/indigo-union-270905/dev-elasticsearch
   pullPolicy: Always
 
 imagePullSecrets: []
@@ -51,17 +52,17 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
-resources: {}
+resources:
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+  limits:
+    cpu: 1
+    memory: 5Gi
+  requests:
+    cpu: 1
+    memory: 5Gi
 
 nodeSelector: {}
 

@@ -56,26 +56,26 @@ spec:
             mountPath: /usr/share/elasticsearch/logs
           # - name: config
           #   mountPath: /usr/share/elasticsearch/config
-          livenessProbe:
-            httpGet:
-              path: /
-              port: {{ .Values.service.port }}
-              scheme: HTTPS
-              httpHeaders:
-                - name: Authorization
-                  value: Basic ZWxhc3RpYzpXaG44QmQiQE0q
-            initialDelaySeconds: 60
-            timeoutSeconds: 10
-          readinessProbe:
-            httpGet:
-              path: /
-              port: {{ .Values.service.port }}
-              scheme: HTTPS
-              httpHeaders:
-                - name: Authorization
-                  value: Basic ZWxhc3RpYzpXaG44QmQiQE0q
-            initialDelaySeconds: 60
-            timeoutSeconds: 10
+          # livenessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: {{ .Values.service.port }}
+          #     scheme: HTTPS
+          #     httpHeaders:
+          #       - name: Authorization
+          #         value: Basic ZWxhc3RpYzpXaG44QmQiQE0q
+          #   initialDelaySeconds: 60
+          #   timeoutSeconds: 10
+          # readinessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: {{ .Values.service.port }}
+          #     scheme: HTTPS
+          #     httpHeaders:
+          #       - name: Authorization
+          #         value: Basic ZWxhc3RpYzpXaG44QmQiQE0q
+          #   initialDelaySeconds: 60
+          #   timeoutSeconds: 10
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
