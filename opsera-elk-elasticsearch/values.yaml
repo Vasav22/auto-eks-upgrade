@@ -13,8 +13,9 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-password: Whn8Bd"@M*
+password: Whn8Bd@M*
 username: elastic
+username_password: ZWxhc3RpYzpXaG44QmRATSo=
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
