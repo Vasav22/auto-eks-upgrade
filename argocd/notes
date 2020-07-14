@@ -1,0 +1,14 @@
+#Locally run
+
+ARGO_PWD=opsera
+htpasswd -nbBC 10 "" $ARGO_PWD | tr -d ':\n' | sed 's/$2y/$2a/'
+
+helm install opsera-argocd -f values.yaml argo/argo-cd --version 2.5.1
+
+Reset Password
+
+kubectl -n argocd patch secret argocd-secret \
+  -p '{"stringData": {
+    "admin.password": "$2a$10$rRyBsGSHK6.uc8fntPwVIuLVHgsAhAX7TcdrqW/RADU0uh7CaChLa",
+    "admin.passwordMtime": "'$(date +%FT%T%Z)'"
+  }}'
