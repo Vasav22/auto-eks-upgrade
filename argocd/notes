@@ -1,7 +1,9 @@
 #Locally run
 
 ARGO_PWD=opsera
-htpasswd -nbBC 10 "" $ARGO_PWD | tr -d ':\n' | sed 's/$2y/$2a/'
+htpasswd -nbBC 10 "" password_opsera | tr -d ':\n' | sed 's/$2y/$2a/'
+
+#bcrypted password : $2y$10$ee8e9S83tWQ438hICjjdk.2a6g6wJ1CSPn6a2I.FawTiYWm6bwLum
 
 helm install opsera-argocd -f values.yaml argo/argo-cd --version 2.5.1
 

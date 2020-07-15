@@ -329,8 +329,10 @@ server:
 
   ## Additional command line arguments to pass to argocd-server
   ##
-  extraArgs: []
-  #  - --insecure
+  extraArgs:
+    - --insecure
+    - --rootpath
+    - /opsera-argo-cd
 
   ## Environment variables to pass to argocd-server
   ##
@@ -857,9 +859,9 @@ configs:
 
     # Argo expects the password in the secret to be bcrypt hashed. You can create this hash with
     # `htpasswd -nbBC 10 "" $ARGO_PWD | tr -d ':\n' | sed 's/$2y/$2a/'`
-    argocdServerAdminPassword: "$2a$10$v6wz/gp84GuLT5vxVeAjLuqp8kYOCS5dEczVf90LLtbxeyKYPYrxu"
+    argocdServerAdminPassword: "$2y$10$ee8e9S83tWQ438hICjjdk.2a6g6wJ1CSPn6a2I.FawTiYWm6bwLum"
     # Password modification time defaults to current time if not set
-    # argocdServerAdminPasswordMtime: "2006-01-02T15:04:05Z"
+    argocdServerAdminPasswordMtime: now
 
 openshift:
   enabled: false
