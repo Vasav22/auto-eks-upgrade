@@ -23,7 +23,7 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
       - name: copy-data
-        image: gcr.io/indigo-union-270905/jenkins-multilang
+        image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
         command: ['sh', '-c', 'chmod -R 777  /temp/jenkins_home; cp -r /var/jenkins_home/* /temp/jenkins_home/']
         volumeMounts:
         - name: my-disk-claim-1

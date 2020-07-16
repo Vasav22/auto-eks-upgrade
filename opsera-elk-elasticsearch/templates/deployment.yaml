@@ -63,7 +63,7 @@ spec:
               scheme: HTTPS
               httpHeaders:
                 - name: Authorization
-                  value: Basic ZWxhc3RpYzpXaG44QmQiQE0q
+                  value: Basic {{ .Values.username_password }}
             initialDelaySeconds: 60
             timeoutSeconds: 10
           readinessProbe:
@@ -73,7 +73,7 @@ spec:
               scheme: HTTPS
               httpHeaders:
                 - name: Authorization
-                  value: Basic ZWxhc3RpYzpXaG44QmQiQE0q
+                  value: Basic {{ .Values.username_password }}
             initialDelaySeconds: 60
             timeoutSeconds: 10
           resources:
