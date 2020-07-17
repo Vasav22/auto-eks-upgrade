@@ -27,6 +27,9 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+          - name: "sonar.web.context"
+            value: "/sonarqube"
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}

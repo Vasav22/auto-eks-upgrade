@@ -1,0 +1,16 @@
+# Configure halyard to support saml
+halyard:
+  # Provide a config map with Hal commands that will be run the core config (storage)
+  # The config map should contain a script in the conf
+  additionalConfigMaps:
+    create: true
+    data:
+      config.src: |-
+        GATE_URL="https://bhargav-demo.opsera.io/spinnaker-gate" # URL to access your gate
+        DECK_URL="https://bhargav-demo.opsera.io/spinnaker" # Url to access your deck
+  additionalScripts:
+    create: true
+    data:
+      configure_saml.sh: |
+        $HAL_COMMAND config security ui edit --override-base-url "$DECK_URL"
+        $HAL_COMMAND config security api edit --override-base-url "$GATE_URL"

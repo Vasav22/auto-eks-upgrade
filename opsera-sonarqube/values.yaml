@@ -40,9 +40,9 @@ ingress:
   enabled: true
   annotations:
     kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/rewrite-target: /*
+    nginx.ingress.kubernetes.io/rewrite-target: /sonarqube/*
   hosts:
-    - host: bbtest.opsera.io
+    - host: bhargav-demo.opsera.io
       paths: [/sonarqube/*]
   tls: []
   #  - secretName: chart-example-tls
