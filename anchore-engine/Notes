@@ -1,0 +1,15 @@
+helm dependency update .
+helm install opsera-anchore . -f custom_values.yaml
+
+helm install opsera-anchore  stable/anchore-engine
+
+
+ANCHORE_CLI_USER=admin
+ANCHORE_CLI_PASS=$(kubectl get secret --namespace mahantha opsera-anchore-anchore-engine -o jsonpath="{.data.ANCHORE_ADMIN_PASSWORD}" | base64 --decode; echo)
+
+Session ended, resume using 'kubectl attach anchore-cli -c anchore-cli -i -t' command when the pod is running
+kubectl attach anchore-cli -c anchore-cli -i -t
+
+helm install <release_name> -f anchore_values.yaml stable/anchore-engine
+
+kubectl exec --stdin --tty opsera-anchore-anchore-engine-analyzer-679b49f55d-x2fdv -- /bin/bash

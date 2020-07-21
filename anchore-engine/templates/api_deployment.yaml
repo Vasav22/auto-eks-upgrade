@@ -134,7 +134,7 @@ spec:
             {{- if .Values.anchoreGlobal.internalServicesSsl.enabled }}
             scheme: HTTPS
             {{- end }}
-          initialDelaySeconds: 120
+          initialDelaySeconds: 1200
           timeoutSeconds: 10
           periodSeconds: 10
           failureThreshold: 6
@@ -203,7 +203,7 @@ spec:
             {{- if .Values.anchoreGlobal.internalServicesSsl.enabled }}
             scheme: HTTPS
             {{- end }}
-          initialDelaySeconds: 120
+          initialDelaySeconds: 1200
           timeoutSeconds: 10
           periodSeconds: 10
           failureThreshold: 6
@@ -270,7 +270,7 @@ spec:
               - curl
               - -f
               - 'localhost:{{ .Values.anchoreEnterpriseRbac.service.authPort }}/health'
-          initialDelaySeconds: 120
+          initialDelaySeconds: 1200
           timeoutSeconds: 10
           periodSeconds: 10
           failureThreshold: 6
@@ -339,7 +339,7 @@ spec:
             {{- if .Values.anchoreGlobal.internalServicesSsl.enabled }}
             scheme: HTTPS
             {{- end }}
-          initialDelaySeconds: 120
+          initialDelaySeconds: 1200
           timeoutSeconds: 10
           periodSeconds: 10
           failureThreshold: 6
@@ -409,7 +409,7 @@ spec:
             {{- if .Values.anchoreGlobal.internalServicesSsl.enabled }}
             scheme: HTTPS
             {{- end }}
-          initialDelaySeconds: 120
+          initialDelaySeconds: 1200
           timeoutSeconds: 10
           periodSeconds: 10
           failureThreshold: 6

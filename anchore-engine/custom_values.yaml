@@ -1,0 +1,36 @@
+postgresql:
+  enabled: false
+  postgresUser: anchoreengine
+  postgresPassword: anchore-postgres,123
+  postgresDatabase: anchore
+  externalEndpoint: mahantha-test.csdvjcmfdj8t.us-east-2.rds.amazonaws.com
+
+anchoreGlobal:
+  hashedPasswords: true
+  extraEnv:
+    # - name: ANCHORE_ENDPOINT_HOSTNAME
+    #   value: anchore-opsera
+    - name: ANCHORE_DB_HOST
+      value: mahantha-test.csdvjcmfdj8t.us-east-2.rds.amazonaws.com
+    - name: ANCHORE_DB_PASSWORD
+      value: anchore-postgres,123
+
+anchoreApi:
+  replicaCount: 1
+  extraEnv: []
+    # - name: foo
+    #   value: bar
+
+  service:
+    type: NodePort
+    port: 8228
+    annotations: {}
+    label: {}
+
+  resources:
+   limits:
+     cpu: 1
+     memory: 4G
+   requests:
+     cpu: 100m
+     memory: 1G
