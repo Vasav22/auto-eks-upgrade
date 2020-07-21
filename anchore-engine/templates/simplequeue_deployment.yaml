@@ -79,7 +79,7 @@ spec:
         {{- if .Values.anchoreEnterpriseGlobal.enabled }}
         args: ["anchore-enterprise-manager", "service", "start", "--no-auto-upgrade", "simplequeue"]
         {{- else }}
-        args: ["anchore-manager", "service", "start", "--no-auto-upgrade", "simplequeue"]
+        args: ["anchore-manager", "--debug", "service", "start", "--no-auto-upgrade", "simplequeue"]
         {{- end }}
         envFrom:
         - secretRef:
