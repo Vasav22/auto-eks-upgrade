@@ -103,7 +103,7 @@ spec:
         livenessProbe:
           tcpSocket:
             port: enterprise-ui
-          initialDelaySeconds: 1200
+          initialDelaySeconds: 120
           periodSeconds: 10
           failureThreshold: 6
           successThreshold: 1

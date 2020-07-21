@@ -17,16 +17,6 @@ anchoreGlobal:
 
 anchoreApi:
   replicaCount: 1
-  extraEnv: []
-    # - name: foo
-    #   value: bar
-
-  service:
-    type: NodePort
-    port: 8228
-    annotations: {}
-    label: {}
-
   resources:
    limits:
      cpu: 1
