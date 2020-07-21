@@ -1,0 +1,42 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.19.0 (f63a961c)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: api
+  name: api
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.19.0 (f63a961c)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: api
+    spec:
+      containers:
+      - args:
+        - anchore-manager
+        - service
+        - start
+        - apiext
+        env:
+        - name: ANCHORE_DB_HOST
+          value: db
+        - name: ANCHORE_DB_PASSWORD
+          value: mysecretpassword
+        - name: ANCHORE_ENDPOINT_HOSTNAME
+          value: api
+        image: anchore/anchore-engine:v0.7.2
+        name: api
+        ports:
+        - containerPort: 8228
+        resources: {}
+      restartPolicy: Always
+status: {}

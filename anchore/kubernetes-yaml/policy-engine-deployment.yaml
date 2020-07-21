@@ -1,0 +1,40 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.19.0 (f63a961c)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: policy-engine
+  name: policy-engine
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.19.0 (f63a961c)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: policy-engine
+    spec:
+      containers:
+      - args:
+        - anchore-manager
+        - service
+        - start
+        - policy_engine
+        env:
+        - name: ANCHORE_DB_HOST
+          value: db
+        - name: ANCHORE_DB_PASSWORD
+          value: mysecretpassword
+        - name: ANCHORE_ENDPOINT_HOSTNAME
+          value: policy-engine
+        image: anchore/anchore-engine:v0.7.2
+        name: policy-engine
+        resources: {}
+      restartPolicy: Always
+status: {}
