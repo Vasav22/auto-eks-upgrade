@@ -127,29 +127,29 @@ spec:
           mountPath: /home/anchore/certs/
           readOnly: true
         {{- end }}
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: external-api
-            {{- if .Values.anchoreGlobal.internalServicesSsl.enabled }}
-            scheme: HTTPS
-            {{- end }}
-          initialDelaySeconds: 120
-          timeoutSeconds: 10
-          periodSeconds: 10
-          failureThreshold: 6
-          successThreshold: 1
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: external-api
-            {{- if .Values.anchoreGlobal.internalServicesSsl.enabled }}
-            scheme: HTTPS
-            {{- end }}
-          timeoutSeconds: 10
-          periodSeconds: 10
-          failureThreshold: 3
-          successThreshold: 1
+        # livenessProbe:
+        #   httpGet:
+        #     path: /health
+        #     port: external-api
+        #     {{- if .Values.anchoreGlobal.internalServicesSsl.enabled }}
+        #     scheme: HTTPS
+        #     {{- end }}
+        #   initialDelaySeconds: 120
+        #   timeoutSeconds: 10
+        #   periodSeconds: 10
+        #   failureThreshold: 6
+        #   successThreshold: 1
+        # readinessProbe:
+        #   httpGet:
+        #     path: /health
+        #     port: external-api
+        #     {{- if .Values.anchoreGlobal.internalServicesSsl.enabled }}
+        #     scheme: HTTPS
+        #     {{- end }}
+        #   timeoutSeconds: 10
+        #   periodSeconds: 10
+        #   failureThreshold: 3
+        #   successThreshold: 1
         resources:
           {{ toYaml .Values.anchoreApi.resources | nindent 10 }}
       {{- if and .Values.anchoreEnterpriseGlobal.enabled .Values.anchoreEnterpriseRbac.enabled }}
@@ -196,29 +196,29 @@ spec:
         - name: run
           mountPath: /var/run/anchore
         {{- end }}
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: rbac-manager
-            {{- if .Values.anchoreGlobal.internalServicesSsl.enabled }}
-            scheme: HTTPS
-            {{- end }}
-          initialDelaySeconds: 120
-          timeoutSeconds: 10
-          periodSeconds: 10
-          failureThreshold: 6
-          successThreshold: 1
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: rbac-manager
-            {{- if .Values.anchoreGlobal.internalServicesSsl.enabled }}
-            scheme: HTTPS
-            {{- end }}
-          timeoutSeconds: 10
-          periodSeconds: 10
-          failureThreshold: 3
-          successThreshold: 1
+        # livenessProbe:
+        #   httpGet:
+        #     path: /health
+        #     port: rbac-manager
+        #     {{- if .Values.anchoreGlobal.internalServicesSsl.enabled }}
+        #     scheme: HTTPS
+        #     {{- end }}
+        #   initialDelaySeconds: 120
+        #   timeoutSeconds: 10
+        #   periodSeconds: 10
+        #   failureThreshold: 6
+        #   successThreshold: 1
+        # readinessProbe:
+        #   httpGet:
+        #     path: /health
+        #     port: rbac-manager
+        #     {{- if .Values.anchoreGlobal.internalServicesSsl.enabled }}
+        #     scheme: HTTPS
+        #     {{- end }}
+        #   timeoutSeconds: 10
+        #   periodSeconds: 10
+        #   failureThreshold: 3
+        #   successThreshold: 1
         resources:
           {{ toYaml .Values.anchoreEnterpriseRbac.managerResources | nindent 10 }}
       - name: {{ .Chart.Name }}-rbac-authorizer
@@ -264,27 +264,27 @@ spec:
         - name: run
           mountPath: /var/run/anchore
         {{- end }}
-        livenessProbe:
-          exec:
-            command:
-              - curl
-              - -f
-              - 'localhost:{{ .Values.anchoreEnterpriseRbac.service.authPort }}/health'
-          initialDelaySeconds: 120
-          timeoutSeconds: 10
-          periodSeconds: 10
-          failureThreshold: 6
-          successThreshold: 1
-        readinessProbe:
-          exec:
-            command:
-              - curl
-              - -f
-              - 'localhost:{{ .Values.anchoreEnterpriseRbac.service.authPort }}/health'
-          timeoutSeconds: 10
-          periodSeconds: 10
-          failureThreshold: 3
-          successThreshold: 1
+        # livenessProbe:
+        #   exec:
+        #     command:
+        #       - curl
+        #       - -f
+        #       - 'localhost:{{ .Values.anchoreEnterpriseRbac.service.authPort }}/health'
+        #   initialDelaySeconds: 120
+        #   timeoutSeconds: 10
+        #   periodSeconds: 10
+        #   failureThreshold: 6
+        #   successThreshold: 1
+        # readinessProbe:
+        #   exec:
+        #     command:
+        #       - curl
+        #       - -f
+        #       - 'localhost:{{ .Values.anchoreEnterpriseRbac.service.authPort }}/health'
+        #   timeoutSeconds: 10
+        #   periodSeconds: 10
+        #   failureThreshold: 3
+        #   successThreshold: 1
         resources:
           {{ toYaml .Values.anchoreEnterpriseRbac.authResources | nindent 10 }}
       {{- end }}
@@ -332,29 +332,29 @@ spec:
         - name: run
           mountPath: /var/run/anchore
         {{- end }}
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: reports-api
-            {{- if .Values.anchoreGlobal.internalServicesSsl.enabled }}
-            scheme: HTTPS
-            {{- end }}
-          initialDelaySeconds: 120
-          timeoutSeconds: 10
-          periodSeconds: 10
-          failureThreshold: 6
-          successThreshold: 1
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: reports-api
-            {{- if .Values.anchoreGlobal.internalServicesSsl.enabled }}
-            scheme: HTTPS
-            {{- end }}
-          timeoutSeconds: 10
-          periodSeconds: 10
-          failureThreshold: 3
-          successThreshold: 1
+        # livenessProbe:
+        #   httpGet:
+        #     path: /health
+        #     port: reports-api
+        #     {{- if .Values.anchoreGlobal.internalServicesSsl.enabled }}
+        #     scheme: HTTPS
+        #     {{- end }}
+        #   initialDelaySeconds: 120
+        #   timeoutSeconds: 10
+        #   periodSeconds: 10
+        #   failureThreshold: 6
+        #   successThreshold: 1
+        # readinessProbe:
+        #   httpGet:
+        #     path: /health
+        #     port: reports-api
+        #     {{- if .Values.anchoreGlobal.internalServicesSsl.enabled }}
+        #     scheme: HTTPS
+        #     {{- end }}
+        #   timeoutSeconds: 10
+        #   periodSeconds: 10
+        #   failureThreshold: 3
+        #   successThreshold: 1
         resources:
           {{ toYaml .Values.anchoreEnterpriseReports.resources | nindent 10 }}
       {{- end }}
