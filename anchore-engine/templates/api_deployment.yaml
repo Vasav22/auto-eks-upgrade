@@ -21,9 +21,6 @@ spec:
       app: {{ template "anchore-engine.fullname" . }}
       component: {{ $component }}
   replicas: {{ .Values.anchoreApi.replicaCount }}
-  strategy:
-    type: Recreate
-    rollingUpdate: null
   template:
     metadata:
       labels:
@@ -43,15 +40,10 @@ spec:
       securityContext:
         runAsUser: 1000
         runAsGroup: 1000
-    {{- if .Values.anchoreEnterpriseGlobal.enabled }}
+      {{ if and .Values.anchoreEnterpriseGlobal.enabled (or .Values.anchoreEnterpriseRbac.enabled .Values.anchoreEnterpriseReports.enabled) }}
       imagePullSecrets:
       - name: {{ .Values.anchoreEnterpriseGlobal.imagePullSecretName }}
-    {{- else }}
-      {{- with .Values.anchoreGlobal.imagePullSecretName }}
-      imagePullSecrets:
-      - name: {{ . }}
       {{- end }}
-    {{- end }}
       containers:
       {{- if .Values.cloudsql.enabled  }}
       - name: cloudsql-proxy
@@ -69,18 +61,10 @@ spec:
         {{- end }}
       {{- end }}
       - name: "{{ .Chart.Name }}-{{ $component }}"
-        {{- if .Values.anchoreEnterpriseGlobal.enabled }}
-        image: {{ .Values.anchoreEnterpriseGlobal.image }}
-        imagePullPolicy: {{ .Values.anchoreEnterpriseGlobal.imagePullPolicy }}
-        {{- else }}
         image: {{ .Values.anchoreGlobal.image }}
         imagePullPolicy: {{ .Values.anchoreGlobal.imagePullPolicy }}
-        {{- end }}
-        {{- if .Values.anchoreEnterpriseGlobal.enabled }}
-        args: ["anchore-enterprise-manager", "service", "start", "--no-auto-upgrade", "apiext"]
-        {{- else }}
-        args: ["anchore-manager", "--debug", "service", "start", "--no-auto-upgrade", "apiext"]
-        {{- end }}
+        command: ["anchore-manager"]
+        args: ["service", "start", "apiext"]
         envFrom:
         - secretRef:
             name: {{ default (include "anchore-engine.fullname" .) .Values.anchoreGlobal.existingSecret }}
@@ -100,17 +84,12 @@ spec:
         - name: ANCHORE_CLI_PASS
           valueFrom:
             secretKeyRef:
-              name: {{ default (include "anchore-engine.fullname" .) .Values.anchoreGlobal.existingSecret }}
+              name: {{ include "anchore-engine.fullname" . }}
               key: ANCHORE_ADMIN_PASSWORD
         ports:
         - containerPort: {{ .Values.anchoreApi.service.port }}
           name: external-api
         volumeMounts:
-        {{- if .Values.anchoreEnterpriseGlobal.enabled }}
-        - name: anchore-license
-          mountPath: /home/anchore/license.yaml
-          subPath: license.yaml
-        {{- end }}
         - name: config-volume
           mountPath: /config/config.yaml
           subPath: config.yaml
@@ -127,36 +106,37 @@ spec:
           mountPath: /home/anchore/certs/
           readOnly: true
         {{- end }}
-        # livenessProbe:
-        #   httpGet:
-        #     path: /health
-        #     port: external-api
-        #     {{- if .Values.anchoreGlobal.internalServicesSsl.enabled }}
-        #     scheme: HTTPS
-        #     {{- end }}
-        #   initialDelaySeconds: 120
-        #   timeoutSeconds: 10
-        #   periodSeconds: 10
-        #   failureThreshold: 6
-        #   successThreshold: 1
-        # readinessProbe:
-        #   httpGet:
-        #     path: /health
-        #     port: external-api
-        #     {{- if .Values.anchoreGlobal.internalServicesSsl.enabled }}
-        #     scheme: HTTPS
-        #     {{- end }}
-        #   timeoutSeconds: 10
-        #   periodSeconds: 10
-        #   failureThreshold: 3
-        #   successThreshold: 1
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: external-api
+            {{- if .Values.anchoreGlobal.internalServicesSsl.enabled }}
+            scheme: HTTPS
+            {{- end }}
+          initialDelaySeconds: 120
+          timeoutSeconds: 10
+          periodSeconds: 10
+          failureThreshold: 6
+          successThreshold: 1
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: external-api
+            {{- if .Values.anchoreGlobal.internalServicesSsl.enabled }}
+            scheme: HTTPS
+            {{- end }}
+          timeoutSeconds: 10
+          periodSeconds: 10
+          failureThreshold: 3
+          successThreshold: 1
         resources:
           {{ toYaml .Values.anchoreApi.resources | nindent 10 }}
       {{- if and .Values.anchoreEnterpriseGlobal.enabled .Values.anchoreEnterpriseRbac.enabled }}
       - name: {{ .Chart.Name }}-rbac-manager
         image: {{ .Values.anchoreEnterpriseGlobal.image }}
         imagePullPolicy: {{ .Values.anchoreEnterpriseGlobal.imagePullPolicy }}
-        args: ["anchore-enterprise-manager", "service", "start", "--no-auto-upgrade", "rbac_manager"]
+        command: ["anchore-enterprise-manager"]
+        args: ["service", "start", "rbac_manager"]
         envFrom:
         - secretRef:
             name: {{ default (include "anchore-engine.fullname" .) .Values.anchoreGlobal.existingSecret }}
@@ -196,35 +176,36 @@ spec:
         - name: run
           mountPath: /var/run/anchore
         {{- end }}
-        # livenessProbe:
-        #   httpGet:
-        #     path: /health
-        #     port: rbac-manager
-        #     {{- if .Values.anchoreGlobal.internalServicesSsl.enabled }}
-        #     scheme: HTTPS
-        #     {{- end }}
-        #   initialDelaySeconds: 120
-        #   timeoutSeconds: 10
-        #   periodSeconds: 10
-        #   failureThreshold: 6
-        #   successThreshold: 1
-        # readinessProbe:
-        #   httpGet:
-        #     path: /health
-        #     port: rbac-manager
-        #     {{- if .Values.anchoreGlobal.internalServicesSsl.enabled }}
-        #     scheme: HTTPS
-        #     {{- end }}
-        #   timeoutSeconds: 10
-        #   periodSeconds: 10
-        #   failureThreshold: 3
-        #   successThreshold: 1
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: rbac-manager
+            {{- if .Values.anchoreGlobal.internalServicesSsl.enabled }}
+            scheme: HTTPS
+            {{- end }}
+          initialDelaySeconds: 120
+          timeoutSeconds: 10
+          periodSeconds: 10
+          failureThreshold: 6
+          successThreshold: 1
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: rbac-manager
+            {{- if .Values.anchoreGlobal.internalServicesSsl.enabled }}
+            scheme: HTTPS
+            {{- end }}
+          timeoutSeconds: 10
+          periodSeconds: 10
+          failureThreshold: 3
+          successThreshold: 1
         resources:
           {{ toYaml .Values.anchoreEnterpriseRbac.managerResources | nindent 10 }}
       - name: {{ .Chart.Name }}-rbac-authorizer
         image: {{ .Values.anchoreEnterpriseGlobal.image }}
         imagePullPolicy: {{ .Values.anchoreEnterpriseGlobal.imagePullPolicy }}
-        args: ["anchore-enterprise-manager", "service", "start", "--no-auto-upgrade", "rbac_authorizer"]
+        command: ["anchore-enterprise-manager"]
+        args: ["service", "start", "rbac_authorizer"]
         envFrom:
         - secretRef:
             name: {{ default (include "anchore-engine.fullname" .) .Values.anchoreGlobal.existingSecret }}
@@ -264,27 +245,27 @@ spec:
         - name: run
           mountPath: /var/run/anchore
         {{- end }}
-        # livenessProbe:
-        #   exec:
-        #     command:
-        #       - curl
-        #       - -f
-        #       - 'localhost:{{ .Values.anchoreEnterpriseRbac.service.authPort }}/health'
-        #   initialDelaySeconds: 120
-        #   timeoutSeconds: 10
-        #   periodSeconds: 10
-        #   failureThreshold: 6
-        #   successThreshold: 1
-        # readinessProbe:
-        #   exec:
-        #     command:
-        #       - curl
-        #       - -f
-        #       - 'localhost:{{ .Values.anchoreEnterpriseRbac.service.authPort }}/health'
-        #   timeoutSeconds: 10
-        #   periodSeconds: 10
-        #   failureThreshold: 3
-        #   successThreshold: 1
+        livenessProbe:
+          exec:
+            command:
+              - curl
+              - -f
+              - 'localhost:{{ .Values.anchoreEnterpriseRbac.service.authPort }}/health'
+          initialDelaySeconds: 120
+          timeoutSeconds: 10
+          periodSeconds: 10
+          failureThreshold: 6
+          successThreshold: 1
+        readinessProbe:
+          exec:
+            command:
+              - curl
+              - -f
+              - 'localhost:{{ .Values.anchoreEnterpriseRbac.service.authPort }}/health'
+          timeoutSeconds: 10
+          periodSeconds: 10
+          failureThreshold: 3
+          successThreshold: 1
         resources:
           {{ toYaml .Values.anchoreEnterpriseRbac.authResources | nindent 10 }}
       {{- end }}
@@ -292,7 +273,8 @@ spec:
       - name: "{{ .Chart.Name }}-reports"
         image: {{ .Values.anchoreEnterpriseGlobal.image }}
         imagePullPolicy: {{ .Values.anchoreEnterpriseGlobal.imagePullPolicy }}
-        args: ["anchore-enterprise-manager", "service", "start", "--no-auto-upgrade", "reports"]
+        command: ["anchore-enterprise-manager"]
+        args: ["service", "start", "reports"]
         ports:
         - containerPort: {{ .Values.anchoreEnterpriseReports.service.port }}
           name: reports-api
@@ -332,29 +314,29 @@ spec:
         - name: run
           mountPath: /var/run/anchore
         {{- end }}
-        # livenessProbe:
-        #   httpGet:
-        #     path: /health
-        #     port: reports-api
-        #     {{- if .Values.anchoreGlobal.internalServicesSsl.enabled }}
-        #     scheme: HTTPS
-        #     {{- end }}
-        #   initialDelaySeconds: 120
-        #   timeoutSeconds: 10
-        #   periodSeconds: 10
-        #   failureThreshold: 6
-        #   successThreshold: 1
-        # readinessProbe:
-        #   httpGet:
-        #     path: /health
-        #     port: reports-api
-        #     {{- if .Values.anchoreGlobal.internalServicesSsl.enabled }}
-        #     scheme: HTTPS
-        #     {{- end }}
-        #   timeoutSeconds: 10
-        #   periodSeconds: 10
-        #   failureThreshold: 3
-        #   successThreshold: 1
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: reports-api
+            {{- if .Values.anchoreGlobal.internalServicesSsl.enabled }}
+            scheme: HTTPS
+            {{- end }}
+          initialDelaySeconds: 120
+          timeoutSeconds: 10
+          periodSeconds: 10
+          failureThreshold: 6
+          successThreshold: 1
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: reports-api
+            {{- if .Values.anchoreGlobal.internalServicesSsl.enabled }}
+            scheme: HTTPS
+            {{- end }}
+          timeoutSeconds: 10
+          periodSeconds: 10
+          failureThreshold: 3
+          successThreshold: 1
         resources:
           {{ toYaml .Values.anchoreEnterpriseReports.resources | nindent 10 }}
       {{- end }}
@@ -362,7 +344,8 @@ spec:
       - name: "{{ .Chart.Name }}-notifications"
         image: {{ .Values.anchoreEnterpriseGlobal.image }}
         imagePullPolicy: {{ .Values.anchoreEnterpriseGlobal.imagePullPolicy }}
-        args: ["anchore-enterprise-manager", "service", "start", "--no-auto-upgrade", "notifications"]
+        command: ["anchore-enterprise-manager"]
+        args: ["service", "start", "notifications"]
         ports:
         - containerPort: {{ .Values.anchoreEnterpriseNotifications.service.port }}
           name: notifi-api
@@ -402,29 +385,29 @@ spec:
         - name: run
           mountPath: /var/run/anchore
         {{- end }}
-        # livenessProbe:
-        #   httpGet:
-        #     path: /health
-        #     port: notifi-api
-        #     {{- if .Values.anchoreGlobal.internalServicesSsl.enabled }}
-        #     scheme: HTTPS
-        #     {{- end }}
-        #   initialDelaySeconds: 120
-        #   timeoutSeconds: 10
-        #   periodSeconds: 10
-        #   failureThreshold: 6
-        #   successThreshold: 1
-        # readinessProbe:
-        #   httpGet:
-        #     path: /health
-        #     port: notifi-api
-        #     {{- if .Values.anchoreGlobal.internalServicesSsl.enabled }}
-        #     scheme: HTTPS
-        #     {{- end }}
-        #   timeoutSeconds: 10
-        #   periodSeconds: 10
-        #   failureThreshold: 3
-        #   successThreshold: 1
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: notifi-api
+            {{- if .Values.anchoreGlobal.internalServicesSsl.enabled }}
+            scheme: HTTPS
+            {{- end }}
+          initialDelaySeconds: 120
+          timeoutSeconds: 10
+          periodSeconds: 10
+          failureThreshold: 6
+          successThreshold: 1
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: notifi-api
+            {{- if .Values.anchoreGlobal.internalServicesSsl.enabled }}
+            scheme: HTTPS
+            {{- end }}
+          timeoutSeconds: 10
+          periodSeconds: 10
+          failureThreshold: 3
+          successThreshold: 1
         resources:
           {{ toYaml .Values.anchoreEnterpriseNotifications.resources | nindent 10 }}
       {{- end }}

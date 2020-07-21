@@ -22,9 +22,6 @@ spec:
       app: {{ template "anchore-engine.fullname" . }}
       component: {{ $component }}
   replicas: 1
-  strategy:
-    type: Recreate
-    rollingUpdate: null
   template:
     metadata:
       labels:
@@ -65,7 +62,8 @@ spec:
       - name: "{{ .Chart.Name }}-{{ $component }}"
         image: {{ .Values.anchoreEnterpriseGlobal.image }}
         imagePullPolicy: {{ .Values.anchoreEnterpriseGlobal.imagePullPolicy }}
-        args: ["anchore-enterprise-manager", "service", "start", "--no-auto-upgrade", "feeds"]
+        command: ["anchore-enterprise-manager"]
+        args: ["service", "start", "feeds"]
         ports:
         - containerPort: {{ .Values.anchoreEnterpriseFeeds.service.port }}
           name: feeds-api
@@ -112,29 +110,29 @@ spec:
           mountPath: /home/anchore/certs/
           readOnly: true
         {{- end }}
-        # livenessProbe:
-        #   httpGet:
-        #     path: /health
-        #     port: feeds-api
-        #     {{- if .Values.anchoreGlobal.internalServicesSsl.enabled }}
-        #     scheme: HTTPS
-        #     {{- end }}
-        #   initialDelaySeconds: 120
-        #   timeoutSeconds: 10
-        #   periodSeconds: 10
-        #   failureThreshold: 6
-        #   successThreshold: 1
-        # readinessProbe:
-        #   httpGet:
-        #     path: /health
-        #     port: feeds-api
-        #     {{- if .Values.anchoreGlobal.internalServicesSsl.enabled }}
-        #     scheme: HTTPS
-        #     {{- end }}
-        #   timeoutSeconds: 10
-        #   periodSeconds: 10
-        #   failureThreshold: 3
-        #   successThreshold: 1
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: feeds-api
+            {{- if .Values.anchoreGlobal.internalServicesSsl.enabled }}
+            scheme: HTTPS
+            {{- end }}
+          initialDelaySeconds: 120
+          timeoutSeconds: 10
+          periodSeconds: 10
+          failureThreshold: 6
+          successThreshold: 1
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: feeds-api
+            {{- if .Values.anchoreGlobal.internalServicesSsl.enabled }}
+            scheme: HTTPS
+            {{- end }}
+          timeoutSeconds: 10
+          periodSeconds: 10
+          failureThreshold: 3
+          successThreshold: 1
         resources:
           {{ toYaml .Values.anchoreEnterpriseFeeds.resources | nindent 10 }}
       volumes:

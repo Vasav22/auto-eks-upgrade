@@ -12,4 +12,4 @@ kubectl attach anchore-cli -c anchore-cli -i -t
 
 helm install <release_name> -f anchore_values.yaml stable/anchore-engine
 
-kubectl exec --stdin --tty opsera-anchore-anchore-engine-analyzer-679b49f55d-x2fdv -- /bin/bash
+kubectl exec --stdin --tty opsera-anchore-anchore-engine-api-84db56c5d7-vk9s9 -- /bin/bash
