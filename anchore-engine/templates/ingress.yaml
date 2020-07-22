@@ -30,7 +30,7 @@ spec:
     {{- end }}
   {{- end }}
   rules:
-  {{- if or .Values.ingress.apiHosts .Values.ingress.uiHosts .Values.ingress.feedsHosts }}
+  {{- if .Values.ingress.apiHosts }}
     {{- range .Values.ingress.apiHosts }}
     - host: {{ . | quote }}
       http:
@@ -40,6 +40,7 @@ spec:
             serviceName: {{ template "anchore-engine.api.fullname" $ }}
             servicePort: {{ $.Values.anchoreApi.service.port }}
     {{- end }}
+    {{- if and (and .Values.anchoreEnterpriseGlobal.enabled .Values.anchoreEnterpriseUi.enabled) .Values.ingress.uiHosts }}
     {{- range .Values.ingress.uiHosts }}
     - host: {{ . | quote }}
       http:
@@ -49,35 +50,19 @@ spec:
             serviceName: {{ template "anchore-engine.enterprise-ui.fullname" $ }}
             servicePort: {{ $.Values.anchoreEnterpriseUi.service.port }}
     {{- end }}
-    {{- range .Values.ingress.feedsHosts }}
-    - host: {{ . | quote }}
-      http:
-        paths:
-        - path: {{ $.Values.ingress.feedsPath }}
-          backend:
-            serviceName: {{ template "anchore-engine.enterprise-feeds.fullname" $ }}
-            servicePort: {{ $.Values.anchoreEnterpriseFeeds.service.port }}
     {{- end }}
   {{- else }}
     - http:
         paths:
-        {{- with .Values.ingress.apiPath }}
-        - path: {{ . }}
+        - path: {{ $.Values.ingress.apiPath }}
           backend:
             serviceName: {{ template "anchore-engine.api.fullname" $ }}
             servicePort: {{ $.Values.anchoreApi.service.port }}
-        {{- end }}
-        {{- with .Values.ingress.uiPath }}
-        - path: {{ . }}
+        {{- if and .Values.anchoreEnterpriseGlobal.enabled .Values.anchoreEnterpriseUi.enabled }}
+        - path: {{ $.Values.ingress.uiPath }}
           backend:
             serviceName: {{ template "anchore-engine.enterprise-ui.fullname" $ }}
             servicePort: {{ $.Values.anchoreEnterpriseUi.service.port }}
-        {{- end }}
-        {{- with .Values.ingress.feedsPath }}
-        - path: {{ . }}
-          backend:
-            serviceName: {{ template "anchore-engine.enterprise-feeds.fullname" $ }}
-            servicePort: {{ $.Values.anchoreEnterpriseFeeds.service.port }}
         {{- end }}
   {{- end }}
 {{- end -}}
