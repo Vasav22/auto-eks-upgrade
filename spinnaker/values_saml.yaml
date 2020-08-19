@@ -6,8 +6,8 @@ halyard:
     create: true
     data:
       config.src: |-
-        GATE_URL="https://bhargav-demo.opsera.io/spinnaker-gate" # URL to access your gate
-        DECK_URL="https://bhargav-demo.opsera.io/spinnaker" # Url to access your deck
+        GATE_URL="https://nawaz-eks.opsera.io/api/v1" # URL to access your gate
+        DECK_URL="https://nawaz-eks.opsera.io" # Url to access your deck
   additionalScripts:
     create: true
     data:

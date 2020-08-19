@@ -103,13 +103,13 @@ controller:
 
   priorityClassName: ""
 
-  resources: {}
-  #  limits:
-  #    cpu: 500m
-  #    memory: 512Mi
-  #  requests:
-  #    cpu: 250m
-  #    memory: 256Mi
+  resources:
+    limits:
+      cpu: 1
+      memory: 5Gi
+    requests:
+      cpu: 1
+      memory: 5Gi
 
   serviceAccount:
     create: true
@@ -229,13 +229,13 @@ dex:
     #     - all
 
 
-  resources: {}
-  #  limits:
-  #    cpu: 50m
-  #    memory: 64Mi
-  #  requests:
-  #    cpu: 10m
-  #    memory: 32Mi
+  resources:
+    limits:
+      cpu: 1
+      memory: 5Gi
+    requests:
+      cpu: 1
+      memory: 5Gi
 
 ## Redis
 redis:
@@ -278,13 +278,13 @@ redis:
     #     - all
 
 
-  resources: {}
-  #  limits:
-  #    cpu: 200m
-  #    memory: 128Mi
-  #  requests:
-  #    cpu: 100m
-  #    memory: 64Mi
+  resources:
+    limits:
+      cpu: 1
+      memory: 5Gi
+    requests:
+      cpu: 1
+      memory: 5Gi
 
   volumeMounts: []
   volumes: []
@@ -332,7 +332,7 @@ server:
   extraArgs:
     - --insecure
     - --rootpath
-    - /opsera-argo-cd
+    - /argo-cd
 
   ## Environment variables to pass to argocd-server
   ##
@@ -389,13 +389,13 @@ server:
     #   drop:
     #     - all
 
-  resources: {}
-  #  limits:
-  #    cpu: 100m
-  #    memory: 128Mi
-  #  requests:
-  #    cpu: 50m
-  #    memory: 64Mi
+  resources:
+    limits:
+      cpu: 1
+      memory: 5Gi
+    requests:
+      cpu: 1
+      memory: 5Gi
 
   ## Certificate configuration
   certificate:
@@ -437,8 +437,13 @@ server:
     annotations: {}
 
   ingress:
-    enabled: false
-    annotations: {}
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      nginx.ingress.kubernetes.io/rewrite-target: /argo-cd/*
+      # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+      # kubernetes.io/ingress.global-static-ip-name: bbtest
+      networking.gke.io/managed-certificates: bb-opsera-example-certificate
     labels: {}
 
     ## Argo Ingress.
@@ -446,10 +451,9 @@ server:
     ## Secrets must be manually created in the namespace
     ##
     hosts:
-      []
-      # - argocd.example.com
+      - bhargav-demo.opsera.io
     paths:
-      - /
+      - /argo-cd/*
     tls:
       []
       # - secretName: argocd-example-tls
@@ -687,13 +691,13 @@ repoServer:
     #   drop:
     #     - all
 
-  resources: {}
-  #  limits:
-  #    cpu: 50m
-  #    memory: 128Mi
-  #  requests:
-  #    cpu: 10m
-  #    memory: 64Mi
+  resources:
+    limits:
+      cpu: 1
+      memory: 5Gi
+    requests:
+      cpu: 1
+      memory: 5Gi
 
   ## Repo server service configuration
   service:
@@ -859,7 +863,7 @@ configs:
 
     # Argo expects the password in the secret to be bcrypt hashed. You can create this hash with
     # `htpasswd -nbBC 10 "" $ARGO_PWD | tr -d ':\n' | sed 's/$2y/$2a/'`
-    argocdServerAdminPassword: "$2y$10$ee8e9S83tWQ438hICjjdk.2a6g6wJ1CSPn6a2I.FawTiYWm6bwLum"
+    argocdServerAdminPassword: "$2a$10$9l9KvgM8.4/x4qN3DSZYA.utyCPUbWFsh1V.0FjH2RZdJyx60ib7S"
     # Password modification time defaults to current time if not set
     argocdServerAdminPasswordMtime: now
 

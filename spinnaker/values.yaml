@@ -1,8 +1,8 @@
 halyard:
-  spinnakerVersion: 1.17.6
+  spinnakerVersion: 1.20.6
   image:
     repository: gcr.io/spinnaker-marketplace/halyard
-    tag: 1.29.0
+    tag: 1.32.0
     pullSecrets: []
   # Set to false to disable persistence data volume for halyard
   persistence:
@@ -205,10 +205,10 @@ kubeConfig:
 # Change this if youd like to expose Spinnaker outside the cluster
 ingress:
   enabled: true
-  host: bhargav-demo.opsera.io
+  host: bhargav-demo-spinnaker.opsera.io
   annotations:
     kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/rewrite-target: /spinnaker/*
+    nginx.ingress.kubernetes.io/rewrite-target: /*
     # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     # kubernetes.io/ingress.global-static-ip-name: bbtest
     networking.gke.io/managed-certificates: bb-opsera-example-certificate
@@ -219,10 +219,10 @@ ingress:
 
 ingressGate:
   enabled: true
-  host: bhargav-demo.opsera.io
+  host: bhargav-demo-spinnaker.opsera.io
   annotations:
     kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/rewrite-target: /spinnaker-gate/*
+    nginx.ingress.kubernetes.io/rewrite-target: /api/v1/*
     # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     # kubernetes.io/ingress.global-static-ip-name: bbtest
     networking.gke.io/managed-certificates: bb-opsera-example-certificate
