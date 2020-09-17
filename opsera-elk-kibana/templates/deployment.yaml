@@ -55,10 +55,10 @@ spec:
                 name: {{ include "opsera-elk-kibana.fullname" . }}-auth
           - name: "ELASTICSEARCH_HOSTS"
             value: {{ .Values.elasticSearchUrl }}
-          - name: "SERVER_BASEPATH"
-            value: "/kibana"
-          - name: "SERVER_REWRITEBASEPATH"
-            value: "true"
+          # - name: "SERVER_BASEPATH"
+          #   value: "/kibana"
+          # - name: "SERVER_REWRITEBASEPATH"
+          #   value: "true"
           volumeMounts:
           - name: kibana-data
             mountPath: /usr/share/kibana/data
@@ -67,13 +67,13 @@ spec:
           
           livenessProbe:
             httpGet:
-              path: /kibana/login
+              path: /login
               port: {{ .Values.service.port }}
             initialDelaySeconds: 60
             timeoutSeconds: 10
           readinessProbe:
             httpGet:
-              path: /kibana/login
+              path: /login
               port: {{ .Values.service.port }}
             initialDelaySeconds: 60
             timeoutSeconds: 10

@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/releasemanagement/jenkins-multilang
+  repository: gcr.io/indigo-union-270905/jenkins-multilang
   pullPolicy: Always
 
 imagePullSecrets: []

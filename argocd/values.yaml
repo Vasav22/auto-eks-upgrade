@@ -331,8 +331,8 @@ server:
   ##
   extraArgs:
     - --insecure
-    - --rootpath
-    - /argo-cd
+    # - --rootpath
+    # - /argo-cd
 
   ## Environment variables to pass to argocd-server
   ##
@@ -440,10 +440,10 @@ server:
     enabled: true
     annotations:
       kubernetes.io/ingress.class: nginx
-      nginx.ingress.kubernetes.io/rewrite-target: /argo-cd/*
+      # nginx.ingress.kubernetes.io/rewrite-target: /argo-cd/*
       # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
       # kubernetes.io/ingress.global-static-ip-name: bbtest
-      networking.gke.io/managed-certificates: bb-opsera-example-certificate
+      # networking.gke.io/managed-certificates: bb-opsera-example-certificate
     labels: {}
 
     ## Argo Ingress.
@@ -451,9 +451,9 @@ server:
     ## Secrets must be manually created in the namespace
     ##
     hosts:
-      - bhargav-demo.opsera.io
+      - argocd.dilnawazragib-1.opsera.io
     paths:
-      - /argo-cd/*
+      - /
     tls:
       []
       # - secretName: argocd-example-tls
