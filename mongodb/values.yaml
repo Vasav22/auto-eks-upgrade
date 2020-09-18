@@ -205,7 +205,13 @@ podLabels: {}
 ## Configure resource requests and limits
 ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
 ##
-resources: {}
+resources:
+  limits:
+    cpu: 1
+    memory: 5Gi
+  requests:
+    cpu: 1
+    memory: 5Gi
 # Define separate resources per arbiter, which are less then primary or secondary
 # used only when replica set is enabled
 resourcesArbiter: {}
