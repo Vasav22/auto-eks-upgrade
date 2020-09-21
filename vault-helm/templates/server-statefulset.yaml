@@ -54,6 +54,10 @@ spec:
         fsGroup: {{ .Values.server.gid | default 1000 }}
       {{- end }}
       volumes:
+        - name: configmap-volume
+          configMap:
+            defaultMode: 0777
+            name: my-configmap
         {{ template "vault.volumes" . }}
         - name: home
           emptyDir: {}
@@ -115,6 +119,9 @@ spec:
             {{- include "vault.extraEnvironmentVars" .Values.server | nindent 12 }}
             {{- include "vault.extraSecretEnvironmentVars" .Values.server | nindent 12 }}
           volumeMounts:
+            - name: configmap-volume
+              mountPath: /vault/entrypoint.sh
+              subPath: entrypoint.sh
           {{ template "vault.mounts" . }}
             - name: home
               mountPath: /home/vault
@@ -172,44 +179,21 @@ spec:
                   # to this pod while it's terminating
                   "sleep {{ .Values.server.preStopSleepSeconds }} && kill -SIGTERM $(pidof vault)",
                 ]
+
             {{- if .Values.server.postStart }}
             # postStart:
+            #   exec:
+            #     command:
+            #     {{- range (.Values.server.postStart) }}
+            #     - {{ . | quote }}
+            #     {{- end }}
+            # {{- end }}
+            # {{- if .Values.server.postStart }}
+            postStart:
               exec:
-                command:
-                  - sh
-                  - "-c"
-                  - |
-                    #!/bin/bash <<'EOF'
-
-                    sleep 15 
-                    cd vault/
-                    status=$(vault status | grep Sealed | awk '{print $2}')
-                    if $status; then 
-                      vault operator init > keys.txt
-                      root_token=$(cat keys.txt | grep Initial | awk '{print $4}')
-                      vault login $root_token
-                      vault secrets enable transit
-                      vault write -f transit/keys/opsera
-                      vault secrets enable kv
-
-                      curl --location --request POST {{ .Values.microservice_url }} \
-                      --header 'accept: application/json' \
-                      --header 'Content-Type: application/json' \
-                      --data-raw '{
-                          "customerId": {{ .Values.customer_id }},
-                          "data": {
-                              "VAULT_TOKEN": $(echo -n $root_token | base64),
-                              "VAULT_KEY": "b3BzZXJh",
-                              "VAULT_URI": $(echo -n {{ .Values.VAULT_URI }} | base64)
-                          }
-                      }'
-                    else 
-                      echo 'Unsealed'
-                    fi
-
-                    EOF
+                command: ["sh", "/vault/entrypoint.sh"]
                 
-            {{- end }}
+            # {{- end }}
         {{- if .Values.server.extraContainers }}
           {{ toYaml .Values.server.extraContainers | nindent 8}}
         {{- end }}

@@ -127,10 +127,10 @@ server:
   # By default no direct resource request is made.
 
   image:
-    repository: "vault"
-    tag: "1.5.2"
+    repository: "440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera/vault"
+    tag: "latest"
     # Overrides the default Image Pull Policy
-    pullPolicy: IfNotPresent
+    pullPolicy: Always
 
   # Configure the Update Strategy Type for the StatefulSet
   # See https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#update-strategies
@@ -228,10 +228,10 @@ server:
   # Used to define commands to run after the pod is ready.
   # This can be used to automate processes such as initialization
   # or boostrapping auth methods.
-  # postStart:
-  # - /bin/sh
-  # - -c
-  # - sleep 15; cd vault/; status=$(vault status | grep Sealed | awk '{print $2}'); if $status; then vault operator init > keys.txt; root_token=$(cat keys.txt | grep Initial | awk '{print $4}'); vault login $root_token; vault secrets enable transit; vault write -f transit/keys/opsera; else echo 'Unsealed'; fi;
+  postStart:
+  - /bin/sh
+  - -c
+  - sleep 15; cd vault/; status=$(vault status | grep Sealed | awk '{print $2}'); if $status; then vault operator init > keys.txt; root_token=$(cat keys.txt | grep Initial | awk '{print $4}'); vault login $root_token; vault secrets enable transit; vault write -f transit/keys/opsera; else echo 'Unsealed'; fi;
 
   # extraEnvironmentVars is a list of extra enviroment variables to set with the stateful set. These could be
   # used to include variables required for auto-unseal.
@@ -415,8 +415,8 @@ server:
       #}
 
       seal "transit" {
-        # address            = "https://vault.dilnawazragib-1.opsera.io"
-        # token              = "s.uYHT57JhXrFSix22oNh4IIjz"
+        address            = "http://microservices-dev.opsera.io:8200"
+        token              = "s.KgpD99Dt4BBLc9w4EmtVCrte"
         disable_renewal    = "false"
 
         // Key configuration
