@@ -28,21 +28,21 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
-          - name: "sonar.web.context"
-            value: "/sonarqube"
+          - name: "SONARQUBE_PASSWORD"
+            value: {{ .Values.SONARQUBE_PASSWORD }}
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /sonarqube/sessions/new
+              path: /sessions/new
               port: {{ .Values.service.port }}
             initialDelaySeconds: 60
             timeoutSeconds: 10
           readinessProbe:
             httpGet:
-              path: /sonarqube/sessions/new
+              path: /sessions/new
               port: {{ .Values.service.port }}
             initialDelaySeconds: 60
             timeoutSeconds: 10

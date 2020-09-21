@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: gcr.io/indigo-union-270905/jenkins-multilang
+  repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera-pipeline/jenkins-lts
   pullPolicy: Always
 
 imagePullSecrets: []
@@ -41,13 +41,13 @@ ingress:
   enabled: true
   annotations:
     kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/rewrite-target: /jenkins/*
+    nginx.ingress.kubernetes.io/rewrite-target: /*
     # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     # kubernetes.io/ingress.global-static-ip-name: bbtest
     networking.gke.io/managed-certificates: bb-opsera-example-certificate
   hosts:
     - host: sundar.opsera.io
-      paths: [/jenkins/*]
+      paths: [/*]
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:

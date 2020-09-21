@@ -22,9 +22,15 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
+      - name: take-data-dir-ownership
+        image: alpine:3
+        command: ['sh', '-c', 'chmod -R 777  /temp/jenkins_home']
+        volumeMounts:
+        - name: my-disk-claim-1
+          mountPath: /temp/jenkins_home
       - name: copy-data
         image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
-        command: ['sh', '-c', 'chmod -R 777  /temp/jenkins_home; cp -r /var/jenkins_home/* /temp/jenkins_home/']
+        command: ['sh', '-c', 'cp -r /var/jenkins_home/* /temp/jenkins_home/']
         volumeMounts:
         - name: my-disk-claim-1
           mountPath: /temp/jenkins_home
@@ -48,8 +54,8 @@ spec:
               secretKeyRef:
                 key:  password
                 name: {{ include "opsera-jenkin.fullname" . }}-auth
-          - name: JENKINS_OPTS
-            value: --prefix=/jenkins/jenkin
+          - name: JENKINS_UI_URL
+            value: {{ .Values.JENKINS_UI_URL }}
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
@@ -61,7 +67,7 @@ spec:
             mountPath: "/var/run/docker.sock"
           readinessProbe:
             httpGet:
-              path: /jenkins/jenkin/login
+              path: /login
               port: {{ .Values.service.port }}
             initialDelaySeconds: 120
             periodSeconds: 60
