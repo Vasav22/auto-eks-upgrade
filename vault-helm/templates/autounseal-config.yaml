@@ -6,7 +6,7 @@ data:
   entrypoint.sh: |-
     #!/bin/bash
     echo starting;
-    sleep 15 
+    sleep 60 
     cd vault/
     status=$(vault status | grep Sealed | awk '{print $2}')
     if $status; then 
