@@ -58,7 +58,7 @@ cloudsql:
 # By default this chart is setup to use the NGINX ingress controller which needs to be installed & configured on your cluster.
 # To utilize a GCE/ALB ingress controller comment out the nginx annotations below, change ingress.class, edit path configurions as per the comments, & set API/UI services to use NodePort.
 ingress:
-  enabled: false
+  enabled: true
   labels: {}
   # Use the following paths for GCE/ALB ingress controller
   # apiPath: /v1/*
@@ -66,10 +66,10 @@ ingress:
   apiPath: /v1/
   uiPath: /
   # Uncomment the following lines to bind on specific hostnames
-  # apiHosts:
-  #   - anchore-api.example.com
-  # uiHosts:
-  #   - anchore-ui.example.com
+  apiHosts:
+    - anchore-api.example.com
+  uiHosts:
+    - anchore-ui.example.com
   annotations:
     # kubernetes.io/ingress.class: gce
     kubernetes.io/ingress.class: nginx

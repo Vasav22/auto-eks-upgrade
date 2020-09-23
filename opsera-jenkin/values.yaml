@@ -6,6 +6,7 @@ replicaCount: 1
 
 image:
   repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera-pipeline/jenkins-lts
+  # repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/releasemanagement/jenkins-multilang
   pullPolicy: Always
 
 imagePullSecrets: []
@@ -45,6 +46,8 @@ ingress:
     # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     # kubernetes.io/ingress.global-static-ip-name: bbtest
     networking.gke.io/managed-certificates: bb-opsera-example-certificate
+    nginx.ingress.kubernetes.io/proxy-redirect-from: http://jenkins-nawaz03.iwin.opsera.io:8000/
+    nginx.ingress.kubernetes.io/proxy-redirect-to: https://jenkins-nawaz03.iwin.opsera.io/
   hosts:
     - host: sundar.opsera.io
       paths: [/*]
