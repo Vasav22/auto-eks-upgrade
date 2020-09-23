@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "opsera-teamcity.fullname" . }}
+  labels:
+    {{- include "opsera-teamcity.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "opsera-teamcity.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "opsera-teamcity.selectorLabels" . | nindent 8 }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "opsera-teamcity.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          env:          
+          - name: "TEAMCITY_PASSWORD"
+            valueFrom:
+              secretKeyRef:
+                key:  password
+                name: {{ include "opsera-teamcity.fullname" . }}-auth
+          volumeMounts:
+          # - name: teamcity-data
+          #   mountPath: /data/teamcity_server/datadir
+          - name: teamcity-logs
+            mountPath: /opt/teamcity/logs
+          # livenessProbe:
+          #   httpGet:
+          #     path: /login.html
+          #     port: {{ .Values.service.port }}
+          #   initialDelaySeconds: 180
+          #   periodSeconds: 60
+          # readinessProbe:
+          #   httpGet:
+          #     path: /login.html
+          #     port: {{ .Values.service.port }}
+          #   initialDelaySeconds: 180
+          #   periodSeconds: 60
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        # - name: teamcity-data
+        #   persistentVolumeClaim:
+        #     claimName: teamcity-data
+        - name: teamcity-logs
+          persistentVolumeClaim:
+            claimName: teamcity-logs
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

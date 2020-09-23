@@ -56,6 +56,8 @@ spec:
                 name: {{ include "opsera-jenkin.fullname" . }}-auth
           - name: JENKINS_UI_URL
             value: {{ .Values.JENKINS_UI_URL }}
+          - name: JENKINS_OPTS
+            value: --prefix=/
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
@@ -65,12 +67,12 @@ spec:
             name: jenkins-home
           - name: dockersock
             mountPath: "/var/run/docker.sock"
-          readinessProbe:
-            httpGet:
-              path: /login
-              port: {{ .Values.service.port }}
-            initialDelaySeconds: 120
-            periodSeconds: 60
+          # readinessProbe:
+          #   httpGet:
+          #     path: /login
+          #     port: {{ .Values.service.port }}
+          #   initialDelaySeconds: 120
+          #   periodSeconds: 60
           # livenessProbe:
           #   httpGet:
           #     path: /
