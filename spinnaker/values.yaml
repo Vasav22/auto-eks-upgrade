@@ -211,7 +211,7 @@ ingress:
     nginx.ingress.kubernetes.io/rewrite-target: /*
     # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     # kubernetes.io/ingress.global-static-ip-name: bbtest
-    networking.gke.io/managed-certificates: bb-opsera-example-certificate
+    # networking.gke.io/managed-certificates: bb-opsera-example-certificate
   # tls:
   #  - secretName: -tls
   #    hosts:

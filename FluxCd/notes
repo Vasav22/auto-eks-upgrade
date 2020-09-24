@@ -24,6 +24,10 @@ helm repo update
 
 kubectl apply -f https://raw.githubusercontent.com/fluxcd/helm-operator/master/deploy/crds.yaml
 
-helm upgrade -i flux fluxcd/flux --wait --namespace fluxcd --set git.url=git@github.com:fluxcd/helm-operator-get-started
-helm upgrade -i helm-operator fluxcd/helm-operator --wait --namespace fluxcd --set git.ssh.secretName=flux-git-deploy --set helm.versions=v3
+helm install -i flux fluxcd/flux --wait --namespace fluxcd --set git.url=git@github.com:fluxcd/helm-operator-get-started
+helm install -i helm-operator fluxcd/helm-operator --wait --namespace fluxcd --set git.ssh.secretName=flux-git-deploy --set helm.versions=v3
 fluxctl identity --k8s-fwd-ns fluxcd
+
+
+
+kubectl delete namespace fluxcd
