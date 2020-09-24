@@ -17,21 +17,32 @@ halyard:
     configMapKey: config.sh
     # If you'd rather do an inline script, set create to true and put the content in the data dict like you would a configmap
     # The content will be passed through `tpl`, so value interpolation is supported.
-    create: false
-    data: {}
+    create: true
+    data:
+      # changed directly in additional-configmaps.yaml
+      configure_saml.sh: |
+        $HAL_COMMAND config security ui edit --override-base-url "$DECK_URL"
+        $HAL_COMMAND config security api edit --override-base-url "$GATE_URL"
   additionalSecrets:
     create: false
     data: {}
     ## Uncomment if you want to use a pre-created secret rather than feeding data in via helm.
     # name:
+
+  GATE_URL: "https://nawaz-eks.opsera.io/api/v1" # URL to access your gate
+  DECK_URL: https://nawaz-eks.opsera.io" # Url to access your deck
   additionalConfigMaps:
-    create: false
-    data: {}
+    create: true
+    data:
+      config.src: |-
+        GATE_URL="example.com" # URL to access your gate
+        DECK_URL="example.com" # Url to access your deck
     ## Uncomment if you want to use a pre-created ConfigMap rather than feeding data in via helm.
     # name:
   ## Define custom profiles for Spinnaker services. Read more for details:
   ## https://www.spinnaker.io/reference/halyard/custom/#custom-profiles
   ## The contents of the files will be passed through `tpl`, so value interpolation is supported.
+
   additionalProfileConfigMaps:
     data: {}
       ## if you're running spinnaker behind a reverse proxy such as a GCE ingress
@@ -208,7 +219,7 @@ ingress:
   host: bhargav-demo-spinnaker.opsera.io
   annotations:
     kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/rewrite-target: /*
+    # nginx.ingress.kubernetes.io/rewrite-target: /*
     # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     # kubernetes.io/ingress.global-static-ip-name: bbtest
     # networking.gke.io/managed-certificates: bb-opsera-example-certificate
@@ -222,10 +233,10 @@ ingressGate:
   host: bhargav-demo-spinnaker.opsera.io
   annotations:
     kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/rewrite-target: /api/v1/*
+    # nginx.ingress.kubernetes.io/rewrite-target: /api/v1/*
     # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     # kubernetes.io/ingress.global-static-ip-name: bbtest
-    networking.gke.io/managed-certificates: bb-opsera-example-certificate
+    # networking.gke.io/managed-certificates: bb-opsera-example-certificate
   # tls:
   #  - secretName: -tls
   #    hosts:
