@@ -34,7 +34,7 @@ securityContext: {}
 
 service:
   type: NodePort
-  port: 8081
+  port: 9000
 
 ingress:
   enabled: true
