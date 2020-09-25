@@ -25,6 +25,9 @@ data:
     {{- end }}
     {{- end }}
 
+    $HAL_COMMAND config security ui edit --override-base-url {{ .Values.halyard.DECK_URL }}
+    $HAL_COMMAND config security api edit --override-base-url {{ .Values.halyard.GATE_URL }}
+
     $HAL_COMMAND deploy apply
     {{- if .Values.halyard.additionalInstallParameters }} \
       {{- .Values.halyard.additionalInstallParameters | join " \\\n" | nindent 6 }}

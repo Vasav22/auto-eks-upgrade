@@ -18,18 +18,13 @@ Render settings for each service by merging predefined defaults with values pass
 {{- $_ := set $settings "redis.yml" $redisDefaults -}}
 
 {{/* Defaults: gate service */}}
-{{- if .Values.ingress.enabled -}}
 {{- $gateDefaults := dict -}}
-{{- $_ := set $gateDefaults "kubernetes" (dict "useExecHealthCheck" false "serviceType" "NodePort") -}}
+{{- $_ := set $gateDefaults "host" "0.0.0.0" -}}
 {{- $_ := set $settings "gate.yml" $gateDefaults -}}
-{{- end -}}
 
 {{/* Defaults: deck service */}}
 {{- $deckDefaults := dict -}}
-{{- $_ := set $deckDefaults "env" (dict "API_HOST" "http://spin-gate:8084") -}}
-{{- if .Values.ingress.enabled -}}
-{{- $_ := set $deckDefaults "kubernetes" (dict "useExecHealthCheck" false "serviceType" "NodePort") -}}
-{{- end -}}
+{{- $_ := set $deckDefaults "host" "0.0.0.0" -}}
 {{- $_ := set $settings "deck.yml" $deckDefaults -}}
 
 {{- /* Merge dictionaries with passed values */}}
