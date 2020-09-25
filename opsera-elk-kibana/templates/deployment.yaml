@@ -21,15 +21,15 @@ spec:
       serviceAccountName: {{ include "opsera-elk-kibana.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-      initContainers:
-      - name: volume-permissions
-        image: busybox
-        command: ['sh', '-c', 'chmod -R 777 /usr/share/kibana/config; chmod -R 777 /usr/share/kibana/data']
-        volumeMounts:
-        - name: kibana-data
-          mountPath: /usr/share/kibana/data
-        - name: kibana-config
-          mountPath: /usr/share/kibana/config
+      # initContainers:
+      # - name: volume-permissions
+      #   image: busybox
+      #   command: ['sh', '-c', 'chmod -R 777 /usr/share/kibana/config; chmod -R 777 /usr/share/kibana/data']
+      #   volumeMounts:
+      #   - name: kibana-data
+      #     mountPath: /usr/share/kibana/data
+      #   - name: kibana-config
+      #     mountPath: /usr/share/kibana/config
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -37,7 +37,7 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           # command: ["sh", "-c", "ls -l /tmp/initialKibnaConfig/config; whoami; ls -l /usr/share/kibana/config/" ]
-          command: ["sh", "-c", "cp -r /tmp/initialKibnaConfig/config/* /usr/share/kibana/config/; /usr/local/bin/kibana-docker" ]
+          command: ["sh", "-c", "/usr/local/bin/kibana-docker" ]
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
@@ -59,11 +59,11 @@ spec:
           #   value: "/kibana"
           # - name: "SERVER_REWRITEBASEPATH"
           #   value: "true"
-          volumeMounts:
-          - name: kibana-data
-            mountPath: /usr/share/kibana/data
-          - name: kibana-config
-            mountPath: /usr/share/kibana/config
+          # volumeMounts:
+          # - name: kibana-data
+          #   mountPath: /usr/share/kibana/data
+          # - name: kibana-config
+          #   mountPath: /usr/share/kibana/config
           
           livenessProbe:
             httpGet:
@@ -79,13 +79,13 @@ spec:
             timeoutSeconds: 10
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-      volumes:
-        - name: kibana-data
-          persistentVolumeClaim:
-            claimName: kibana-data
-        - name: kibana-config
-          persistentVolumeClaim:
-            claimName: kibana-config
+      # volumes:
+      #   - name: kibana-data
+      #     persistentVolumeClaim:
+      #       claimName: kibana-data
+      #   - name: kibana-config
+      #     persistentVolumeClaim:
+      #       claimName: kibana-config
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
