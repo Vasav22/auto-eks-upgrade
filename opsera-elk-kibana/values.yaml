@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/onprem-kibana
+  repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/dev-kibana
   # repository: gcr.io/indigo-union-270905/onprem-kibana
   pullPolicy: Always
 

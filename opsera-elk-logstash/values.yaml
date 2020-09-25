@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/onprem-logstash
+  repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/logstashv2
   # repository: gcr.io/indigo-union-270905/onprem-logstash
   pullPolicy: Always
 
