@@ -11,10 +11,10 @@
 image:
   ## Bitnami MongoDB registry
   ##
-  registry: docker.io
+  registry: 440953937617.dkr.ecr.us-east-2.amazonaws.com
   ## Bitnami MongoDB image name
   ##
-  repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera/mongodb
+  repository: opsera/mongodb
   ## Bitnami MongoDB image tag
   ## ref: https://hub.docker.com/r/bitnami/mongodb/tags/
   ##
