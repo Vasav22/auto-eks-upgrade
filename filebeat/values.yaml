@@ -4,10 +4,16 @@
 filebeatConfig:
   filebeat.yml: |
     filebeat.inputs:
+      # Each - is an input. Most options can be set at the input level, so
+      # you can use different inputs for various configurations.
+      # Below are the input specific configurations.
+
+
       - type: log
         enabled: true
         paths:
-          - /var/lib/docker/volumes/*/_data/workspace/Cypress-test/examples/unit-testing__application-code/cypress-unit-test-results/*.xml
+          # - /var/jenkins_home/workspace/*/examples/unit-testing__application-code/cypress-unit-test-results/*.xml
+          - /var/jenkins_home/workspace/*/cypress-unit-test-results/*.xml
         exclude_lines: ['^<?xml']
         multiline.pattern: '<testsuite>'
         multiline.negate: true
@@ -20,13 +26,9 @@ filebeatConfig:
         # Change to true to enable this input configuration.
         enabled: true
 
-        # Paths that should be crawled and fetched. Glob based paths.
         paths:
           - /var/jenkinslogs/*/junitResult.xml
-
         exclude_lines: ['^<?xml']
-
-        # The regexp Pattern that has to be matched. The example pattern matches all lines starting with [
         multiline.pattern: '<suite>'
         multiline.negate: true
         multiline.match: after
@@ -34,17 +36,9 @@ filebeatConfig:
         multiline.timeout: 1000
 
       - type: log
-
-        # Change to true to enable this input configuration.
         enabled: true
-
-        # Paths that should be crawled and fetched. Glob based paths.
         paths:
-          #- /var/lib/docker/volumes/*/_data/jobs/*/builds/*/performance-reports/JMeter/Sample-plan.csv
-          - /var/lib/docker/volumes/*/_data/jobs/*/builds/*/archive/standardResults.xml
-          #- c:\programdata\elasticsearch\logs\*
-
-        ### Multiline options
+          - /var/jenkins_home/jobs/*/builds/*/archive/standardResults.xml
 
         multiline.pattern: '<api>'
         multiline.negate: true
@@ -55,23 +49,9 @@ filebeatConfig:
 
         enabled: true
         paths:
-          - /var/lib/docker/volumes/*/_data/workspace/release-pipeline/TestResults/*.xml
-          - /var/lib/docker/volumes/*/_data/workspace/release-pipeline/*/*/TestResults/*.xml
-
-      #adding build.xml and jenkins logs
-      - type: log
-
-        enabled: true
-        paths:
-          - /var/lib/docker/volumes/*/_data/jobs/*/builds/*/build.xml
-
-        multiline.pattern: '^<?xml'
-        multiline.negate: true
-        multiline.match: after
-        multiline.flush_pattern: '</build>'
-        multiline.timeout: 120
-        multiline.max_lines: 3000
-        multiline.max_bytes: 20MB
+          - /var/jenkins_home/workspace/release-pipeline/TestResults/*.xml
+          - /var/jenkins_home/workspace/release-pipeline/*/*/TestResults/*.xml
+      #add acnhore logs
 
     output.logstash:
       # The Logstash hosts
@@ -86,14 +66,15 @@ extraEnvs: []
 #  - name: MY_ENVIRONMENT_VAR
 #    value: the_value_goes_here
 
-extraVolumeMounts: []
-  # - name: extras
-  #   mountPath: /usr/share/extras
-  #   readOnly: true
+extraVolumeMounts:
+  - name: jenkins-home
+    mountPath: /var/jenkins_home
+    readOnly: true
 
-extraVolumes: []
-  # - name: extras
-  #   emptyDir: {}
+extraVolumes:
+  - name: jenkins-home
+    persistentVolumeClaim:
+      claimName: jenkins-home
 
 extraContainers: ""
 # - name: dummy-init

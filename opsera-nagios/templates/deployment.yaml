@@ -29,8 +29,19 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: 80
+              containerPort: {{ .Values.service.port }}
               protocol: TCP
+          env:          
+          - name: "GRAFANA_PASSWORD"
+            valueFrom:
+              secretKeyRef:
+                key:  grafana_password
+                name: {{ include "opsera-nagios.fullname" . }}-auth
+          - name: "NAGIOS_PASSWORD"
+            valueFrom:
+              secretKeyRef:
+                key:  nagios_password
+                name: {{ include "opsera-nagios.fullname" . }}-auth
           # livenessProbe:
           #   httpGet:
           #     path: /

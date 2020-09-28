@@ -5,9 +5,12 @@
 replicaCount: 1
 
 image:
-  repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/nagios-grafana
+  repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera-pipeline/nagios
   pullPolicy: Always
 
+
+GRAFANA_PASSWORD: ""
+NAGIOS_PASSWORD: ""
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
