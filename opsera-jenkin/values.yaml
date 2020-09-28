@@ -5,7 +5,8 @@
 replicaCount: 1
 
 image:
-  repository: gcr.io/indigo-union-270905/jenkins-multilang
+  repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera-pipeline/jenkins-lts
+  # repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/releasemanagement/jenkins-multilang
   pullPolicy: Always
 
 imagePullSecrets: []
@@ -41,29 +42,31 @@ ingress:
   enabled: true
   annotations:
     kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/rewrite-target: /jenkins/*
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /*
+    # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     # kubernetes.io/ingress.global-static-ip-name: bbtest
     networking.gke.io/managed-certificates: bb-opsera-example-certificate
+    nginx.ingress.kubernetes.io/proxy-redirect-from: http://jenkins-nawaz03.iwin.opsera.io:8000/
+    nginx.ingress.kubernetes.io/proxy-redirect-to: https://jenkins-nawaz03.iwin.opsera.io/
   hosts:
     - host: sundar.opsera.io
-      paths: [/jenkins/*]
+      paths: [/*]
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
   #      - chart-example.local
 
-resources: {}
+resources:
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+  limits:
+    cpu: 1
+    memory: 5Gi
+  requests:
+    cpu: 1
+    memory: 5Gi
 
 nodeSelector: {}
 

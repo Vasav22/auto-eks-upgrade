@@ -1,0 +1,30 @@
+anchoreApi:
+  extraEnv:
+    - name: ANCHORE_ENDPOINT_HOSTNAME
+      value: anchore
+
+ingress:
+  enabled: true
+  labels: {}
+  # Use the following paths for GCE/ALB ingress controller
+  # apiPath: /v1/*
+  # uiPath: /*
+  apiPath: /v1/
+  # uiPath: /
+  # Uncomment the following lines to bind on specific hostnames
+  apiHosts:
+    - bhargav-demo-anchore.opsera.io
+  # uiHosts:
+  #   - anchore-ui.example.com
+  annotations:
+    # kubernetes.io/ingress.class: gce
+    kubernetes.io/ingress.class: nginx
+    # nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    # kubernetes.io/ingress.allow-http: false
+    # kubernetes.io/tls-acme: true
+  tls: []
+  # Secrets must be manually created in the namespace.
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+

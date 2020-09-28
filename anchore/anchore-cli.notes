@@ -1,0 +1,31 @@
+docker run --rm  \
+            --env ANCHORE_CLI_USER=admin \
+            --env ANCHORE_CLI_PASS=foobar \
+            --env ANCHORE_CLI_URL=http://13.58.71.60:8228/v1/ \
+            anchore/engine-cli \
+            anchore-cli image list
+
+docker run --rm  \
+            --env ANCHORE_CLI_USER=admin \
+            --env ANCHORE_CLI_PASS=foobar \
+            --env ANCHORE_CLI_URL=http://13.58.71.60:8228/v1/ \
+            anchore/engine-cli \
+            anchore-cli image add docker.io/library/debian:latest
+
+docker run --rm  \
+            --env ANCHORE_CLI_USER=admin \
+            --env ANCHORE_CLI_PASS=foobar \
+            --env ANCHORE_CLI_URL=http://13.58.71.60:8228/v1/ \
+            anchore/engine-cli \
+            anchore-cli registry list
+
+docker run --rm  \
+            --env ANCHORE_CLI_USER=admin \
+            --env ANCHORE_CLI_PASS=foobar \
+            --env ANCHORE_CLI_URL=http://13.58.71.60:8228/v1/ \
+            anchore/engine-cli \
+            anchore-cli registry add \
+               440953937617.dkr.ecr.us-east-2.amazonaws.com \
+               awsauto \
+               awsauto \
+               --registry-type=awsecr

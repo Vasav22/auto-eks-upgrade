@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: my-configmap
+data:
+  entrypoint.sh: |-
+    #!/bin/bash
+    echo starting;
+    sleep 60 
+    cd vault/
+    status=$(vault status | grep Sealed | awk '{print $2}')
+    if $status; then 
+      vault operator init > keys.txt
+      root_token=$(cat keys.txt | grep Initial | awk '{print $4}')
+      vault login $root_token
+      vault secrets enable transit
+      vault write -f transit/keys/opsera
+      vault secrets enable kv
+
+      vault_token=$(printf $root_token | base64)
+      vault_uri=$(printf {{ .Values.VAULT_URI }} | base64)
+
+      curl --location --request POST {{ .Values.microservice_url }} \
+      --header 'accept: application/json' \
+      --header 'Content-Type: application/json' \
+      --data-raw '{
+          "customerId": "{{ .Values.customer_id }}",
+          "data": {
+            "VAULT_TOKEN": "'$vault_token'",
+            "VAULT_KEY": "b3BzZXJh",
+            "VAULT_URI": "'$vault_uri'"
+        }
+      }'
+      
+    else 
+      echo 'Unsealed'
+    fi
+    
+    echo done;

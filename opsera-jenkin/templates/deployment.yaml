@@ -22,9 +22,15 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
+      - name: take-data-dir-ownership
+        image: alpine:3
+        command: ['sh', '-c', 'chmod -R 777  /temp/jenkins_home']
+        volumeMounts:
+        - name: my-disk-claim-1
+          mountPath: /temp/jenkins_home
       - name: copy-data
-        image: gcr.io/indigo-union-270905/jenkins-multilang
-        command: ['sh', '-c', 'chmod -R 777  /temp/jenkins_home; cp -r /var/jenkins_home/* /temp/jenkins_home/']
+        image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
+        command: ['sh', '-c', 'cp -r /var/jenkins_home/* /temp/jenkins_home/']
         volumeMounts:
         - name: my-disk-claim-1
           mountPath: /temp/jenkins_home
@@ -48,8 +54,10 @@ spec:
               secretKeyRef:
                 key:  password
                 name: {{ include "opsera-jenkin.fullname" . }}-auth
+          - name: JENKINS_UI_URL
+            value: {{ .Values.JENKINS_UI_URL }}
           - name: JENKINS_OPTS
-            value: --prefix=/jenkins/jenkin
+            value: --prefix=/
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
@@ -59,12 +67,12 @@ spec:
             name: jenkins-home
           - name: dockersock
             mountPath: "/var/run/docker.sock"
-          readinessProbe:
-            httpGet:
-              path: /jenkins/jenkin/login
-              port: {{ .Values.service.port }}
-            initialDelaySeconds: 120
-            periodSeconds: 60
+          # readinessProbe:
+          #   httpGet:
+          #     path: /login
+          #     port: {{ .Values.service.port }}
+          #   initialDelaySeconds: 120
+          #   periodSeconds: 60
           # livenessProbe:
           #   httpGet:
           #     path: /

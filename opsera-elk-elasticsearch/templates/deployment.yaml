@@ -22,6 +22,12 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
+      - name: sysctl
+        image: busybox
+        imagePullPolicy: IfNotPresent
+        command: ["sysctl", "-w", "vm.max_map_count=524288"]
+        securityContext:
+          privileged: true
       - name: volume-permissions
         image: busybox
         command: ['sh', '-c', 'chmod -R 777 /usr/share/elasticsearch/data; chmod -R 777 /usr/share/elasticsearch/logs']
@@ -63,7 +69,7 @@ spec:
               scheme: HTTPS
               httpHeaders:
                 - name: Authorization
-                  value: Basic ZWxhc3RpYzpXaG44QmQiQE0q
+                  value: Basic {{ .Values.username_password }}
             initialDelaySeconds: 60
             timeoutSeconds: 10
           readinessProbe:
@@ -73,7 +79,7 @@ spec:
               scheme: HTTPS
               httpHeaders:
                 - name: Authorization
-                  value: Basic ZWxhc3RpYzpXaG44QmQiQE0q
+                  value: Basic {{ .Values.username_password }}
             initialDelaySeconds: 60
             timeoutSeconds: 10
           resources:

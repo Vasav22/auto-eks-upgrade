@@ -3,7 +3,6 @@ kind: PersistentVolumeClaim
 metadata:
   name: my-disk-claim-1
 spec:
-  storageClassName: fast
   accessModes:
     - ReadWriteOnce
   resources:
