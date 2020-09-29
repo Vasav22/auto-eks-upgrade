@@ -53,6 +53,8 @@ spec:
             value: {{ .Values.elasticSearchUrl }}
           - name: "opseraBaseUrl"
             value: {{ .Values.opseraBaseUrl }}
+          - name: "customerid"
+            value: {{ .Values.customerid }}
           # livenessProbe:
           #   httpGet:
           #     path: /

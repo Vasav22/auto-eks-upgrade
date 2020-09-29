@@ -19,6 +19,7 @@ opseraBaseUrl: "https://api-test.opsera.io"
 # base url for prod environment
 # opseraBaseUrl: "https://app.opsera.io"
 
+customerid: ""
 password: Whn8Bd"@M*
 username: elastic
 elasticSearchUrl: ""
