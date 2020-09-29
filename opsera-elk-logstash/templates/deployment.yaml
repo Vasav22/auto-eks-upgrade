@@ -51,6 +51,8 @@ spec:
                 name: {{ include "opsera-elk-logstash.fullname" . }}-auth
           - name: "ELASTICSEARCH_URL"
             value: {{ .Values.elasticSearchUrl }}
+          - name: "opseraBaseUrl"
+            value: {{ .Values.opseraBaseUrl }}
           # livenessProbe:
           #   httpGet:
           #     path: /
