@@ -415,8 +415,8 @@ server:
       #}
 
       seal "transit" {
-        address            = "http://microservices-dev.opsera.io:8200"
-        token              = "s.KgpD99Dt4BBLc9w4EmtVCrte"
+        address            = "http://10.0.3.253:8200"
+        token              = "s.gAfkJKZdHmuWyZiQC4eQMXvk"
         disable_renewal    = "false"
 
         // Key configuration
