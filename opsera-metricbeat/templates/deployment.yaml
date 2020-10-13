@@ -48,7 +48,7 @@ metadata:
 data:
   system.yml: |-
     - module: system
-      period: 10s
+      period: 300s
       metricsets:
         - cpu
         - load
@@ -65,7 +65,7 @@ data:
         by_memory: 5   # include top 5 processes by memory
 
     - module: system
-      period: 1m
+      period: 300s
       metricsets:
         - filesystem
         - fsstat
@@ -80,7 +80,7 @@ data:
         - pod
         - container
         - volume
-      period: 10s
+      period: 300s
       host: ${NODE_NAME}
       hosts: ["https://${NODE_NAME}:10250"]
       bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
@@ -93,7 +93,7 @@ data:
     - module: kubernetes
       metricsets:
         - proxy
-      period: 10s
+      period: 300s
       host: ${NODE_NAME}
       hosts: ["localhost:10249"]
 ---
@@ -246,7 +246,7 @@ data:
         - state_resourcequota
         # Uncomment this to get k8s events:
         #- event
-      period: 10s
+      period: 300s
       host: ${NODE_NAME}
       hosts: ["kube-state-metrics:8080"]
 ---
