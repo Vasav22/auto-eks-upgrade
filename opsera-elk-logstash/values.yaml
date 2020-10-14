@@ -13,8 +13,11 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+# base url for dev environment
+opseraBaseUrl: "https://appdev01.opsera.io"
+
 # base url for test environment
-opseraBaseUrl: "https://api-test.opsera.io"
+#opseraBaseUrl: "https://api-test.opsera.io"
 
 # base url for prod environment
 # opseraBaseUrl: "https://app.opsera.io"
