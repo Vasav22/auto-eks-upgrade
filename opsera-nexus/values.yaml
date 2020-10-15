@@ -4,6 +4,8 @@
 
 replicaCount: 1
 
+sidecarImage: 440953937617.dkr.ecr.us-east-2.amazonaws.com/nginx-nexus-sidecar:latest
+
 image:
   repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/nexus3
   pullPolicy: Always
