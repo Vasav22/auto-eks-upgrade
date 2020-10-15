@@ -29,7 +29,7 @@ spec:
         - name: my-disk-claim-1
           mountPath: /temp/jenkins_home
       - name: copy-data
-        image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         command: ['sh', '-c', 'cp -r /var/jenkins_home/* /temp/jenkins_home/']
         volumeMounts:
         - name: my-disk-claim-1
@@ -46,7 +46,7 @@ spec:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
           - name: JENKINS_ADMIN_PASSWORD

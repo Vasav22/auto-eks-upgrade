@@ -6,6 +6,7 @@ replicaCount: 1
 
 image:
   repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera-pipeline/jenkins-lts
+  tag: test
   # repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/releasemanagement/jenkins-multilang
   pullPolicy: Always
 
