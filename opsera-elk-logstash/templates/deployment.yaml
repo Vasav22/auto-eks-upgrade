@@ -55,6 +55,8 @@ spec:
             value: {{ .Values.opseraBaseUrl }}
           - name: "customerid"
             value: {{ .Values.customerid }}
+          - name: "CUSTOMER_TYPE"
+            value: {{ .Values.customerType }}
           # livenessProbe:
           #   httpGet:
           #     path: /
