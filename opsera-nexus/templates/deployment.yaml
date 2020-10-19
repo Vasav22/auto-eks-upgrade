@@ -23,7 +23,7 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: nginx-sidecar
-          image: "440953937617.dkr.ecr.us-east-2.amazonaws.com/nginx-nexus-sidecar:latest"
+          image: {{ .Values.sidecarImage }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http

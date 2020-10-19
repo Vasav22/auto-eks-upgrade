@@ -25,11 +25,13 @@ spec:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
           - name: "SONARQUBE_PASSWORD"
             value: {{ .Values.SONARQUBE_PASSWORD }}
+          - name: "SONARQUBE_BASE_URL"
+            value: {{ .Values.SONARQUBE_BASE_URL }}
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}

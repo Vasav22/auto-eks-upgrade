@@ -6,6 +6,7 @@ replicaCount: 1
 
 image:
   repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/logstashv2
+  tag: latest
   # repository: gcr.io/indigo-union-270905/onprem-logstash
   pullPolicy: Always
 
@@ -13,16 +14,20 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+# base url for dev environment
+# opseraBaseUrl: "https://appdev01.opsera.io"
+
 # base url for test environment
-opseraBaseUrl: "https://api-test.opsera.io"
+#opseraBaseUrl: "https://api-test.opsera.io"
 
 # base url for prod environment
-# opseraBaseUrl: "https://app.opsera.io"
+opseraBaseUrl: "https://app.opsera.io"
 
-customerid: ""
+customerType: "env_not_needed"
+customerid: "env_not_needed"
 password: Whn8Bd"@M*
 username: elastic
-elasticSearchUrl: ""
+elasticSearchUrl: "https://localhost:9200"
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
