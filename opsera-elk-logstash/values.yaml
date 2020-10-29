@@ -23,7 +23,7 @@ opseraBaseUrl: "https://appdev01.opsera.io"
 # base url for prod environment
 # opseraBaseUrl: "https://app.opsera.io"
 
-KafkaServer: localhost:9092
+  
 
 customerType: "env_not_needed"
 customerid: "env_not_needed"
