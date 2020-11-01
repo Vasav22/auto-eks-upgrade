@@ -57,6 +57,8 @@ spec:
             value: {{ .Values.customerid }}
           - name: "CUSTOMER_TYPE"
             value: {{ .Values.customerType }}
+          - name: "OP_KAFKA_BOOTSTRAP_SERVER"
+            value: {{ .Values.KafkaServer }}
           # livenessProbe:
           #   httpGet:
           #     path: /
