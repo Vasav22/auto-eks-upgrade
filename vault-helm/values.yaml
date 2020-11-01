@@ -415,8 +415,8 @@ server:
       #}
 
       seal "transit" {
-        address            = "http://10.0.3.253:8200"
-        token              = "s.gAfkJKZdHmuWyZiQC4eQMXvk"
+        address            = "http://10.0.2.4:8200"
+        token              = "s.vpg8kzhzjTvfh1dDgOzAhTxh"
         disable_renewal    = "false"
 
         // Key configuration
