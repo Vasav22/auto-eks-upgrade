@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/logstashv2
-  tag: test
+  tag: latest
   # repository: gcr.io/indigo-union-270905/onprem-logstash
   pullPolicy: Always
 
@@ -18,12 +18,12 @@ fullnameOverride: ""
 # opseraBaseUrl: "https://appdev01.opsera.io"
 
 # base url for test environment
-opseraBaseUrl: "https://api-test.opsera.io"
+# opseraBaseUrl: "https://api-test.opsera.io"
 
 # base url for prod environment
-# opseraBaseUrl: "https://app.opsera.io"
+opseraBaseUrl: "https://app.opsera.io"
 
-KafkaServer: 10.0.2.27:9092
+KafkaServer: 10.0.3.85:9092
 
 customerType: "env_not_needed"
 customerid: "env_not_needed"
