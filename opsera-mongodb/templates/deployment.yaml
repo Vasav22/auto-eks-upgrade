@@ -78,7 +78,7 @@ spec:
           - name: mongodb-data
             mountPath: /data
           - name: mongodb-journal
-            mountPath: /data/db/journal
+            mountPath: /var/lib/mongodb/journal
           - name: mongodb-log
             mountPath: /var/log/mongodb
           {{- if .Values.livenessProbe.enabled }}
