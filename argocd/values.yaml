@@ -97,7 +97,8 @@ controller:
   ## Node selectors and tolerations for server scheduling to nodes with taints
   ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
   ##
-  nodeSelector: {}
+  nodeSelector:
+    Name: tools-node
   tolerations: []
   affinity: {}
 
@@ -105,11 +106,11 @@ controller:
 
   resources:
     limits:
-      cpu: 1
-      memory: 5Gi
+      cpu: 100m
+      memory: 2Gi
     requests:
-      cpu: 1
-      memory: 5Gi
+      cpu: 100m
+      memory: 2Gi
 
   serviceAccount:
     create: true
@@ -216,7 +217,8 @@ dex:
   ## Node selectors and tolerations for server scheduling to nodes with taints
   ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
   ##
-  nodeSelector: {}
+  nodeSelector:
+    Name: tools-node
   tolerations: []
   affinity: {}
 
@@ -231,11 +233,11 @@ dex:
 
   resources:
     limits:
-      cpu: 1
-      memory: 5Gi
+      cpu: 100m
+      memory: 2Gi
     requests:
-      cpu: 1
-      memory: 5Gi
+      cpu: 100m
+      memory: 2Gi
 
 ## Redis
 redis:
@@ -265,7 +267,8 @@ redis:
   ## Node selectors and tolerations for server scheduling to nodes with taints
   ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
   ##
-  nodeSelector: {}
+  nodeSelector:
+    Name: tools-node
   tolerations: []
   affinity: {}
 
@@ -280,11 +283,11 @@ redis:
 
   resources:
     limits:
-      cpu: 1
-      memory: 5Gi
+      cpu: 100m
+      memory: 2Gi
     requests:
-      cpu: 1
-      memory: 5Gi
+      cpu: 100m
+      memory: 2Gi
 
   volumeMounts: []
   volumes: []
@@ -377,7 +380,8 @@ server:
   ## Node selectors and tolerations for server scheduling to nodes with taints
   ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
   ##
-  nodeSelector: {}
+  nodeSelector:
+    Name: tools-node
   tolerations: []
   affinity: {}
 
@@ -391,11 +395,11 @@ server:
 
   resources:
     limits:
-      cpu: 1
-      memory: 5Gi
+      cpu: 100m
+      memory: 2Gi
     requests:
-      cpu: 1
-      memory: 5Gi
+      cpu: 100m
+      memory: 2Gi
 
   ## Certificate configuration
   certificate:
@@ -679,7 +683,8 @@ repoServer:
   ## Node selectors and tolerations for server scheduling to nodes with taints
   ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
   ##
-  nodeSelector: {}
+  nodeSelector:
+    Name: tools-node
   tolerations: []
   affinity: {}
 
@@ -693,11 +698,11 @@ repoServer:
 
   resources:
     limits:
-      cpu: 1
-      memory: 5Gi
+      cpu: 100m
+      memory: 2Gi
     requests:
-      cpu: 1
-      memory: 5Gi
+      cpu: 100m
+      memory: 2Gi
 
   ## Repo server service configuration
   service:
