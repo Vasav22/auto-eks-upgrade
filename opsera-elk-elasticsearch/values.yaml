@@ -71,8 +71,7 @@ resources:
     cpu: 1
     memory: 2Gi
 
-nodeSelector:
-  Name: opsera-node
+nodeSelector: {}
 
 tolerations: []
 
