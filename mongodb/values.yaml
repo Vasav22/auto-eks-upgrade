@@ -207,11 +207,11 @@ podLabels: {}
 ##
 resources:
   limits:
-    cpu: 1
-    memory: 5Gi
+    cpu: 2
+    memory: 8Gi
   requests:
-    cpu: 1
-    memory: 5Gi
+    cpu: 2
+    memory: 8Gi
 # Define separate resources per arbiter, which are less then primary or secondary
 # used only when replica set is enabled
 resourcesArbiter: {}
@@ -228,7 +228,8 @@ resourcesArbiter: {}
 
 ## Node selector
 ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
-nodeSelector: {}
+nodeSelector:
+  Name: opsera-node
 
 ## Affinity
 ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity

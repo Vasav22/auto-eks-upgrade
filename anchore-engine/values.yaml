@@ -245,17 +245,18 @@ anchoreAnalyzer:
     #   regexp_match:
     #     - "EXAMPLE_MATCH="
 
-  # resources:
-  #  limits:
-  #    cpu: 100m
-  #    memory: 8Gi
-  #  requests:
-  #    cpu: 100m
-  #    memory: 3Gi
+  resources:
+   limits:
+     cpu: 100m
+     memory: 8Gi
+   requests:
+     cpu: 100m
+     memory: 3Gi
 
   labels: {}
   annotations: {}
-  nodeSelector: {}
+  nodeSelector:
+    Name: tools-node
   tolerations: []
   affinity: {}
 
@@ -282,17 +283,18 @@ anchoreApi:
   #   hostname: anchore-api.example.com
   #   port: 8443
 
-  # resources:
-  #  limits:
-  #    cpu: 100m
-  #    memory: 6Gi
-  #  requests:
-  #    cpu: 100m
-  #    memory: 4Gi
+  resources:
+   limits:
+     cpu: 100m
+     memory: 6Gi
+   requests:
+     cpu: 100m
+     memory: 4Gi
 
   labels: {}
   annotations: {}
-  nodeSelector: {}
+  nodeSelector:
+    Name: tools-node
   tolerations: []
   affinity: {}
 
@@ -385,17 +387,18 @@ anchoreCatalog:
     annotations: {}
     labels: {}
 
-  # resources:
-  #  limits:
-  #    cpu: 100m
-  #    memory: 8Gi
-  #  requests:
-  #    cpu: 100m
-  #    memory: 3Gi
+  resources:
+   limits:
+     cpu: 100m
+     memory: 8Gi
+   requests:
+     cpu: 100m
+     memory: 3Gi
 
   labels: {}
   annotations: {}
-  nodeSelector: {}
+  nodeSelector:
+    Name: tools-node
   tolerations: []
   affinity: {}
 
@@ -422,17 +425,18 @@ anchorePolicyEngine:
     annotations: {}
     labels: {}
 
-  # resources:
-  #  limits:
-  #    cpu: 100m
-  #    memory: 8Gi
-  #  requests:
-  #    cpu: 100m
-  #    memory: 3Gi
+  resources:
+   limits:
+     cpu: 100m
+     memory: 8Gi
+   requests:
+     cpu: 100m
+     memory: 3Gi
 
   labels: {}
   annotations: {}
-  nodeSelector: {}
+  nodeSelector:
+    Name: tools-node
   tolerations: []
   affinity: {}
 
@@ -452,17 +456,18 @@ anchoreSimpleQueue:
     annotations: {}
     labels: {}
 
-  # resources:
-  #  limits:
-  #    cpu: 100m
-  #    memory: 3Gi
-  #  requests:
-  #    cpu: 100m
-  #    memory: 2Gi
+  resources:
+   limits:
+     cpu: 100m
+     memory: 3Gi
+   requests:
+     cpu: 100m
+     memory: 2Gi
 
   labels: {}
   annotations: {}
-  nodeSelector: {}
+  nodeSelector:
+    Name: tools-node
   tolerations: []
   affinity: {}
 
@@ -550,17 +555,18 @@ anchoreEnterpriseFeeds:
     annotations: {}
     labels: {}
 
-  # resources:
-  #  limits:
-  #    cpu: 100m
-  #    memory: 8Gi
-  #  requests:
-  #    cpu: 100m
-  #    memory: 3Gi
+  resources:
+   limits:
+     cpu: 100m
+     memory: 8Gi
+   requests:
+     cpu: 100m
+     memory: 3Gi
 
   labels: {}
   annotations: {}
-  nodeSelector: {}
+  nodeSelector:
+    Name: tools-node
   tolerations: []
   affinity: {}
 
@@ -624,17 +630,18 @@ anchoreEnterpriseReports:
   service:
     port: 8558
 
-  # resources:
-  #  limits:
-  #    cpu: 100m
-  #    memory: 8Gi
-  #  requests:
-  #    cpu: 100m
-  #    memory: 3Gi
+  resources:
+   limits:
+     cpu: 100m
+     memory: 8Gi
+   requests:
+     cpu: 100m
+     memory: 3Gi
 
   labels: {}
   annotations: {}
-  nodeSelector: {}
+  nodeSelector:
+    Name: tools-node
   tolerations: []
   affinity: {}
 
@@ -688,13 +695,13 @@ anchoreEnterpriseUi:
     labels: {}
     sessionAffinity: ClientIP
 
-  # resources:
-  #  limits:
-  #    cpu: 100m
-  #    memory: 8Gi
-  #  requests:
-  #    cpu: 100m
-  #    memory: 3Gi
+  resources:
+   limits:
+     cpu: 100m
+     memory: 8Gi
+   requests:
+     cpu: 100m
+     memory: 3Gi
 
   labels: {}
   annotations: {}

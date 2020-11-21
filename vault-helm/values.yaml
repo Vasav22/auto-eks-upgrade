@@ -138,11 +138,11 @@ server:
 
   resources:
     limits:
-      cpu: 1
-      memory: 5Gi
+      cpu: 2
+      memory: 8Gi
     requests:
-      cpu: 1
-      memory: 5Gi
+      cpu: 2
+      memory: 4Gi
 
   # Ingress allows ingress services to be created to allow external access
   # from Kubernetes to access Vault pods.
@@ -294,7 +294,8 @@ server:
   # Example:
   # nodeSelector: |
   #   beta.kubernetes.io/arch: amd64
-  nodeSelector: null
+  nodeSelector: |
+    Name: opsera-node
 
   # Priority class for server pods
   priorityClassName: ""
@@ -342,7 +343,7 @@ server:
   dataStorage:
     enabled: true
     # Size of the PVC created
-    size: 10Gi
+    size: 50Gi
     # Name of the storage class to use.  If null it will use the
     # configured default Storage Class.
     storageClass: null
@@ -416,7 +417,7 @@ server:
 
       seal "transit" {
         address            = "http://10.0.2.4:8200"
-        token              = "s.tZmDbx2r82MYKMaH7ne3d10H"
+        token              = "s.F4QaU1a8LqDcgFUONDPyS0B4"
         disable_renewal    = "false"
 
         // Key configuration

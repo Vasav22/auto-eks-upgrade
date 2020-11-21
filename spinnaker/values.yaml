@@ -124,13 +124,13 @@ halyard:
 
   ## Uncomment the following resources definitions to control the cpu and memory
   # resources allocated for the halyard pod
-  resources: {}
-    # requests:
-    #   memory: "1Gi"
-    #   cpu: "100m"
-    # limits:
-    #   memory: "2Gi"
-    #   cpu: "200m"
+  resources:
+    requests:
+      memory: "1Gi"
+      cpu: "100m"
+    limits:
+      memory: "2Gi"
+      cpu: "200m"
 
   ## Uncomment if you want to set environment variables on the Halyard pod.
   # env:
@@ -255,8 +255,8 @@ spinnakerFeatureFlags:
 # Node labels for pod assignment
 # Ref: https://kubernetes.io/docs/user-guide/node-selection/
 # nodeSelector to provide to each of the Spinnaker components
-nodeSelector: {}
-
+nodeSelector:
+  Name: tools-node
 # Redis password to use for the in-cluster redis service
 # Enable redis to use in-cluster redis
 redis:
@@ -267,7 +267,8 @@ redis:
     port: 6379
     # password: ""
   password: password
-  nodeSelector: {}
+  nodeSelector:
+    Name: tools-node
   cluster:
     enabled: false
 # Uncomment if you don't want to create a PVC for redis
@@ -288,7 +289,8 @@ minio:
   defaultBucket:
     enabled: true
     name: "spinnaker"
-  nodeSelector: {}
+  nodeSelector:
+    Name: tools-node
 # Uncomment if you don't want to create a PVC for minio
 #  persistence:
 #    enabled: false
