@@ -610,7 +610,7 @@ persistence:
     - ReadWriteOnce
   ## PVC size
   ##
-  size: 8Gi
+  size: 100Gi
   ## PVC annotations
   ##
   annotations: {}
@@ -639,7 +639,7 @@ logPersistence:
     - ReadWriteOnce
   ## PVC size
   ##
-  size: 8Gi
+  size: 100Gi
   ## PVC annotations
   ##
   annotations: {}
@@ -935,6 +935,7 @@ metrics:
 ##
 zookeeper:
   enabled: true
+  replicaCount: 3
   auth:
     ## Enable Zookeeper auth
     ##

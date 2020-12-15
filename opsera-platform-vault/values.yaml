@@ -426,10 +426,10 @@ server:
       #   tls_skip_verify    = "true"
       # }
 
-      seal "awskms" {
-        kms_key_id = "96f82100-eac1-4171-9988-a99318b5883f"
-        region     = "us-east-2"
-      }
+      # seal "awskms" {
+      #   kms_key_id = "96f82100-eac1-4171-9988-a99318b5883f"
+      #   region     = "us-east-2"
+      # }
 
   # Run Vault in "HA" mode. There are no storage requirements unless audit log
   # persistence is required.  In HA mode Vault will configure itself to use Consul
