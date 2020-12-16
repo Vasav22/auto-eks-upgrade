@@ -285,8 +285,8 @@ auth:
     ##   - user1
     ##   - user2
     ##
-    clientUsers:
-      - user
+    # clientUsers:
+    #   - user
 
     ## Kafka client passwords. This is mandatory if more than one user is specified in clientUsers.
     ##
@@ -346,7 +346,7 @@ interBrokerListenerName: INTERNAL
 
 ## Number of Kafka brokers to deploy
 ##
-replicaCount: 1
+replicaCount: 3
 
 ## StrategyType, can be set to RollingUpdate or OnDelete by default.
 ## ref: https://kubernetes.io/docs/tutorials/stateful-application/basic-stateful-set/#updating-statefulsets
@@ -381,7 +381,8 @@ affinity: {}
 ## Node labels for pod assignment. Evaluated as a template
 ## ref: https://kubernetes.io/docs/user-guide/node-selection/
 ##
-nodeSelector: {}
+nodeSelector:
+  Name: opsera-node
 
 ## Tolerations for pod assignment. Evaluated as a template
 ## Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
@@ -413,12 +414,12 @@ resources:
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  limits: {}
-  #   cpu: 250m
-  #   memory: 1Gi
-  requests: {}
-  #   cpu: 250m
-  #   memory: 256Mi
+  limits:
+    cpu: 1
+    memory: 8Gi
+  requests:
+    cpu: 250m
+    memory: 6Mi
 
 ## Kafka containers' liveness and readiness probes. Evaluated as a template.
 ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
@@ -939,6 +940,7 @@ metrics:
 ##
 zookeeper:
   enabled: true
+  replicaCount: 3
   auth:
     ## Enable Zookeeper auth
     ##

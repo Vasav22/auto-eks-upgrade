@@ -242,8 +242,8 @@ auth:
   ## | sasl      | Yes (via SASL)                | No                 |
   ## | sasl_tls  | Yes (via SASL)                | Yes                |
   ##
-  clientProtocol: sasl
-  interBrokerProtocol: sasl
+  clientProtocol: plaintext
+  interBrokerProtocol: plaintext
 
   ## Allowed SASL mechanisms when clientProtocol or interBrokerProtocol are using either sasl or sasl_tls
   ##
@@ -285,8 +285,7 @@ auth:
     ##   - user1
     ##   - user2
     ##
-    clientUsers:
-      - user
+    clientUsers: []
 
     ## Kafka client passwords
     ##
@@ -338,7 +337,7 @@ advertisedListeners: []
 
 ## Allow to use the PLAINTEXT listener.
 ##
-allowPlaintextListener: false
+allowPlaintextListener: true
 
 ## Name of listener used for communication between brokers.
 ##
