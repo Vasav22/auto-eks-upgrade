@@ -416,7 +416,7 @@ server:
       #}
 
       seal "transit" {
-        address            = "http://10.0.3.253:8200"
+        address            = "https://vault.opsera-test-private.opsera.io"
         token              = "s.sCAHvHuyzw9giVCnPziqXQl0"
         disable_renewal    = "false"
 
