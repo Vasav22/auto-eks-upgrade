@@ -23,7 +23,7 @@ opseraBaseUrl: "https://api.opsera-dev.opsera.io"
 # base url for prod environment
 # opseraBaseUrl: "https://app.opsera.io"
 
-KafkaServer: kafka.opsera-test-private.opsera.io:9092
+KafkaServer: aeb8153aa1fc74089bd33608cc2d5e60-0a9b5f33d78b35f5.elb.us-east-2.amazonaws.com:9094
 
 customerType: "env_not_needed"
 customerid: "env_not_needed"

@@ -150,7 +150,7 @@ maxMessageBytes: _1000012
 
 ## Default replication factors for automatically created topics
 ##
-defaultReplicationFactor: 1
+defaultReplicationFactor: 3
 
 ## The replication factor for the offsets topic
 ##
@@ -174,7 +174,7 @@ numNetworkThreads: 3
 
 ## The default number of log partitions per topic.
 ##
-numPartitions: 1
+numPartitions: 3
 
 ## The number of threads per data directory to be used for log recovery at startup and flushing at shutdown.
 ##
@@ -415,11 +415,11 @@ resources:
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   limits:
-    cpu: 1
+    cpu: 2
     memory: 8Gi
   requests:
-    cpu: 250m
-    memory: 6Mi
+    cpu: 1
+    memory: 8Gi
 
 ## Kafka containers' liveness and readiness probes. Evaluated as a template.
 ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
@@ -510,7 +510,7 @@ service:
 externalAccess:
   ## Enable Kubernetes external cluster access to Kafka brokers
   ##
-  enabled: false
+  enabled: true
 
   ## External IPs auto-discovery configuration
   ## An init container is used to auto-detect LB IPs or node ports by querying the K8s API
@@ -519,7 +519,7 @@ externalAccess:
   autoDiscovery:
     ## Enable external IP/ports auto-discovery
     ##
-    enabled: false
+    enabled: true
     ## Bitnami Kubectl image
     ## ref: https://hub.docker.com/r/bitnami/kubectl/tags/
     ##
@@ -591,7 +591,9 @@ externalAccess:
     # domain: mydomain.com
     ## Provide any additional annotations which may be required. Evaluated as a template
     ##
-    annotations: {}
+    annotations:
+      service.beta.kubernetes.io/aws-load-balancer-type: nlb
+      service.beta.kubernetes.io/aws-load-balancer-internal: "true"
 
 ## Persistence paramaters
 ##
@@ -709,7 +711,7 @@ rbac:
   ## binding Kafka ServiceAccount to a role
   ## that allows Kafka pods querying the K8s API
   ##
-  create: false
+  create: true
 
 ## Prometheus Exporters / Metrics
 ##
