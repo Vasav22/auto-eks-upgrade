@@ -23,7 +23,7 @@ fullnameOverride: ""
 # base url for prod environment
 opseraBaseUrl: "https://app.opsera.io"
 
-KafkaServer: 10.0.3.85:9092
+KafkaServer: aebc67922dca34d76b34d1b83b951fea-626fe2b9cd27f673.elb.us-east-2.amazonaws.com:9094
 
 customerType: "env_not_needed"
 customerid: "env_not_needed"
