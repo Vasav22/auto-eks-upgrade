@@ -417,7 +417,7 @@ server:
 
       seal "transit" {
         address            = "https://vault.opsera-prod-private.opsera.io"
-        token              = "s.sCAHvHuyzw9giVCnPziqXQl0"
+        token              = "s.F4QaU1a8LqDcgFUONDPyS0B4"
         disable_renewal    = "false"
 
         // Key configuration
