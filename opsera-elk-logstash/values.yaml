@@ -18,12 +18,12 @@ fullnameOverride: ""
 # opseraBaseUrl: "https://appdev01.opsera.io"
 
 # base url for test environment
-opseraBaseUrl: "https://api.opsera-test.opsera.io"
+opseraBaseUrl: "https://api.opsera-prod.opsera.io"
 
 # base url for prod environment
 # opseraBaseUrl: "https://app.opsera.io"
 
-KafkaServer: aeb8153aa1fc74089bd33608cc2d5e60-0a9b5f33d78b35f5.elb.us-east-2.amazonaws.com:9094
+KafkaServer: aebc67922dca34d76b34d1b83b951fea-626fe2b9cd27f673.elb.us-east-2.amazonaws.com:9094
 
 customerType: "env_not_needed"
 customerid: "env_not_needed"
