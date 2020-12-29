@@ -45,12 +45,12 @@ spec:
           - name: "DOCKER_ENV"
             value: {{ .Values.DOCKER_ENV }}
           volumeMounts:
-          - name: spinnaker-integrator-logs
-            mountPath: /apps/OpsERA/logs/components/spinnaker-integrator
+          - name: microservices-efs
+            mountPath: /apps/OpsERA/logs/components/
       volumes:
-        - name: spinnaker-integrator-logs
+        - name: microservices-efs
           persistentVolumeClaim:
-            claimName: spinnaker-integrator-logs
+            claimName: microservices-efs
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
