@@ -6,6 +6,7 @@ replicaCount: 1
 
 image:
   repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/logstashv2
+  tag: latest
   # repository: gcr.io/indigo-union-270905/onprem-logstash
   pullPolicy: Always
 
@@ -14,18 +15,21 @@ nameOverride: ""
 fullnameOverride: ""
 
 # base url for dev environment
-opseraBaseUrl: "https://appdev01.opsera.io"
+# opseraBaseUrl: "https://appdev01.opsera.io"
 
 # base url for test environment
-#opseraBaseUrl: "https://api-test.opsera.io"
+# opseraBaseUrl: "https://api-test.opsera.io"
 
 # base url for prod environment
-# opseraBaseUrl: "https://app.opsera.io"
+opseraBaseUrl: "https://app.opsera.io"
 
-customerid: ""
+KafkaServer: aebc67922dca34d76b34d1b83b951fea-626fe2b9cd27f673.elb.us-east-2.amazonaws.com:9094
+
+customerType: "env_not_needed"
+customerid: "env_not_needed"
 password: Whn8Bd"@M*
 username: elastic
-elasticSearchUrl: ""
+elasticSearchUrl: "https://localhost:9200"
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
@@ -73,12 +77,13 @@ resources:
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   limits:
     cpu: 1
-    memory: 5Gi
+    memory: 8Gi
   requests:
     cpu: 1
-    memory: 5Gi
+    memory: 4Gi
 
-nodeSelector: {}
+nodeSelector:
+  Name: opsera-node
 
 tolerations: []
 

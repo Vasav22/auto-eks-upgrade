@@ -61,12 +61,13 @@ resources:
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   limits:
     cpu: 1
-    memory: 5Gi
+    memory: 8Gi
   requests:
     cpu: 1
-    memory: 5Gi
+    memory: 8Gi
 
-nodeSelector: {}
+nodeSelector:
+  Name: tools-node
 
 tolerations: []
 

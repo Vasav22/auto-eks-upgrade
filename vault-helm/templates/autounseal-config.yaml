@@ -30,7 +30,7 @@ data:
             "VAULT_KEY": "b3BzZXJh",
             "VAULT_URI": "'$vault_uri'"
         }
-      }'
+      }' -k
       
     else 
       echo 'Unsealed'

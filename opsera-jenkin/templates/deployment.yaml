@@ -1,7 +1,7 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
-  name: {{ include "opsera-jenkin.fullname" . }}
+  name: "opsera-jenkin"
   labels:
     {{- include "opsera-jenkin.labels" . | nindent 4 }}
 spec:
@@ -9,6 +9,7 @@ spec:
   selector:
     matchLabels:
       {{- include "opsera-jenkin.selectorLabels" . | nindent 6 }}
+  serviceName: "opsera-jenkin"
   template:
     metadata:
       labels:
@@ -29,7 +30,7 @@ spec:
         - name: my-disk-claim-1
           mountPath: /temp/jenkins_home
       - name: copy-data
-        image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         command: ['sh', '-c', 'cp -r /var/jenkins_home/* /temp/jenkins_home/']
         volumeMounts:
         - name: my-disk-claim-1
@@ -43,10 +44,10 @@ spec:
         - name: my-disk-claim-1
           mountPath: /temp/jenkins_home
       containers:
-        - name: {{ .Chart.Name }}
+        - name: jenkins
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
           - name: JENKINS_ADMIN_PASSWORD

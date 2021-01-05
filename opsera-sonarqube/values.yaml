@@ -6,6 +6,7 @@ replicaCount: 1
 
 image:
   repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera-pipeline/sonarqube
+  tag: latest
   pullPolicy: Always
 
 imagePullSecrets: []
@@ -56,12 +57,13 @@ resources:
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   limits:
     cpu: 1
-    memory: 5Gi
+    memory: 4Gi
   requests:
     cpu: 1
-    memory: 5Gi
+    memory: 4Gi
 
-nodeSelector: {}
+nodeSelector:
+  Name: tools-node
 
 tolerations: []
 

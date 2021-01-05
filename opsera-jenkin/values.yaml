@@ -6,6 +6,7 @@ replicaCount: 1
 
 image:
   repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera-pipeline/jenkins-lts
+  tag: latest
   # repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/releasemanagement/jenkins-multilang
   pullPolicy: Always
 
@@ -62,13 +63,14 @@ resources:
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   limits:
-    cpu: 1
-    memory: 5Gi
+    cpu: 2
+    memory: 4Gi
   requests:
-    cpu: 1
-    memory: 5Gi
+    cpu: 2
+    memory: 2Gi
 
-nodeSelector: {}
+nodeSelector:
+  Name: tools-node
 
 tolerations: []
 

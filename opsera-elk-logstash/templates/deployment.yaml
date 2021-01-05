@@ -25,7 +25,7 @@ spec:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           # command: ["sh", "-c", "ls -l /usr/share/logstash/config" ]
           ports:
@@ -55,6 +55,10 @@ spec:
             value: {{ .Values.opseraBaseUrl }}
           - name: "customerid"
             value: {{ .Values.customerid }}
+          - name: "CUSTOMER_TYPE"
+            value: {{ .Values.customerType }}
+          - name: "OP_KAFKA_BOOTSTRAP_SERVER"
+            value: {{ .Values.KafkaServer }}
           # livenessProbe:
           #   httpGet:
           #     path: /
