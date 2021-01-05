@@ -45,12 +45,12 @@ spec:
           - name: "DOCKER_ENV"
             value: {{ .Values.DOCKER_ENV }}
           volumeMounts:
-          - name: tools-manager-logs
-            mountPath: /apps/OpsERA/logs/components/tools-manager
+          - name: microservices-efs
+            mountPath: /apps/OpsERA/logs/components/
       volumes:
-        - name: tools-manager-logs
+        - name: microservices-efs
           persistentVolumeClaim:
-            claimName: tools-manager-logs
+            claimName: microservices-efs
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

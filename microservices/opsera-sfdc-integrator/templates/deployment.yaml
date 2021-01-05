@@ -45,12 +45,12 @@ spec:
           - name: "DOCKER_ENV"
             value: {{ .Values.DOCKER_ENV }}
           volumeMounts:
-          - name: sfdc-integrator-logs
-            mountPath: /apps/OpsERA/logs/components/sfdc-integrator
+          - name: microservices-efs
+            mountPath: /apps/OpsERA/logs/components/
       volumes:
-        - name: sfdc-integrator-logs
+        - name: microservices-efs
           persistentVolumeClaim:
-            claimName: sfdc-integrator-logs
+            claimName: microservices-efs
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

@@ -45,8 +45,8 @@ spec:
           - name: "DOCKER_ENV"
             value: {{ .Values.DOCKER_ENV }}
           volumeMounts:
-          - name: terraform-service-logs
-            mountPath: /apps/OpsERA/logs/components/terraform-service
+          - name: microservices-efs
+            mountPath: /apps/OpsERA/logs/components/
           volumeMounts:
           - mountPath: "/apps/OpsERA/components/helmcharts"
             name: helm-charts
@@ -66,9 +66,9 @@ spec:
       volumes:
         - name: helm-charts
           emptyDir: {}
-        - name: terraform-service-logs
+        - name: microservices-efs
           persistentVolumeClaim:
-            claimName: terraform-service-logs
+            claimName: microservices-efs
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
