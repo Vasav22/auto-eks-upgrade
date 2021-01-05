@@ -31,8 +31,8 @@ data:
     }
 
     seal "transit" {
-      address            = {{ .Values.env_vault_address }}
-      token              = {{ .Values.env_vault_token }}
+      address            = "{{ .Values.env_vault_address }}"
+      token              = "{{ .Values.env_vault_token }}"
       disable_renewal    = "false"
 
       // Key configuration
