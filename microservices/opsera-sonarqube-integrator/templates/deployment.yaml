@@ -45,12 +45,12 @@ spec:
           - name: "DOCKER_ENV"
             value: {{ .Values.DOCKER_ENV }}
           volumeMounts:
-          - name: sonarqube-integrator-logs
-            mountPath: /apps/OpsERA/logs/components/sonarqube-integrator
+          - name: microservices-efs
+            mountPath: /apps/OpsERA/logs/components/
       volumes:
-        - name: sonarqube-integrator-logs
+        - name: microservices-efs
           persistentVolumeClaim:
-            claimName: sonarqube-integrator-logs
+            claimName: microservices-efs
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

@@ -45,12 +45,12 @@ spec:
           - name: "DOCKER_ENV"
             value: {{ .Values.DOCKER_ENV }}
           volumeMounts:
-          - name: argo-integrator-logs
-            mountPath: /apps/OpsERA/logs/components/argo-integrator
+          - name: microservices-efs
+            mountPath: /apps/OpsERA/logs/components/
       volumes:
-        - name: argo-integrator-logs
+        - name: microservices-efs
           persistentVolumeClaim:
-            claimName: argo-integrator-logs
+            claimName: microservices-efs
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

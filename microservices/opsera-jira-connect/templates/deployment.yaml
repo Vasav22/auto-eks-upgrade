@@ -45,12 +45,12 @@ spec:
           - name: "DOCKER_ENV"
             value: {{ .Values.DOCKER_ENV }}
           volumeMounts:
-          - name: jira-connect-logs
-            mountPath: /apps/OpsERA/logs/components/jira-connect-service
+          - name: microservices-efs
+            mountPath: /apps/OpsERA/logs/components/
       volumes:
-        - name: jira-connect-logs
+        - name: microservices-efs
           persistentVolumeClaim:
-            claimName: jira-connect-logs
+            claimName: microservices-efs
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

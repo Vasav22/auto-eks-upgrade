@@ -45,12 +45,12 @@ spec:
           - name: "DOCKER_ENV"
             value: {{ .Values.DOCKER_ENV }}
           volumeMounts:
-          - name: slack-endpoint-logs
-            mountPath: /apps/OpsERA/logs/components/slack-endpoint
+          - name: microservices-efs
+            mountPath: /apps/OpsERA/logs/components/
       volumes:
-        - name: slack-endpoint-logs
+        - name: microservices-efs
           persistentVolumeClaim:
-            claimName: slack-endpoint-logs
+            claimName: microservices-efs
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

@@ -45,12 +45,12 @@ spec:
           - name: "DOCKER_ENV"
             value: {{ .Values.DOCKER_ENV }}
           volumeMounts:
-          - name: logstash-integrator-logs
-            mountPath: /apps/OpsERA/logs/components/logstash-integrator
+          - name: microservices-efs
+            mountPath: /apps/OpsERA/logs/components/
       volumes:
-        - name: logstash-integrator-logs
+        - name: microservices-efs
           persistentVolumeClaim:
-            claimName: logstash-integrator-logs
+            claimName: microservices-efs
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
