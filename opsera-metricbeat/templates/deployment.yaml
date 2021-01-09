@@ -27,16 +27,15 @@ data:
     cloud.id: ${ELASTIC_CLOUD_ID}
     cloud.auth: ${ELASTIC_CLOUD_AUTH}
 
-    # setup.dashboards.enabled: true
-    # setup.kibana.host: "https://xunit.opsera.io:443"
-    # setup.kibana.ssl.verification_mode: "none"
-    # setup.kibana.password: Qr6oWiA9e9
-    # setup.kibana.username: elastic
+    setup.dashboards.enabled: true
+    setup.kibana.host: "opsera-kibana-opsera-elk-kibana.opsera.svc.cluster.local:5601"
+    setup.kibana.ssl.verification_mode: "none"
 
-    output.logstash:
-      # The Logstash hosts
-      hosts: ["xunit-logstash.opsera.io:5044"]
-      ssl.enabled: true
+    output.elasticsearch:
+      hosts: ['https://${ELASTICSEARCH_HOST:10.100.121.108}:${ELASTICSEARCH_PORT:9200}']
+      username: ${ELASTICSEARCH_USERNAME}
+      password: ${ELASTICSEARCH_PASSWORD}
+      ssl.verification_mode: "none"
 
 ---
 apiVersion: v1
@@ -128,6 +127,14 @@ spec:
           "-system.hostfs=/hostfs",
         ]
         env:
+        - name: ELASTICSEARCH_HOST
+          value: opsera-elasticsearch-opsera-elk-elasticsearch.opsera.svc.cluster.local
+        - name: ELASTICSEARCH_PORT
+          value: "9200"
+        - name: ELASTICSEARCH_USERNAME
+          value: {{ .Values.ELASTICSEARCH_USERNAME }}
+        - name: ELASTICSEARCH_PASSWORD
+          value: {{ .Values.ELASTICSEARCH_PASSWORD }}
         - name: ELASTIC_CLOUD_ID
           value:
         - name: ELASTIC_CLOUD_AUTH
@@ -208,16 +215,15 @@ data:
     cloud.id: ${ELASTIC_CLOUD_ID}
     cloud.auth: ${ELASTIC_CLOUD_AUTH}
 
-    # setup.dashboards.enabled: true
-    # setup.kibana.host: "https://xunit.opsera.io:443"
-    # setup.kibana.ssl.verification_mode: "none"
-    # setup.kibana.password: Qr6oWiA9e9
-    # setup.kibana.username: elastic
+    setup.dashboards.enabled: true
+    setup.kibana.host: "opsera-kibana-opsera-elk-kibana.opsera.svc.cluster.local:5601"
+    setup.kibana.ssl.verification_mode: "none"
 
-    output.logstash:
-      # The Logstash hosts
-      hosts: ["xunit-logstash.opsera.io:5044"]
-      ssl.enabled: true
+    output.elasticsearch:
+      hosts: ['https://${ELASTICSEARCH_HOST:10.100.121.108}:${ELASTICSEARCH_PORT:9200}']
+      username: ${ELASTICSEARCH_USERNAME}
+      password: ${ELASTICSEARCH_PASSWORD}
+      ssl.verification_mode: "none"
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -272,6 +278,14 @@ spec:
           "-e",
         ]
         env:
+        - name: ELASTICSEARCH_HOST
+          value: opsera-elasticsearch-opsera-elk-elasticsearch.opsera.svc.cluster.local
+        - name: ELASTICSEARCH_PORT
+          value: "9200"
+        - name: ELASTICSEARCH_USERNAME
+          value: {{ .Values.ELASTICSEARCH_USERNAME }}
+        - name: ELASTICSEARCH_PASSWORD
+          value: {{ .Values.ELASTICSEARCH_PASSWORD }}
         - name: ELASTIC_CLOUD_ID
           value:
         - name: ELASTIC_CLOUD_AUTH
