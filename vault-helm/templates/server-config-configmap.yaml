@@ -19,7 +19,27 @@ data:
   {{- if eq $type "string" }}
     disable_mlock = true
   {{- if eq .mode "standalone" }}
-    {{ tpl .Values.server.standalone.config . | nindent 4 | trim }}
+    ui = true
+
+    listener "tcp" {
+      tls_disable = 1
+      address = "[::]:8200"
+      cluster_address = "[::]:8201"
+    }
+    storage "file" {
+      path = "/vault/data"
+    }
+
+    seal "transit" {
+      address            = "{{ .Values.env_vault_address }}"
+      token              = "{{ .Values.env_vault_token }}"
+      disable_renewal    = "false"
+
+      // Key configuration
+      key_name           = "autounseal"
+      mount_path         = "transit/"
+      tls_skip_verify    = "true"
+    }
   {{- else if and (eq .mode "ha") (eq (.Values.server.ha.raft.enabled | toString) "false") }}
     {{ tpl .Values.server.ha.config . | nindent 4 | trim }}
   {{- else if and (eq .mode "ha") (eq (.Values.server.ha.raft.enabled | toString) "true") }}

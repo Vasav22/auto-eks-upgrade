@@ -52,6 +52,13 @@ spec:
               port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+          - name: microservices-efs
+            mountPath: /apps/OpsERA/logs/components/
+      volumes:
+        - name: microservices-efs
+          persistentVolumeClaim:
+            claimName: microservices-efs
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
