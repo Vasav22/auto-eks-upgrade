@@ -12,6 +12,11 @@ filebeatConfig:
       - type: log
         enabled: true
         paths:
+          - /apps/OpsERA/logs/components/*/*.log
+
+      - type: log
+        enabled: true
+        paths:
           # - /var/jenkins_home/workspace/*/examples/unit-testing__application-code/cypress-unit-test-results/*.xml
           - /var/jenkins_home/workspace/*/cypress-unit-test-results/*.xml
         exclude_lines: ['^<?xml']
@@ -34,6 +39,7 @@ filebeatConfig:
         multiline.match: after
         multiline.flush_pattern: '</suite>'
         multiline.timeout: 1000
+ 
 
       - type: log
         enabled: true
@@ -55,8 +61,19 @@ filebeatConfig:
 
     output.logstash:
       # The Logstash hosts
-      hosts: ["opsera-logstash-opsera-elk-logstash.opsera.svc.cluster.local:5044"]
-      ssl.enabled: false
+      hosts: ["xunit-logstash.opsera.io:5044"]
+      ssl.enabled: true
+
+    processors:
+      - add_fields:
+          target: ''
+          fields:
+            opsera_env: k8honeywell
+      - add_host_metadata:
+          when.not.contains.tags: forwarded
+      - add_cloud_metadata: ~
+      - add_docker_metadata: ~
+      - add_kubernetes_metadata: ~
 
 
 # Extra environment variables to append to the DaemonSet pod spec.
@@ -67,14 +84,14 @@ extraEnvs: []
 #    value: the_value_goes_here
 
 extraVolumeMounts:
-  - name: jenkins-home
-    mountPath: /var/jenkins_home
+  - name: microservices-efs
+    mountPath: /apps/OpsERA/logs/components/
     readOnly: true
 
 extraVolumes:
-  - name: jenkins-home
+  - name: microservices-efs
     persistentVolumeClaim:
-      claimName: jenkins-home
+      claimName: microservices-efs
 
 extraContainers: ""
 # - name: dummy-init
@@ -141,13 +158,13 @@ podSecurityContext:
   runAsUser: 0
   privileged: false
 
-resources:
-  requests:
-    cpu: "100m"
-    memory: "100Mi"
-  limits:
-    cpu: "1000m"
-    memory: "200Mi"
+# resources:
+#   requests:
+#     cpu: "100m"
+#     memory: "100Mi"
+#   limits:
+#     cpu: "1000m"
+#     memory: "200Mi"
 
 # Custom service account override that the pod will use
 serviceAccount: ""
@@ -168,8 +185,7 @@ terminationGracePeriod: 30
 
 tolerations: []
 
-nodeSelector:
-  kubernetes.io/hostname: ip-10-4-145-172.us-east-2.compute.internal
+nodeSelector: {}
 
 affinity: {}
 
