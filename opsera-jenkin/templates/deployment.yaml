@@ -59,10 +59,16 @@ spec:
             value: {{ .Values.JENKINS_UI_URL }}
           - name: JENKINS_OPTS
             value: --prefix=/
+          - name: KUBERNETES_URL
+            value: {{ .Values.KUBERNETES_URL }}
+          - name: KUBERNETES_NAMESPACE
+            value: {{ .Values.KUBERNETES_NAMESPACE }}
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
+            - name: jnlp-port
+              containerPort: 50000
           volumeMounts:
           - mountPath: "/var/jenkins_home"
             name: jenkins-home
