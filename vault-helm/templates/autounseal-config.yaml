@@ -33,7 +33,7 @@ data:
           }
         }' -k
       else 
-        echo 'It's replica vault'
+        echo 'It is replica vault'
       fi
       
     else 
