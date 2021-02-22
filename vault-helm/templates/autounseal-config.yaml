@@ -20,7 +20,7 @@ data:
       vault_token=$(printf $root_token | base64)
       vault_uri=$(printf {{ .Values.VAULT_URI }} | base64)
 
-      if $vault_token; then 
+      if [ -z != $vault_token ] ; then 
         curl --location --request POST {{ .Values.microservice_url }} \
         --header 'accept: application/json' \
         --header 'Content-Type: application/json' \
