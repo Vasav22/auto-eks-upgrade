@@ -5,8 +5,9 @@ metadata:
 data:
   entrypoint.sh: |-
     #!/bin/bash
+    set -e
     echo starting;
-    sleep 60 
+    sleep 120
     cd vault/
     status=$(vault status | grep Sealed | awk '{print $2}')
     if $status; then 
