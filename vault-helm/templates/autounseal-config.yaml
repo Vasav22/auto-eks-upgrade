@@ -21,17 +21,21 @@ data:
       vault_token=$(printf $root_token | base64)
       vault_uri=$(printf {{ .Values.VAULT_URI }} | base64)
 
-      curl --location --request POST {{ .Values.microservice_url }} \
-      --header 'accept: application/json' \
-      --header 'Content-Type: application/json' \
-      --data-raw '{
-          "customerId": "{{ .Values.customer_id }}",
-          "data": {
-            "VAULT_TOKEN": "'$vault_token'",
-            "VAULT_KEY": "b3BzZXJh",
-            "VAULT_URI": "'$vault_uri'"
-        }
-      }' -k
+      if [ -z != $vault_token ] ; then 
+        curl --location --request POST {{ .Values.microservice_url }} \
+        --header 'accept: application/json' \
+        --header 'Content-Type: application/json' \
+        --data-raw '{
+            "customerId": "{{ .Values.customer_id }}",
+            "data": {
+              "VAULT_TOKEN": "'$vault_token'",
+              "VAULT_KEY": "b3BzZXJh",
+              "VAULT_URI": "'$vault_uri'"
+          }
+        }' -k
+      else 
+        echo 'It is replica vault'
+      fi
       
     else 
       echo 'Unsealed'
