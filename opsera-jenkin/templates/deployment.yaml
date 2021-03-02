@@ -63,6 +63,8 @@ spec:
             value: {{ .Values.KUBERNETES_URL }}
           - name: KUBERNETES_NAMESPACE
             value: {{ .Values.KUBERNETES_NAMESPACE }}
+          - name: JENKINS_WORKSPACE_EFS
+            value: {{ include "opsera-jenkin.fullname" . }}-efs
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
