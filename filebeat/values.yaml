@@ -7,25 +7,26 @@ filebeatConfig:
       # Each - is an input. Most options can be set at the input level, so
       # you can use different inputs for various configurations.
       # Below are the input specific configurations.
-
-
+​
+​
       - type: log
         enabled: true
         paths:
           # - /var/jenkins_home/workspace/*/examples/unit-testing__application-code/cypress-unit-test-results/*.xml
-          - /var/jenkins_home/workspace/*/cypress-unit-test-results/*.xml
+          - /var/jenkins_home/workspace/*/cypress-unit-test-results/*.xml 
+          - /home/jenkins/agent/workspace/*/cypress-unit-test-results/*.xml 
         exclude_lines: ['^<?xml']
         multiline.pattern: '<testsuite>'
         multiline.negate: true
         multiline.match: after
         multiline.flush_pattern: '</testsuite>'
         multiline.timeout: 1000
-
+​
       - type: log
-
+​
         # Change to true to enable this input configuration.
         enabled: true
-
+​
         paths:
           - /var/jenkinslogs/*/junitResult.xml
         exclude_lines: ['^<?xml']
@@ -34,25 +35,29 @@ filebeatConfig:
         multiline.match: after
         multiline.flush_pattern: '</suite>'
         multiline.timeout: 1000
-
+​
       - type: log
         enabled: true
         paths:
           - /var/jenkins_home/jobs/*/builds/*/archive/standardResults.xml
-
+​
         multiline.pattern: '<api>'
         multiline.negate: true
         multiline.match: after
         multiline.flush_pattern: '</api>'
-
+​
       - type: log
-
+​
         enabled: true
         paths:
           - /var/jenkins_home/workspace/release-pipeline/TestResults/*.xml
+          - /home/jenkins/agent/workspace/release-pipeline/TestResults/*.xml
+​
           - /var/jenkins_home/workspace/release-pipeline/*/*/TestResults/*.xml
+          - /home/jenkins/agent/workspace/release-pipeline/*/*/TestResults/*.xml
+​
       #add acnhore logs
-
+​
     output.logstash:
       # The Logstash hosts
       hosts: ["opsera-logstash-opsera-elk-logstash.opsera.svc.cluster.local:5044"]
@@ -70,11 +75,17 @@ extraVolumeMounts:
   - name: jenkins-home
     mountPath: /var/jenkins_home
     readOnly: true
+  - name: opsera-jenkins-efs
+    mountPath: /home/jenkins/agent
+    readOnly: true
 
 extraVolumes:
   - name: jenkins-home
     persistentVolumeClaim:
       claimName: jenkins-home
+  - name: opsera-jenkins-efs
+    persistentVolumeClaim:
+      claimName: opsera-jenkins-efs
 
 extraContainers: ""
 # - name: dummy-init
