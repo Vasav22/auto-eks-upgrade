@@ -1,0 +1,121 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "opendj.fullname" . }}
+  labels:
+    {{- include "opendj.labels" . | nindent 4 }}
+spec:
+  serviceName: {{ include "opendj.fullname" . }}
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "opendj.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "opendj.selectorLabels" . | nindent 8 }}
+    spec:
+      terminationGracePeriodSeconds: 1800
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+      - name: take-data-dir-ownership
+        image: alpine:3
+        command: ['sh', '-c', 'chmod -R 777  /temp/opendj_data']
+        volumeMounts:
+        - name: temp-data
+          mountPath: /temp/opendj_data
+      - name: copy-data
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        command: ['sh', '-c', 'ls /opt/opendj; cp -r /opt/opendj/data/ /temp/opendj_data/']
+        volumeMounts:
+        - name: temp-data
+          mountPath: /temp/opendj_data
+      - name: volume-permissions
+        image: busybox
+        command: ['sh', '-c', 'chmod -R 777  /opt/opendj/data/; mv -vn /temp/opendj_data/* /opt/opendj/data/']
+        volumeMounts:
+        - name: {{ include "opendj.fullname" . }}-data
+          mountPath: /opt/opendj/data/
+        - name: temp-data
+          mountPath: /temp/opendj_data
+      containers:
+        - name: opendj
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          envFrom:
+            - secretRef:
+                name: {{ include "opendj.fullname" . }}-admin
+          env:
+            - name: BASE_DN
+              value: {{ .Values.config.ldap.baseDN }}
+            - name: MASTER_SERVER
+              value: {{ .Values.config.replication.master }}
+          ports:
+            {{- if .Values.service.ports.snmp }}
+            - name: snmp
+              containerPort: 2161
+              protocol: UDP
+            {{- end }}
+            {{- if .Values.service.ports.ldap }}
+            - name: ldap
+              containerPort: 1389
+              protocol: TCP
+            {{- end }}
+            {{- if .Values.service.ports.ldaps }}
+            - name: ldaps
+              containerPort: 1636
+              protocol: TCP
+            {{- end }}
+            {{- if .Values.service.ports.management }}
+            - name: management
+              containerPort: 4444
+              protocol: TCP
+            {{- end }}
+            {{- if .Values.service.ports.jmx }}
+            - name: jmx
+              containerPort: 1689
+              protocol: TCP
+            {{- end }}
+          volumeMounts:
+            - mountPath: /opt/opendj/data/
+              name: {{ include "opendj.fullname" . }}-data
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+      - name: temp-data
+        emptyDir: {}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+  volumeClaimTemplates:
+    - metadata:
+        name: {{ include "opendj.fullname" . }}-data
+      spec:
+        {{ if .Values.persistence.storageClass }}
+        storageClassName: {{ .Values.persistence.storageClass }}
+        {{- end }}
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: {{ .Values.persistence.capacity }}

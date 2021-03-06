@@ -11,5 +11,9 @@ spec:
       targetPort: http
       protocol: TCP
       name: http
+    - name: jenkins-jnlp
+      port: 50000
+      protocol: TCP
+      targetPort: 50000
   selector:
     {{- include "opsera-jenkin.selectorLabels" . | nindent 4 }}

@@ -47,7 +47,6 @@ spec:
           volumeMounts:
           - name: microservices-efs
             mountPath: /apps/OpsERA/logs/components/
-          volumeMounts:
           - mountPath: "/apps/OpsERA/components/helmcharts"
             name: helm-charts
       initContainers:
