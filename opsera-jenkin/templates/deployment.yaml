@@ -78,6 +78,9 @@ spec:
             mountPath: /home/jenkins/agent
           - name: dockersock
             mountPath: "/var/run/docker.sock"
+          - name: server-key
+            mountPath: /var/jenkins_home/sfdx/key/server.key
+            subPath: server.key
           # readinessProbe:
           #   httpGet:
           #     path: /login
@@ -103,6 +106,10 @@ spec:
       - name: dockersock
         hostPath:
           path: /var/run/docker.sock
+      - name: server-key
+        configMap:
+          defaultMode: 0777
+          name: jenkin-server-key
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

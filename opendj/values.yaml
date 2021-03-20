@@ -1,4 +1,4 @@
-replicaCount: 1
+replicaCount: 3
 
 nameOverride: ""
 fullnameOverride: ""
@@ -58,12 +58,11 @@ config:
     baseDN: dc=opsera,dc=io
     admin:
       userDN: cn=admin
-      password: "passwd"
+      password: "6p%bWM~,Vz5RdTkf"
   replication:
-    enabled: false
-    # master: master.opendj.example.com
-    # simple - standard replication
+    enabled: true
+    master: opendj-0.opendj.opsera.svc.cluster.local
+    type: simple  #- standard replication
     # srs - standalone replication servers
     # sdsr - Standalone Directory Server Replicas
     # rg - Replication Groups
-    mode: simple

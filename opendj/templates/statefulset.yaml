@@ -19,7 +19,7 @@ spec:
       labels:
         {{- include "opendj.selectorLabels" . | nindent 8 }}
     spec:
-      terminationGracePeriodSeconds: 1800
+      terminationGracePeriodSeconds: 60
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -61,6 +61,8 @@ spec:
               value: {{ .Values.config.ldap.baseDN }}
             - name: MASTER_SERVER
               value: {{ .Values.config.replication.master }}
+            - name: OPENDJ_REPLICATION_TYPE
+              value: {{ .Values.config.replication.type }}
           ports:
             {{- if .Values.service.ports.snmp }}
             - name: snmp
