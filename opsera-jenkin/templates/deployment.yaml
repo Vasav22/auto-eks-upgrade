@@ -63,6 +63,8 @@ spec:
             value: {{ .Values.KUBERNETES_URL }}
           - name: KUBERNETES_NAMESPACE
             value: {{ .Values.KUBERNETES_NAMESPACE }}
+          - name: JENKINS_WORKSPACE_EFS
+            value: {{ include "opsera-jenkin.fullname" . }}-efs
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
@@ -72,8 +74,13 @@ spec:
           volumeMounts:
           - mountPath: "/var/jenkins_home"
             name: jenkins-home
+          - name: opsera-jenkins-efs
+            mountPath: /home/jenkins/agent
           - name: dockersock
             mountPath: "/var/run/docker.sock"
+          - name: server-key
+            mountPath: /var/jenkins_home/sfdx/key/server.key
+            subPath: server.key
           # readinessProbe:
           #   httpGet:
           #     path: /login
@@ -93,9 +100,16 @@ spec:
       - name: jenkins-home
         persistentVolumeClaim:
           claimName: jenkins-home
+      - name: opsera-jenkins-efs
+        persistentVolumeClaim:
+          claimName: opsera-jenkins-efs
       - name: dockersock
         hostPath:
           path: /var/run/docker.sock
+      - name: server-key
+        configMap:
+          defaultMode: 0777
+          name: jenkin-server-key
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

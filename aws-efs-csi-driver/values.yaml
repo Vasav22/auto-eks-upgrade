@@ -1,0 +1,84 @@
+# Default values for aws-efs-csi-driver.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 2
+
+image:
+  repository: amazon/aws-efs-csi-driver
+  tag: "v1.1.0"
+  pullPolicy: IfNotPresent
+
+sidecars:
+  livenessProbeImage:
+    repository: quay.io/k8scsi/livenessprobe
+    tag: "v2.0.0"
+  nodeDriverRegistrarImage:
+    repository: quay.io/k8scsi/csi-node-driver-registrar
+    tag: "v1.3.0"
+  csiProvisionerImage:
+    repository: k8s.gcr.io/sig-storage/csi-provisioner
+    tag: "v2.0.2"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+podAnnotations: {}
+
+resources:
+  {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+node:
+  podAnnotations: {}
+  tolerations: []
+
+logLevel: 5
+
+hostAliases:
+  {}
+  # for cross VPC EFS, you need to poison or overwrite the DNS for the efs volume as per
+  # https://docs.aws.amazon.com/efs/latest/ug/efs-different-vpc.html#wt6-efs-utils-step3
+  # implementing the suggested solution found here:
+  # https://github.com/kubernetes-sigs/aws-efs-csi-driver/issues/240#issuecomment-676849346
+  # EFS Vol ID, IP, Region
+  # "fs-01234567":
+  #   ip: 10.10.2.2
+  #   region: us-east-2
+
+dnsPolicy: ""
+dnsConfig:
+  {}
+  # Example config which uses the AWS nameservers
+  # dnsPolicy: "None"
+  # dnsConfig:
+  #   nameservers:
+  #     - 169.254.169.253
+
+serviceAccount:
+  controller:
+    # Specifies whether a service account should be created
+    create: false
+    annotations: {}
+    ## Enable if EKS IAM for SA is used
+    #  eks.amazonaws.com/role-arn: arn:aws:iam::111122223333:role/efs-csi-role
+    name: efs-csi-controller-sa
+
+controller:
+  create: false

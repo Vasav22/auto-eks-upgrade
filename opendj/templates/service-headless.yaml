@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "opendj.fullname" . }}
+  labels:
+    {{- include "opendj.labels" . | nindent 4 }}
+spec:
+  sessionAffinity: None
+  clusterIP: None
+  type: ClusterIP
+  ports:
+    {{- if .Values.service.ports.snmp }}
+    - name: snmp
+      port: {{ .Values.service.ports.snmp }}
+      protocol: UDP
+      targetPort: snmp
+    {{- end }}
+    {{- if .Values.service.ports.ldap }}
+    - name: ldap
+      port: {{ .Values.service.ports.ldap }}
+      protocol: TCP
+      targetPort: ldap
+    {{- end }}
+    {{- if .Values.service.ports.ldaps }}
+    - name: ldaps
+      port: {{ .Values.service.ports.ldaps }}
+      protocol: TCP
+      targetPort: ldaps
+    {{- end }}
+    {{- if .Values.service.ports.management }}
+    - name: management
+      port: {{ .Values.service.ports.management }}
+      protocol: TCP
+      targetPort: management
+    {{- end }}
+  selector:
+    {{- include "opendj.selectorLabels" . | nindent 4 }}

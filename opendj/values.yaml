@@ -1,0 +1,68 @@
+replicaCount: 3
+
+nameOverride: ""
+fullnameOverride: ""
+
+podAnnotations: {}
+
+nodeSelector: {}
+affinity: {}
+tolerations: []
+
+imagePullSecrets: []
+image:
+  repository: docker.io/openidentityplatform/opendj
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "4.4.9" # yamllint disable-line rule:quoted-strings
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: LoadBalancer
+  ports:
+    # snmp: 2161
+    ldap: 1389
+    ldaps: 1636
+    # management port for replication (--adminConnectorPort)
+    management: 4444
+
+resources: {}
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+metrics:
+  # enable jmx_exporter
+  enabled: true
+
+persistence:
+  enabled: false
+  storageClass: ""
+  capacity: 50Gi
+
+config:
+  ldap:
+    baseDN: dc=opsera,dc=io
+    admin:
+      userDN: cn=admin
+      password: "6p%bWM~,Vz5RdTkf"
+  replication:
+    enabled: true
+    master: opendj-0.opendj.opsera.svc.cluster.local
+    type: simple  #- standard replication
+    # srs - standalone replication servers
+    # sdsr - Standalone Directory Server Replicas
+    # rg - Replication Groups
