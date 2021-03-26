@@ -61,6 +61,13 @@ resources:
 nodeSelector:
   Name: microservice-node
 
+autoscaling:
+  enabled: true
+  minReplicas: 3
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80  
+
 tolerations: []
 
 affinity: {}
