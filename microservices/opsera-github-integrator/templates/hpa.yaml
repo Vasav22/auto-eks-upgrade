@@ -2,14 +2,14 @@
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "opsera-opsera-github-integrator.fullname" . }}
+  name: {{ include "opsera-github-integrator.fullname" . }}
   labels:
-    {{- include "opsera-opsera-github-integrator.labels" . | nindent 4 }}
+    {{- include "opsera-github-integrator.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "opsera-opsera-github-integrator.fullname" . }}
+    name: {{ include "opsera-github-integrator.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:
