@@ -21,6 +21,27 @@ spec:
       serviceAccountName: {{ include "opsera-nexus.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+      - name: take-data-dir-ownership
+        image: alpine:3
+        command: ['sh', '-c', 'chmod -R 777  /temp/nexus-data']
+        volumeMounts:
+        - name: temp-data
+          mountPath: /temp/nexus-data
+      - name: copy-data
+        image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
+        command: ['sh', '-c', 'cp -r /nexus-data/* /temp/nexus-data/']
+        volumeMounts:
+        - name: temp-data
+          mountPath: /temp/nexus-data
+      - name: volume-permissions
+        image: busybox
+        command: ['sh', '-c', 'chmod -R 777  /nexus-data; mv -vn /temp/nexus-data/* /nexus-data/']
+        volumeMounts:
+        - name: nexus-data
+          mountPath: /nexus-data
+        - name: temp-data
+          mountPath: /temp/nexus-data
       containers:
         - name: nginx-sidecar
           image: {{ .Values.sidecarImage }}
@@ -41,7 +62,7 @@ spec:
               protocol: TCP
           volumeMounts:
           - name: nexus-data
-            mountPath: /nexus/data
+            mountPath: /nexus-data
           env:
           - name: NEXUS_CONTEXT
             value: /
@@ -61,6 +82,9 @@ spec:
         - name: nexus-data
           persistentVolumeClaim:
             claimName: nexus-data
+        - name: temp-data
+          persistentVolumeClaim:
+            claimName: temp-data
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
