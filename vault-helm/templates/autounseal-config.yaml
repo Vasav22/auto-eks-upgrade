@@ -18,6 +18,38 @@ data:
       vault write -f transit/keys/opsera
       vault secrets enable kv
 
+      tee dev-policy.hcl <<EOF
+      # List, create, update, and delete key/value secrets
+      path "secret/*"
+      {
+        capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+      }
+      # List, create, update, and delete key/value transit
+      path "transit/*"
+      {
+        capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+      }
+      # List, create, update, and delete key/value kv
+      path "kv/*"
+      {
+        capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+      }
+      EOF
+
+      vault policy write developer dev-policy.hcl
+
+      vault auth enable kubernetes
+      vault write auth/kubernetes/config kubernetes_host="{{ .Values.K8S_HOST }}"
+      vault write auth/kubernetes/role/dev \
+        bound_service_account_names=vault \
+        bound_service_account_namespaces=opsera \
+        policies=developer \
+        ttl=1h
+
+      KUBE_TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
+      echo $KUBE_TOKEN
+
+      kube_token=$(printf $KUBE_TOKEN | base64)
       vault_token=$(printf $root_token | base64)
       vault_uri=$(printf {{ .Values.VAULT_URI }} | base64)
 
@@ -30,7 +62,9 @@ data:
             "data": {
               "VAULT_TOKEN": "'$vault_token'",
               "VAULT_KEY": "b3BzZXJh",
-              "VAULT_URI": "'$vault_uri'"
+              "VAULT_URI": "'$vault_uri'",
+              "KUBE_TOKEN": "'$kube_token'",
+              "VAULT_ROLE": $(printf "dev" | base64)
           }
         }' -k
       else 
