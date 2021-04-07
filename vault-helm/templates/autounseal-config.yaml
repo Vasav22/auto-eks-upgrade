@@ -19,22 +19,22 @@ data:
       vault secrets enable kv
 
       tee dev-policy.hcl <<EOF
-      # List, create, update, and delete key/value secrets
-      path "secret/*"
-      {
-        capabilities = ["create", "read", "update", "delete", "list", "sudo"]
-      }
-      # List, create, update, and delete key/value transit
-      path "transit/*"
-      {
-        capabilities = ["create", "read", "update", "delete", "list", "sudo"]
-      }
-      # List, create, update, and delete key/value kv
-      path "kv/*"
-      {
-        capabilities = ["create", "read", "update", "delete", "list", "sudo"]
-      }
-      EOF
+    # List, create, update, and delete key/value secrets
+    path "secret/*"
+    {
+      capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+    }
+    # List, create, update, and delete key/value transit
+    path "transit/*"
+    {
+      capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+    }
+    # List, create, update, and delete key/value kv
+    path "kv/*"
+    {
+      capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+    }
+    EOF
 
       vault policy write developer dev-policy.hcl
 
