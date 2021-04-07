@@ -71,9 +71,6 @@ data:
       else 
         echo 'It is replica vault'
       fi
-      
     else 
       echo 'Unsealed'
     fi
-    
-    echo done;
