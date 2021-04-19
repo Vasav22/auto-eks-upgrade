@@ -17,6 +17,6 @@ spec:
             command: ["/home/cronjobs/delete-artifacts/01.sh"]
             args:
             - admin
-            - 11f50e9a4090c7bc756384e103e19b21bc
-            - https://jenkins-olge.ldapowner.opsera.io
+            - {{  .Values.password }}
+            - {{ .Values.JENKINS_UI_URL }}
           restartPolicy: Never
