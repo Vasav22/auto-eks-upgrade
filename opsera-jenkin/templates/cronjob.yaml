@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: cron-delete-archive
 spec:
-  schedule: "*/1 * * * *"
+  schedule: "0 0 * * *"
   successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 5
   jobTemplate:
@@ -12,7 +12,7 @@ spec:
         spec:
           containers:
           - name: cron-delete-archive
-            image: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera-pipeline/jenkins-agent:test
+            image: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera-pipeline/jenkins-agent:latest
             imagePullPolicy: Always
             command: ["/home/cronjobs/delete-artifacts/01.sh"]
             args:
