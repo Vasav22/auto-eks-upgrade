@@ -72,8 +72,8 @@ spec:
             - name: jnlp-port
               containerPort: 50000
           volumeMounts:
-          - mountPath: "/var/jenkins_home"
-            name: jenkins-home
+          - name: opsera-jenkins-efs
+            mountPath: "/var/jenkins_home"
           - name: opsera-jenkins-efs
             mountPath: /home/jenkins/agent
           - name: dockersock
