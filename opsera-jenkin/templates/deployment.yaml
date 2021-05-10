@@ -39,7 +39,7 @@ spec:
         image: busybox
         command: ['sh', '-c', 'chmod -R 777  /var/jenkins_home; mv -vn /temp/jenkins_home/* /var/jenkins_home/']
         volumeMounts:
-        - name: jenkins-home
+        - name: opsera-jenkins-master-efs
           mountPath: /var/jenkins_home
         - name: my-disk-claim-1
           mountPath: /temp/jenkins_home
@@ -72,10 +72,10 @@ spec:
             - name: jnlp-port
               containerPort: 50000
           volumeMounts:
-          - name: opsera-jenkins-efs
-            mountPath: "/var/jenkins_home"
-          - name: opsera-jenkins-efs
-            mountPath: /home/jenkins/agent
+          - mountPath: "/var/jenkins_home"
+            name: opsera-jenkins-master-efs
+          - mountPath: /home/jenkins/agent
+            name: opsera-jenkins-efs
           - name: dockersock
             mountPath: "/var/run/docker.sock"
           - name: server-key
@@ -94,15 +94,12 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
-      - name: my-disk-claim-1
+      - name: opsera-jenkins-master-efs
         persistentVolumeClaim:
-          claimName: my-disk-claim-1
-      - name: jenkins-home
+          claimName: {{ include "opsera-jenkin.fullname" . }}-masterefs
+      - name: opsera-jenkins-agent-efs
         persistentVolumeClaim:
-          claimName: jenkins-home
-      - name: opsera-jenkins-efs
-        persistentVolumeClaim:
-          claimName: opsera-jenkins-efs
+          claimName: {{ include "opsera-jenkin.fullname" . }}-agentefs
       - name: dockersock
         hostPath:
           path: /var/run/docker.sock
