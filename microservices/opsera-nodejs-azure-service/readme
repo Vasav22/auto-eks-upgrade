@@ -1,11 +1,2 @@
-
-helm -n microservices uninstall node-services-azure-service
 helm -n microservices install  opsera-nodejs-azure-service .
-
-
-helm -n microservices install --set image.tag=kube-dev \
-    --set ingress.hosts.host=azure-service.opsera-dev-private.opsera.io \
-    opsera-nodejs-azure-service .
-
-
 helm -n microservices upgrade opsera-nodejs-azure-service .
