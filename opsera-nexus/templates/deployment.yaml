@@ -42,6 +42,7 @@ spec:
           mountPath: /nexus-data
         - name: temp-data
           mountPath: /temp/nexus-data
+      hostNetwork: true
       containers:
         - name: nginx-sidecar
           image: {{ .Values.sidecarImage }}
@@ -56,16 +57,16 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
           # image: "brndnmtthws/nginx-echo-headers"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          ports:
-            - name: http
-              containerPort: {{ .Values.service.port }}
-              protocol: TCP
+          # ports:
+          #   - name: http
+          #     containerPort: {{ .Values.service.port }}
+          #     protocol: TCP
           volumeMounts:
           - name: nexus-data
             mountPath: /nexus-data
           env:
-          - name: NEXUS_CONTEXT
-            value: /
+          # - name: NEXUS_CONTEXT
+          #   value: /
           - name: NEXUS_PASSWORD
             value: {{ .Values.NEXUS_PASSWORD }}
           # livenessProbe:
