@@ -51,7 +51,7 @@ data:
 
       kube_token=$(echo $KUBE_TOKEN | base64 | tr -d '\n')
       vault_token=$(printf $root_token | base64)
-      vault_uri=$(printf {{ .Values.VAULT_URI }} | base64)
+      vault_uri=$(printf {{ .Values.VAULT_URI }} | base64 | tr -d '\n')
       vault_role=$(printf "dev" | base64)
 
       if [ -z != $vault_token ] ; then 
