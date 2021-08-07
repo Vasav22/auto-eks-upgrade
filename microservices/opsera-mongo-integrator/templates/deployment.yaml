@@ -1,35 +1,41 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "opsera-terraform-service.fullname" . }}
+  name: {{ include "opsera-mongo-integrator.fullname" . }}
   labels:
-    {{- include "opsera-terraform-service.labels" . | nindent 4 }}
+    {{- include "opsera-mongo-integrator.labels" . | nindent 4 }}
 spec:
+  {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
+  {{- end }}
   selector:
     matchLabels:
-      {{- include "opsera-terraform-service.selectorLabels" . | nindent 6 }}
+      {{- include "opsera-mongo-integrator.selectorLabels" . | nindent 6 }}
   template:
     metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       labels:
-        {{- include "opsera-terraform-service.selectorLabels" . | nindent 8 }}
+        {{- include "opsera-mongo-integrator.selectorLabels" . | nindent 8 }}
     spec:
-    {{- with .Values.imagePullSecrets }}
+      {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
-    {{- end }}
-      serviceAccountName: {{ include "opsera-terraform-service.serviceAccountName" . }}
+      {{- end }}
+      serviceAccountName: {{ include "opsera-mongo-integrator.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: {{ .Values.service.port }}
+              containerPort: 80
               protocol: TCP
           # livenessProbe:
           #   httpGet:
@@ -47,28 +53,7 @@ spec:
           volumeMounts:
           - name: microservices-efs
             mountPath: /apps/OpsERA/logs/components/
-          - mountPath: "/apps/OpsERA/components/helmcharts"
-            name: helm-charts
-          lifecycle:
-            postStart:
-              exec:
-                command: ["/bin/mkdir", "/apps/OpsERA/components/terraform"]
-      initContainers:
-        - name: git-cloner
-          image: alpine/git
-          args:
-              - clone
-              - -b
-              - {{ .Values.HELM_GIT_BRANCH }}
-              - --single-branch
-              - https://{{ .Values.GIT_CREDENTIAL }}@gitlab.com/opsera-repo/cloud-infrastructure/helmcharts.git
-              - /data
-          volumeMounts:
-          - mountPath: /data
-            name: helm-charts
       volumes:
-        - name: helm-charts
-          emptyDir: {}
         - name: microservices-efs
           persistentVolumeClaim:
             claimName: microservices-efs
@@ -76,11 +61,11 @@ spec:
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with .Values.affinity }}
+      {{- with .Values.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
-    {{- end }}
-    {{- with .Values.tolerations }}
+      {{- end }}
+      {{- with .Values.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
-    {{- end }}
+      {{- end }}

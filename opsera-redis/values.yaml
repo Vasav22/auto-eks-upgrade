@@ -1,12 +1,14 @@
-# Default values for opsera-pipeline-config.
+# Default values for opsera-redis.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 replicaCount: 1
 
 image:
-  repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera-pipeline-config
+  repository: redis
   pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: 6.0-rc3-alpine
 
 imagePullSecrets: []
 nameOverride: ""
@@ -19,7 +21,9 @@ serviceAccount:
   annotations: {}
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
-  name:
+  name: ""
+
+podAnnotations: {}
 
 podSecurityContext: {}
   # fsGroup: 2000
@@ -34,7 +38,7 @@ securityContext: {}
 
 service:
   type: ClusterIP
-  port: 8071
+  port: 6379
 
 ingress:
   enabled: false
@@ -50,22 +54,21 @@ ingress:
   #      - chart-example.local
 
 resources:
-  limits:
-    cpu: 500m
-    memory: 2Gi
-  requests:
-    cpu: 100m
-    memory: 1Gi
-
-nodeSelector:
-  Name: microservice-node
+    limits:
+      cpu: 500m
+      memory: 2Gi
+    requests:
+      cpu: 100m
+      memory: 1Gi
 
 autoscaling:
-  enabled: true
+  enabled: false
   minReplicas: 1
-  maxReplicas: 10
-  targetCPUUtilizationPercentage: 60
-  targetMemoryUtilizationPercentage: 60
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
 
 tolerations: []
 

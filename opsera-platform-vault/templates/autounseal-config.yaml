@@ -10,30 +10,11 @@ data:
     # cd vault/
     # status=$(vault status | grep Sealed | awk '{print $2}')
     # if $status; then 
-    #   vault operator init > keys.txt
-    #   root_token=$(cat keys.txt | grep Initial | awk '{print $4}')
-    #   vault login $root_token
-    #   vault secrets enable transit
-    #   vault write -f transit/keys/opsera
-    #   vault secrets enable kv
-
-    #   # vault_token=$(printf $root_token | base64)
-    #   # vault_uri=$(printf {{ .Values.VAULT_URI }} | base64)
-
-    #   # curl --location --request POST {{ .Values.microservice_url }} \
-    #   # --header 'accept: application/json' \
-    #   # --header 'Content-Type: application/json' \
-    #   # --data-raw '{
-    #   #     "customerId": "{{ .Values.customer_id }}",
-    #   #     "data": {
-    #   #       "VAULT_TOKEN": "'$vault_token'",
-    #   #       "VAULT_KEY": "b3BzZXJh",
-    #   #       "VAULT_URI": "'$vault_uri'"
-    #   #   }
-    #   # }'
-      
+    #   vault operator unseal Cfygi6lCWVd+S5nUCVHPg4276OsIy15kEuIEtdjipuQB
+    #   vault operator unseal nwFggmmOk6Y2YrEV/eOtN6o5n+ahz+gQXA9T3wLj409O
+    #   vault operator unseal nQfsr3/fI2Q/bjWop7r2hSO4anHJD1ZXRX1tyvjOG1O3
     # else 
     #   echo 'Unsealed'
     # fi
     
-    # echo done;
+    echo done;
