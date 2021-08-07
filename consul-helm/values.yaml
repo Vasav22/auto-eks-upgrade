@@ -1,6 +1,8 @@
 # Available parameters and their default values for the Consul chart.
 
 # Holds values that affect multiple components of the chart.
+BACKUP_BUCKET_NAME: ""
+NAMESPACES: ""
 global:
   # The main enabled/disabled setting. If true, servers,
   # clients, Consul DNS and the Consul UI will be enabled. Each component can override
