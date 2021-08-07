@@ -437,7 +437,7 @@ server:
   # Helm project by default.  It is possible to manually configure Vault to use a
   # different HA backend.
   ha:
-    enabled: false
+    enabled: true
     replicas: 3
 
     # Set the api_addr configuration for Vault HA
@@ -508,16 +508,16 @@ server:
       #   crypto_key  = "vault-helm-unseal-key"
       #}
 
-      seal "transit" {
-        # address            = "https://vault.dilnawazragib-1.opsera.io"
-        # token              = "s.uYHT57JhXrFSix22oNh4IIjz"
-        disable_renewal    = "false"
+      # seal "transit" {
+      #   # address            = "https://vault.dilnawazragib-1.opsera.io"
+      #   # token              = "s.uYHT57JhXrFSix22oNh4IIjz"
+      #   disable_renewal    = "false"
 
-        // Key configuration
-        key_name           = "autounseal"
-        mount_path         = "transit/"
-        tls_skip_verify    = "true"
-      }
+      #   // Key configuration
+      #   key_name           = "autounseal"
+      #   mount_path         = "transit/"
+      #   tls_skip_verify    = "true"
+      # }
 
     # A disruption budget limits the number of pods of a replicated application
     # that are down simultaneously from voluntary disruptions
