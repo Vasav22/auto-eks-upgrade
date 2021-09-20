@@ -19,6 +19,7 @@ spec:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       serviceAccountName: {{ include "opsera-mongodb-realm-integrator.serviceAccountName" . }}
+      terminationGracePeriodSeconds: 300
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -27,6 +28,12 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          lifecycle:
+            preStop:
+              httpGet:
+                path: /stopListener
+                port: http
+                scheme: HTTP
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
