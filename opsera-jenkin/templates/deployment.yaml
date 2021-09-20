@@ -39,7 +39,7 @@ spec:
         image: busybox
         command: ['sh', '-c', 'chmod -R 777  /var/jenkins_home; rm -rf /var/jenkins_home/plugins; rm -rf /var/jenkins_home/init.groovy.d; mv -f /temp/jenkins_home/plugins /var/jenkins_home/plugins; mv -f /temp/jenkins_home/init.groovy.d /var/jenkins_home/init.groovy.d; mv -vn /temp/jenkins_home/* /var/jenkins_home/;']
         volumeMounts:
-        - name: jenkins-home
+        - name: opsera-jenkins-master-efs
           mountPath: /var/jenkins_home
         - name: my-disk-claim-1
           mountPath: /temp/jenkins_home
@@ -64,7 +64,7 @@ spec:
           - name: KUBERNETES_NAMESPACE
             value: {{ .Values.KUBERNETES_NAMESPACE }}
           - name: JENKINS_WORKSPACE_EFS
-            value: {{ include "opsera-jenkin.fullname" . }}-efs
+            value: {{ include "opsera-jenkin.fullname" . }}-{{ .Values.KUBERNETES_NAMESPACE }}-agentefs-pvc
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
@@ -73,36 +73,26 @@ spec:
               containerPort: 50000
           volumeMounts:
           - mountPath: "/var/jenkins_home"
-            name: jenkins-home
-          - name: opsera-jenkins-efs
-            mountPath: /home/jenkins/agent
+            name: opsera-jenkins-master-efs
+          - mountPath: /home/jenkins/agent
+            name: opsera-jenkins-agent-efs
           - name: dockersock
             mountPath: "/var/run/docker.sock"
           - name: server-key
             mountPath: /var/jenkins_home/sfdx/key/server.key
             subPath: server.key
-          # readinessProbe:
-          #   httpGet:
-          #     path: /login
-          #     port: {{ .Values.service.port }}
-          #   initialDelaySeconds: 120
-          #   periodSeconds: 60
-          # livenessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
       - name: my-disk-claim-1
         persistentVolumeClaim:
           claimName: my-disk-claim-1
-      - name: jenkins-home
+      - name: opsera-jenkins-master-efs
         persistentVolumeClaim:
-          claimName: jenkins-home
-      - name: opsera-jenkins-efs
+          claimName: {{ include "opsera-jenkin.fullname" . }}-{{ .Values.KUBERNETES_NAMESPACE }}-masterefs-pvc
+      - name: opsera-jenkins-agent-efs
         persistentVolumeClaim:
-          claimName: opsera-jenkins-efs
+          claimName: {{ include "opsera-jenkin.fullname" . }}-{{ .Values.KUBERNETES_NAMESPACE }}-agentefs-pvc
       - name: dockersock
         hostPath:
           path: /var/run/docker.sock

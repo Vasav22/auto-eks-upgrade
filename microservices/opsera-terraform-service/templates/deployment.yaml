@@ -49,6 +49,10 @@ spec:
             mountPath: /apps/OpsERA/logs/components/
           - mountPath: "/apps/OpsERA/components/helmcharts"
             name: helm-charts
+          lifecycle:
+            postStart:
+              exec:
+                command: ["/bin/mkdir", "/apps/OpsERA/components/terraform"]
       initContainers:
         - name: git-cloner
           image: alpine/git
