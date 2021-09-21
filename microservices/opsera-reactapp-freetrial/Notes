@@ -1,0 +1,6 @@
+helm -n microservices install --set DOCKER_ENV=kubernetes --set image.tag=kube-dev opsera-mongodb-realm-integrator .
+
+helm -n microservices install -f freetrial-dev.yaml opsera-reactapp-freetrial .
+
+
+helm -n microservices get values opsera-reactapp 
