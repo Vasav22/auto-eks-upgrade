@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "opsera-reactapp.fullname" . }}
+  name: {{ include "opsera-reactapp-freetrial.fullname" . }}
   labels:
-    {{- include "opsera-reactapp.labels" . | nindent 4 }}
+    {{- include "opsera-reactapp-freetrial.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "opsera-reactapp.selectorLabels" . | nindent 6 }}
+      {{- include "opsera-reactapp-freetrial.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "opsera-reactapp.selectorLabels" . | nindent 8 }}
+        {{- include "opsera-reactapp-freetrial.selectorLabels" . | nindent 8 }}
     spec:
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      serviceAccountName: {{ include "opsera-reactapp.serviceAccountName" . }}
+      serviceAccountName: {{ include "opsera-reactapp-freetrial.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:

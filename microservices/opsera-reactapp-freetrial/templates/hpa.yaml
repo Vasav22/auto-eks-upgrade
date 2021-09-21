@@ -2,14 +2,14 @@
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "opsera-reactapp.fullname" . }}
+  name: {{ include "opsera-reactapp-freetrial.fullname" . }}
   labels:
-    {{- include "opsera-reactapp.labels" . | nindent 4 }}
+    {{- include "opsera-reactapp-freetrial.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "opsera-reactapp.fullname" . }}
+    name: {{ include "opsera-reactapp-freetrial.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:
