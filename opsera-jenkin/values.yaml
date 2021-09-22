@@ -2,13 +2,6 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-EFS_JENK_AGENT_AP: fsap-0000
-EFS_JENK_MASTER_AP: fsap-1111
-EFS_VOLUME_ID: fs-001
-KUBERNETES_NAMESPACE: demo01
-JENKINS_UI_URL: https://demo-jenkins.opsera.io
-KUBERNETES_URL: https://kubernetes-url.com
-
 replicaCount: 1
 
 image:

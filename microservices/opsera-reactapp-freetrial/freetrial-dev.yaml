@@ -1,0 +1,8 @@
+image:
+  repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera-reactapp-freetrial
+  tag: kube-dev
+ingress:
+  hosts:
+  - host: freetrial.opsera-dev.opsera.io
+    paths:
+    - /
