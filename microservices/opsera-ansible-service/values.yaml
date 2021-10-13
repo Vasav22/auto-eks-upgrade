@@ -9,8 +9,8 @@ image:
   pullPolicy: Always
 
 imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: ""
+nameOverride: "opsera-ansible-service"
+fullnameOverride: "opsera-ansible-service"
 
 serviceAccount:
   # Specifies whether a service account should be created
