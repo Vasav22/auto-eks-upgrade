@@ -48,3 +48,24 @@ helm upgrade opsera-flyway-integrator . \
 
 helm uninstall opsera-flyway-integrator . \
     -n microservices 
+
+#honeywell-sandbox
+
+helm install opsera-flyway-integrator . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=honeywell-sandbox
+
+helm upgrade opsera-flyway-integrator . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=khoneywell-sandbox 
+
+
+helm uninstall opsera-flyway-integrator . \
+    -n microservices 
+
+
+
+#kubectl 
+kubectl -n microservices get po -l app.kubernetes.io/name=opsera-flyway-integrator
