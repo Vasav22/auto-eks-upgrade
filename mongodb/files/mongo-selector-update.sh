@@ -45,22 +45,23 @@ do
 
 		echo "${datetime} new primary node is ${new_primary_node}"
 		
-		existing_primary_node=$(kubectl get pods -l component=primary | grep -v NAME | awk '{print $1}')
+		existing_primary_nodes=$(kubectl get pods -l component=primary | grep -v NAME | awk '{print $1}')
 		if [[ -z ${existing_primary_node} ]]; then
 			echo "${datetime} No Existing primary node found."
-		else
-			echo "${datetime} Existing primary is ${existing_primary_node}"
 		fi
 
-		if [[ "${existing_primary_node}" -ne "${new_primary_node}" ]]; then
-			echo "${datetime} new node is not in service. we will need to update"
-			kubectl label pod ${new_primary_node} component=primary --overwrite
-			if [[ -z ${existing_primary_node} ]]; then
-				kubectl label pod ${existing_primary_node} component=secondary --overwrite
+		for existing_primary_node in ${existing_primary_nodes}
+		do
+			if [[ "${existing_primary_node}" != "${new_primary_node}" ]]; then
+				echo "${datetime} new node is not in service. we will need to update"
+				kubectl label pod ${new_primary_node} component=primary --overwrite
+				if [[ ! -z ${existing_primary_node} ]]; then
+					kubectl label pod ${existing_primary_node} component=secondary --overwrite
+				fi
+			else
+				echo "${datetime} Node ${existing_primary_node} (${new_primary_node}) is already in service."
 			fi
-		else
-			echo "${datetime} Node ${existing_primary_node} (${new_primary_node}) is already in service."
-		fi
+		done
 
 
 	fi

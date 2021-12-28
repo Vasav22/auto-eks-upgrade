@@ -291,6 +291,10 @@ spec:
 {{ toYaml .Values.sidecars | indent 8 }}
 {{- end }}
       volumes:
+        - name: mongodb-updater-config
+          configMap:
+            defaultMode: 0744
+            name: {{ template "mongodb.name" . }}-updater
         {{- if .Values.configmap }}
         - name: config
           configMap:
