@@ -12,3 +12,6 @@ autoscaling:
   maxReplicas: 10
   targetCPUUtilizationPercentage: 60
   targetMemoryUtilizationPercentage: 60
+
+GIT_CREDENTIAL: support%40opsera.io:Wishy811%24%24
+HELM_GIT_BRANCH: master-dev
