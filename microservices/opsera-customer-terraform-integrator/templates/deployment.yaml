@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "opsera-log-accumulator.fullname" . }}
+  name: {{ include "opsera-customer-terraform-integrator.fullname" . }}
   labels:
-    {{- include "opsera-log-accumulator.labels" . | nindent 4 }}
+    {{- include "opsera-customer-terraform-integrator.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "opsera-log-accumulator.selectorLabels" . | nindent 6 }}
+      {{- include "opsera-customer-terraform-integrator.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,13 +18,13 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "opsera-log-accumulator.selectorLabels" . | nindent 8 }}
+        {{- include "opsera-customer-terraform-integrator.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "opsera-log-accumulator.serviceAccountName" . }}
+      serviceAccountName: {{ include "opsera-customer-terraform-integrator.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -41,12 +41,10 @@ spec:
             httpGet:
               path: /status
               port: http
-            initialDelaySeconds: 40
           readinessProbe:
             httpGet:
               path: /status
               port: http
-            initialDelaySeconds: 40
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           env:          
