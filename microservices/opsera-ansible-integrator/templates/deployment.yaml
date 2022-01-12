@@ -1,25 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "opsera-mongodb-realm-integrator.fullname" . }}
+  name: {{ include "opsera-ansible-integrator.fullname" . }}
   labels:
-    {{- include "opsera-mongodb-realm-integrator.labels" . | nindent 4 }}
+    {{- include "opsera-ansible-integrator.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "opsera-mongodb-realm-integrator.selectorLabels" . | nindent 6 }}
+      {{- include "opsera-ansible-integrator.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "opsera-mongodb-realm-integrator.selectorLabels" . | nindent 8 }}
+        {{- include "opsera-ansible-integrator.selectorLabels" . | nindent 8 }}
     spec:
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      serviceAccountName: {{ include "opsera-mongodb-realm-integrator.serviceAccountName" . }}
-      terminationGracePeriodSeconds: 300
+      serviceAccountName: {{ include "opsera-ansible-integrator.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -28,12 +27,6 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          lifecycle:
-            preStop:
-              httpGet:
-                path: /stopListener
-                port: http
-                scheme: HTTP
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}

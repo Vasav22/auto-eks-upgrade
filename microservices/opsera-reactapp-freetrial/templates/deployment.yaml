@@ -1,25 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "opsera-mongodb-realm-integrator.fullname" . }}
+  name: {{ include "opsera-reactapp-freetrial.fullname" . }}
   labels:
-    {{- include "opsera-mongodb-realm-integrator.labels" . | nindent 4 }}
+    {{- include "opsera-reactapp-freetrial.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "opsera-mongodb-realm-integrator.selectorLabels" . | nindent 6 }}
+      {{- include "opsera-reactapp-freetrial.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "opsera-mongodb-realm-integrator.selectorLabels" . | nindent 8 }}
+        {{- include "opsera-reactapp-freetrial.selectorLabels" . | nindent 8 }}
     spec:
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      serviceAccountName: {{ include "opsera-mongodb-realm-integrator.serviceAccountName" . }}
-      terminationGracePeriodSeconds: 300
+      serviceAccountName: {{ include "opsera-reactapp-freetrial.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -28,36 +27,20 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          lifecycle:
-            preStop:
-              httpGet:
-                path: /stopListener
-                port: http
-                scheme: HTTP
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
-          # livenessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
-          # readinessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          env:          
-          - name: "DOCKER_ENV"
-            value: {{ .Values.DOCKER_ENV }}
-          volumeMounts:
-          - name: microservices-efs
-            mountPath: /apps/OpsERA/logs/components/
-      volumes:
-        - name: microservices-efs
-          persistentVolumeClaim:
-            claimName: microservices-efs
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
