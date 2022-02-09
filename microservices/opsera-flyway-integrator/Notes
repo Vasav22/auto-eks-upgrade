@@ -49,6 +49,7 @@ helm upgrade opsera-flyway-integrator . \
 helm uninstall opsera-flyway-integrator . \
     -n microservices 
 
+<<<<<<< HEAD
 #production
 
 helm install opsera-flyway-integrator . \
@@ -65,6 +66,8 @@ helm upgrade opsera-flyway-integrator . \
 helm uninstall opsera-flyway-integrator . \
     -n microservices 
     
+=======
+>>>>>>> master-dev
 #honeywell-sandbox
 
 helm install opsera-flyway-integrator . \
