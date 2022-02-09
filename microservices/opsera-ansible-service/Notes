@@ -1,0 +1,12 @@
+helm -n microservices install --set DOCKER_ENV=kubernetes --set image.tag=kube-prod opsera-ansible-integrator .
+
+helm -n microservices install --set DOCKER_ENV=kubernetes --set image.tag=honeywell-sandbox opsera-ansible-integrator .
+
+
+helm -n microservices uninstall  opsera-ansible-integrator
+
+kubectl -n microservices get all  -l app.kubernetes.io/name=opsera-ansible-integrator
+
+kubectl -n microservices get po  -l app.kubernetes.io/name=opsera-ansible-integrator
+
+kubectl -n microservices get events
