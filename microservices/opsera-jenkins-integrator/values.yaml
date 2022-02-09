@@ -70,3 +70,10 @@ autoscaling:
 tolerations: []
 
 affinity: {}
+
+datadog:
+  metadata:
+    tags: 
+      env: "opsera-test-platform"
+      service: "opsera-jenkins-integrator"
+      version: "1"
