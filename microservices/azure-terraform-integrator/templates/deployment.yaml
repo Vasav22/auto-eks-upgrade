@@ -13,6 +13,8 @@ spec:
       {{- include "azure-terraform-integrator.selectorLabels" . | nindent 6 }}
   template:
     metadata:
+      annotations:
+        rollme: {{ randAlphaNum 5 | quote }}
       {{- with .Values.podAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
@@ -52,6 +54,7 @@ spec:
           env:          
           - name: "DOCKER_ENV"
             value: {{ .Values.DOCKER_ENV }}
+          {{- include "ms.extraSecretEnvironmentVars" .Values | nindent 10 }}
           volumeMounts:
           - name: microservices-efs
             mountPath: /apps/OpsERA/logs/components/

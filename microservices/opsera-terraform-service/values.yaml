@@ -70,3 +70,41 @@ autoscaling:
 tolerations: []
 
 affinity: {}
+
+extraSecretEnvironmentVars:
+  - secretName: microservices-ms-env
+    envName: OPSERA_VAULT_TOKEN
+    secretKey: OPSERA_VAULT_TOKEN
+  - secretName: microservices-ms-env
+    envName: OPSERA_VAULT_HELM_URI
+    secretKey: OPSERA_VAULT_HELM_URI
+  - secretName: microservices-ms-env
+    envName: OPSERA_VAULT_IP_URL
+    secretKey: OPSERA_VAULT_IP_URL
+  - secretName: microservices-ms-env
+    envName: OPSERA_KAFKA_BOOTSTRAP_URL
+    secretKey: OPSERA_KAFKA_BOOTSTRAP_URL
+  - secretName: microservices-ms-env
+    envName: OPSERA_API_SERVICE_URL
+    secretKey: OPSERA_API_SERVICE_URL
+  - secretName: microservices-ms-env
+    envName: OPSERA_KAFKA_SERVER
+    secretKey: OPSERA_KAFKA_SERVER
+  - secretName: microservices-ms-env
+    envName: OPSERA_PLATFORM_VPCID
+    secretKey: OPSERA_PLATFORM_VPCID
+  - secretName: microservices-ms-env
+    envName: OPSERA_GIT_BRANCH_NAME
+    secretKey: OPSERA_GIT_BRANCH_NAME
+  - secretName: microservices-ms-env
+    envName: OPSERA_PLATFORM_TRANSIT_GATEWAY
+    secretKey: OPSERA_PLATFORM_TRANSIT_GATEWAY
+  - secretName: microservices-ms-env
+    envName: OPSERA_API_NODE_URL
+    secretKey: OPSERA_API_NODE_URL
+  - secretName: microservices-ms-env
+    envName: OPSERA_PLATFORM_ROUTETABLE_ID
+    secretKey: OPSERA_PLATFORM_ROUTETABLE_ID
+  - secretName: microservices-ms-env
+    envName: OPSERA_PLATFORM_DOMAIN
+    secretKey: OPSERA_PLATFORM_DOMAIN
