@@ -41,10 +41,18 @@ spec:
             httpGet:
               path: /status
               port: http
+            initialDelaySeconds: 40
           readinessProbe:
             httpGet:
               path: /status
               port: http
+            initialDelaySeconds: 40
+          lifecycle:
+            preStop:
+              httpGet:
+                path: /stopListener
+                port: http
+                scheme: HTTP
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           env:          

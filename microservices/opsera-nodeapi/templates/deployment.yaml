@@ -11,6 +11,8 @@ spec:
       {{- include "opsera-nodeapi.selectorLabels" . | nindent 6 }}
   template:
     metadata:
+      annotations:
+        rollme: {{ randAlphaNum 5 | quote }}
       labels:
         {{- include "opsera-nodeapi.selectorLabels" . | nindent 8 }}
     spec:
@@ -52,6 +54,10 @@ spec:
               port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          env:          
+          - name: "DOCKER_ENV"
+            value: {{ .Values.DOCKER_ENV }}
+          {{- include "ms.extraSecretEnvironmentVars" .Values | nindent 10 }}
           volumeMounts:
           - name: microservices-efs
             mountPath: /apps/OpsERA/logs/components/
