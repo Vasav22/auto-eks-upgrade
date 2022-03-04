@@ -1,5 +1,6 @@
-#!/bin/bash
+#!/bin/sh -x
 
+RESPONSE_FILE="/tmp/response.txt"
 if [[ -z ${OPSERA_ADMIN_USERNAME} ]];
 then
 	echo "No Admin user information provided. Using Default user information."
@@ -31,16 +32,16 @@ DEFAULT_CURL_ACTION="GET"
 
 if [[ -z ${ARGOCD_ADMIN_USER} ]]; then
 	echo "Missing ArgoCD Username. Exiting now..."
-	#exit 1
+	exit 1
 elif [[ -z ${ARGOCD_ADMIN_PASSWORD} ]]; then
 	echo "Missing ArgoCD Admin User Password. Exiting Now."
-	#exit 1
+	exit 1
 else
 	echo "Proceeding with provided ArgoCD Admin username and password."
 fi
 
-ARGOCD_ADMIN_USER="admin"
-ARGOCD_ADMIN_PASSWORD="vfyJRkpxsehxYEWP"
+# ARGOCD_ADMIN_USER=""
+# ARGOCD_ADMIN_PASSWORD=""
 account_found=""
 
 function execute_curl() {
@@ -58,15 +59,15 @@ function execute_curl() {
 	OPTIONS=${4:-""}
 	
 	#TODO: check for file before removal.
-	if [[ -f response.txt ]]; then
-		rm -rf response.txt
+	if [[ -f ${RESPONSE_FILE} ]]; then
+		rm -rf ${RESPONSE_FILE}
 	fi
 	
 	if [[ -z "${OPTIONS}" ]]; 
 	then
-		http_response=$(curl -s -o response.txt -w "%{http_code}" ${CURL_URL} -X ${CURL_ACTION} -d "${CURL_PAYLOAD}" -H 'Content-Type: application/json' -k)
+		http_response=$(curl -s -o ${RESPONSE_FILE} -w "%{http_code}" ${CURL_URL} -X ${CURL_ACTION} -d "${CURL_PAYLOAD}" -H 'Content-Type: application/json' -k)
 	else
-		http_response=$(curl -s -o response.txt -w "%{http_code}" ${CURL_URL} -X ${CURL_ACTION} -d "${CURL_PAYLOAD}" -H 'Content-Type: application/json' -H "${OPTIONS}" -k)
+		http_response=$(curl -s -o ${RESPONSE_FILE} -w "%{http_code}" ${CURL_URL} -X ${CURL_ACTION} -d "${CURL_PAYLOAD}" -H 'Content-Type: application/json' -H "${OPTIONS}" -k)
 	fi
 
 	if [[ ${http_response} -eq 200 && $? -eq 0 ]];
@@ -75,14 +76,13 @@ function execute_curl() {
 	else
 		echo "[$retry]${CURL_URL} has failed with status ${http_response}"
 		echo "[$retry]Exiting Now."
-		exit 1
 	fi
 }
 
 function validate_user_account() {
 	payload=""
 	execute_curl "account" "GET" "${payload}" "Cookie: argocd.token=${token}"
-	accounts=$(cat response.txt | jq -r ".items[] | .name")
+	accounts=$(cat ${RESPONSE_FILE} | jq -r ".items[] | .name")
 	for account in $accounts;
 	do
 		if [[ "$account" == "${OPSERA_ADMIN_USERNAME}" ]]; then
@@ -99,12 +99,12 @@ do
 	token=""
 	echo "[$retry]Login in as Admin User."
 	execute_curl "session" "POST" "{\"username\": \"${ARGOCD_ADMIN_USER}\", \"password\": \"${ARGOCD_ADMIN_PASSWORD}\"}"
-	token=$(cat response.txt| jq -r ".token")
+	token=$(cat ${RESPONSE_FILE}| jq -r ".token")
 
 	if [[ $? -ne 200 && -z ${token} ]];
 	then
 		echo "[$retry]Unable to login with Admin User."
-		cat response.txt
+		cat ${RESPONSE_FILE}
 	else
 		validate_user_account
 		if [[ ! -z $account_found ]]; then
@@ -116,5 +116,5 @@ do
 		fi
 	fi
 	((retry=retry+1))
-	sleep 3
+	sleep 30
 done

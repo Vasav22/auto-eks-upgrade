@@ -211,8 +211,8 @@ controller:
     portName: https-controller
 
   # -- [Node selector]
-  nodeSelector:
-    Name: tools-node
+  nodeSelector: {}
+    # Name: tools-node
   # -- [Tolerations] for use with node taints
   tolerations: []
   # -- Assign custom [affinity] rules to the deployment
@@ -502,8 +502,8 @@ dex:
   servicePortMetrics: 5558
 
   # -- [Node selector]
-  nodeSelector:
-    Name: tools-node
+  nodeSelector: {}
+    # Name: tools-node
   # -- [Tolerations] for use with node taints
   tolerations: []
   # -- Assign custom [affinity] rules to the deployment
@@ -610,8 +610,8 @@ redis:
   podLabels: {}
 
   # -- [Node selector]
-  nodeSelector:
-    Name: tools-node
+  nodeSelector: {}
+    # Name: tools-node
   # -- [Tolerations] for use with node taints
   tolerations: []
   # -- Assign custom [affinity] rules to the deployment
@@ -888,8 +888,8 @@ server:
   volumes: []
 
   # -- [Node selector]
-  nodeSelector:
-    Name: tools-node
+  nodeSelector: {}
+    # Name: tools-node
   # -- [Tolerations] for use with node taints
   tolerations: []
   # -- Assign custom [affinity] rules to the deployment
@@ -1851,7 +1851,7 @@ configs:
     # -- Bcrypt hashed admin password
     ## Argo expects the password in the secret to be bcrypt hashed. You can create this hash with
     ## `htpasswd -nbBC 10 "" $ARGO_PWD | tr -d ':\n' | sed 's/$2y/$2a/'`
-    argocdServerAdminPassword: "$2a$10$9l9KvgM8.4/x4qN3DSZYA.utyCPUbWFsh1V.0FjH2RZdJyx60ib7S"
+    argocdServerAdminPassword: "$2a$10$HqrYIJLsgC9zAa8m1F320OlaLZHA0A9ESNx/Ycjarcx3xM13PcFJW"
     # -- Admin password modification time. Eg. `"2006-01-02T15:04:05Z"`
     # @default -- `""` (defaults to current time)
     argocdServerAdminPasswordMtime: "now"
