@@ -3,13 +3,13 @@
 if [[ -z ${OPSERA_ADMIN_USERNAME} ]];
 then
 	echo "No Admin user information provided. Using Default user information."
-	OPSERA_ADMIN_USERNAME="opsera_admin"
+	OPSERA_ADMIN_USERNAME="nrupen"
 fi
 
 if [[ -z ${OPSERA_ADMIN_PASSWORD} ]];
 then
 	echo "No default password provided. Using Default password."
-	OPSERA_ADMIN_PASSWORD="Opsera2022"
+	OPSERA_ADMIN_PASSWORD="OpseraAdmin768"
 fi
 
 echo "Fetching ArgoCD service Host and Port Information."
@@ -40,7 +40,8 @@ else
 fi
 
 ARGOCD_ADMIN_USER="admin"
-ARGOCD_ADMIN_PASSWORD="Mbc6zf46Uxi3CcaO"
+ARGOCD_ADMIN_PASSWORD="vfyJRkpxsehxYEWP"
+account_found=""
 
 function execute_curl() {
 	
@@ -70,24 +71,50 @@ function execute_curl() {
 
 	if [[ ${http_response} -eq 200 && $? -eq 0 ]];
 	then
-		echo "${CURL_URL} executed successfully."
+		echo "[$retry]${CURL_URL} executed successfully."
 	else
-		echo "${CURL_URL} has failed with status ${http_response}"
-		echo "Exiting Now."
+		echo "[$retry]${CURL_URL} has failed with status ${http_response}"
+		echo "[$retry]Exiting Now."
 		exit 1
 	fi
 }
 
-token=""
-echo "Login in as Admin User."
-execute_curl "session" "POST" "{\"username\": \"${ARGOCD_ADMIN_USER}\", \"password\": \"${ARGOCD_ADMIN_PASSWORD}\"}"
-token=$(cat response.txt| jq -r ".token")
+function validate_user_account() {
+	payload=""
+	execute_curl "account" "GET" "${payload}" "Cookie: argocd.token=${token}"
+	accounts=$(cat response.txt | jq -r ".items[] | .name")
+	for account in $accounts;
+	do
+		if [[ "$account" == "${OPSERA_ADMIN_USERNAME}" ]]; then
+			account_found="true"
+			break
+		fi
+	done
+}
 
-if [[ $? -ne 200 && -z ${token} ]];
-then
-	echo "Unable to login with Admin User."
-	cat response.txt
-else
-	echo "Updating Password for user ${OPSERA_ADMIN_USERNAME}"
-	execute_curl "account/password" "PUT" "{\"currentPassword\": \"${ARGOCD_ADMIN_PASSWORD}\", \"name\": \"${OPSERA_ADMIN_USERNAME}\", \"newPassword\": \"${OPSERA_ADMIN_PASSWORD}\"}" "Cookie: argocd.token=${token}"
-fi
+retry=0
+max_retry_count=${MAX_RETRY_COUNT:-5}
+while [[ $retry -le 5 ]];
+do
+	token=""
+	echo "[$retry]Login in as Admin User."
+	execute_curl "session" "POST" "{\"username\": \"${ARGOCD_ADMIN_USER}\", \"password\": \"${ARGOCD_ADMIN_PASSWORD}\"}"
+	token=$(cat response.txt| jq -r ".token")
+
+	if [[ $? -ne 200 && -z ${token} ]];
+	then
+		echo "[$retry]Unable to login with Admin User."
+		cat response.txt
+	else
+		validate_user_account
+		if [[ ! -z $account_found ]]; then
+			echo "[$retry]Updating Password for user ${OPSERA_ADMIN_USERNAME}"
+			execute_curl "account/password" "PUT" "{\"currentPassword\": \"${ARGOCD_ADMIN_PASSWORD}\", \"name\": \"${OPSERA_ADMIN_USERNAME}\", \"newPassword\": \"${OPSERA_ADMIN_PASSWORD}\"}" "Cookie: argocd.token=${token}"
+			exit 0
+		else
+			echo "[$retry]User ${OPSERA_ADMIN_USERNAME} is not available...Skipping password update"
+		fi
+	fi
+	((retry=retry+1))
+	sleep 3
+done

@@ -786,6 +786,11 @@ redis-ha:
 server:
   # -- Argo CD server name
   name: server
+  opseraUser:
+    enabled: true
+    userSecret:
+      username: "opsera_admin"
+      password: "OpseraAdmin768"
 
   # -- The number of server pods to run
   replicas: 1

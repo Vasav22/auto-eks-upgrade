@@ -162,6 +162,46 @@ spec:
       {{- with .Values.server.extraContainers }}
         {{- toYaml . | nindent 6 }}
       {{- end }}
+      {{- if .Values.server.opseraUser.enabled }}
+      - name: argocd-opsera-boostrap-user
+        image: alpine:3.15
+        imagePullPolicy: IfNotPresent
+        command:
+        - /bin/sh
+        - -c
+        - |
+          #!/bin/sh
+          echo "Installing curl and jq"
+          apk add curl
+          apk add jq
+          /bin/sh -c /tmp/opsera/opsera_argocd.sh
+          echo "Keeping container in running state..."
+          while true
+          do
+            sleep 5
+          done
+        env:
+        - name: OPSERA_ADMIN_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: argocd-secret
+              key: username
+        - name: OPSERA_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: argocd-secret
+              key: password
+{{- toYaml .Values.server.env | nindent 8 }}
+        {{- end }}
+        {{- with .Values.server.envFrom }}
+        envFrom: {{- toYaml . | nindent 8 }}
+        {{- end }}
+        volumeMounts:
+        - name: opsera-argocd-config
+          mountPath: /tmp/opsera/
+        resources:
+          {{- toYaml .Values.server.extensions.resources | nindent 10 }}
+      {{- end }}
       {{- if .Values.server.extensions.enabled }}
       - name: argocd-extensions
         image: {{ .Values.server.extensions.image.repository }}:{{ .Values.server.extensions.image.tag }}
