@@ -211,8 +211,8 @@ controller:
     portName: https-controller
 
   # -- [Node selector]
-  nodeSelector: {}
-    # Name: tools-node
+  nodeSelector:
+    Name: tools-node
   # -- [Tolerations] for use with node taints
   tolerations: []
   # -- Assign custom [affinity] rules to the deployment
@@ -502,8 +502,8 @@ dex:
   servicePortMetrics: 5558
 
   # -- [Node selector]
-  nodeSelector: {}
-    # Name: tools-node
+  nodeSelector:
+    Name: tools-node
   # -- [Tolerations] for use with node taints
   tolerations: []
   # -- Assign custom [affinity] rules to the deployment
@@ -610,8 +610,8 @@ redis:
   podLabels: {}
 
   # -- [Node selector]
-  nodeSelector: {}
-    # Name: tools-node
+  nodeSelector:
+    Name: tools-node
   # -- [Tolerations] for use with node taints
   tolerations: []
   # -- Assign custom [affinity] rules to the deployment
@@ -791,7 +791,9 @@ server:
     userSecret:
       username: "opsera_admin"
       password: "OpseraAdmin768"
-
+    argocdAdmin:
+      username: "admin" # This is default admin user that is created with initial deployment.
+      password: "v0xIS-DldPPGlGW6" # This value has to match with configs.secret.argocdServerAdminPassword
   # -- The number of server pods to run
   replicas: 1
 
@@ -888,8 +890,8 @@ server:
   volumes: []
 
   # -- [Node selector]
-  nodeSelector: {}
-    # Name: tools-node
+  nodeSelector:
+    Name: tools-node
   # -- [Tolerations] for use with node taints
   tolerations: []
   # -- Assign custom [affinity] rules to the deployment
@@ -1150,7 +1152,7 @@ server:
   # -- [General Argo CD configuration]
   # @default -- See [values.yaml]
   config:
-    accounts.opsera_admin: apiKey, login
+    # accounts.opsera_admin: apiKey, login
     # Argo CD's externally facing base URL (optional). Required when configuring SSO
     url: https://argocd.example.com
     # Argo CD instance label key
@@ -1189,8 +1191,8 @@ server:
   ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/rbac.md
   rbacConfig:
     policy.default: role:readonly
-    policy.csv: |
-      g, opsera_admin, role:admin
+    # policy.csv: |
+      # g, opsera_admin, role:admin
     # policy.csv is an file containing user-defined RBAC policies and role definitions (optional).
     # Policy rules are in the form:
     #   p, subject, resource, action, object, effect

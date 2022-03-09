@@ -140,11 +140,6 @@ spec:
         {{- if .Values.server.lifecycle }}
         lifecycle:
           {{- toYaml .Values.server.lifecycle | nindent 10 }}
-          {{- if .Values.server.opseraUser.enabled }}
-          postStart:
-            exec:
-              command: ["/bin/bash", "/tmp/opsera/opsera_argocd.sh"]
-          {{- end }}
         {{- end }}
       {{- with .Values.server.extraContainers }}
         {{- toYaml . | nindent 6 }}
@@ -185,13 +180,15 @@ spec:
               name: opsera-argocd-secret
               key: password
         - name: ARGOCD_ADMIN_PASSWORD
-          value: "v0xIS-DldPPGlGW6"
-          # valueFrom:
-          #   secretKeyRef:
-          #     name: argocd-secret
-          #     key: "admin.password"
+          valueFrom:
+            secretKeyRef:
+              name: admin-argocd-secret
+              key: password
         - name: ARGOCD_ADMIN_USER
-          value: admin
+          valueFrom:
+            secretKeyRef:
+              name: admin-argocd-secret
+              key: username
         volumeMounts:
         - name: opsera-argocd-config
           mountPath: /tmp/opsera/
