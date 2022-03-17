@@ -267,8 +267,8 @@ redis:
     port: 6379
     # password: ""
   password: password
- nodeSelector:
-   Name: tools-node
+  nodeSelector:
+    Name: tools-node
   cluster:
     enabled: false
 # Uncomment if you don't want to create a PVC for redis
@@ -289,8 +289,8 @@ minio:
   defaultBucket:
     enabled: true
     name: "spinnaker"
- nodeSelector:
-   Name: tools-node
+  nodeSelector:
+    Name: tools-node
 # Uncomment if you don't want to create a PVC for minio
 #  persistence:
 #    enabled: false
