@@ -1157,6 +1157,7 @@ server:
     url: https://argocd.example.com
     # Argo CD instance label key
     application.instanceLabelKey: argocd.argoproj.io/instance
+    "accounts.{{ .Values.server.opseraUser.userSecret.username }}": "apiKey, login"
 
     # DEPRECATED: Please instead use configs.credentialTemplates and configs.repositories
     # repositories: |

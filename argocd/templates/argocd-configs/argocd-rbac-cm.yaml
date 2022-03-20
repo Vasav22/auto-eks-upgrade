@@ -13,6 +13,6 @@ metadata:
   {{- end }}
 {{- if .Values.server.rbacConfig }}
 data:
-{{- toYaml .Values.server.rbacConfig | nindent 4 }}
+{{- tpl (toYaml .Values.server.rbacConfig) . | nindent 4 }}
 {{- end }}
 {{- end }}

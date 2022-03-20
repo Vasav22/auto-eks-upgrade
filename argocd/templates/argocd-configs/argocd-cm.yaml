@@ -11,5 +11,5 @@ metadata:
     {{ $key }}: {{ $value | quote }}
   {{- end }}
   {{- end }}
-data: {{- include "argo-cd.config" $ | nindent 4 }}
+data: {{- tpl (include "argo-cd.config" $) . | nindent 4 }}
 {{- end }}

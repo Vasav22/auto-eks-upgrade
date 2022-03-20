@@ -1,1 +1,3 @@
-g, opsera_admin, role:admin
+{{ if .Values.server.opseraUser.enabled }}
+g, {{ .Values.server.opseraUser.userSecret.username}}, role:admin
+{{ end }}
