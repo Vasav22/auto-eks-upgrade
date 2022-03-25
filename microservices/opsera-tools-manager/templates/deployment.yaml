@@ -11,6 +11,8 @@ spec:
       {{- include "opsera-tools-manager.selectorLabels" . | nindent 6 }}
   template:
     metadata:
+      annotations:
+        rollme: {{ randAlphaNum 5 | quote }}
       labels:
         {{- include "opsera-tools-manager.selectorLabels" . | nindent 8 }}
     spec:

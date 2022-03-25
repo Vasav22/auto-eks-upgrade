@@ -11,6 +11,8 @@ spec:
       {{- include "opsera-kafka-integrator.selectorLabels" . | nindent 6 }}
   template:
     metadata:
+      annotations:
+        rollme: {{ randAlphaNum 5 | quote }}
       labels:
         {{- include "opsera-kafka-integrator.selectorLabels" . | nindent 8 }}
     spec:

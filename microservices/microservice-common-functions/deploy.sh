@@ -27,3 +27,9 @@ OPSERA_ENV=OPSERA_EAST_REPLICA
 helm upgrade microservice-common-functions ./microservice-common-functions \
 	-n microservices \
 	$(aws secretsmanager get-secret-value --secret-id=$OPSERA_ENV --profile opsera | jq '.SecretString | fromjson' | jq -r 'keys[] as $k | "--set extraSecretEnvironmentVars.\($k)=\(.[$k])"')
+
+
+OPSERA_ENV=AMEX-PLATFORM
+helm upgrade microservice-common-functions ./microservice-common-functions \
+	-n microservices \
+	$(aws secretsmanager get-secret-value --secret-id=$OPSERA_ENV --profile opsera | jq '.SecretString | fromjson' | jq -r 'keys[] as $k | "--set extraSecretEnvironmentVars.\($k)=\(.[$k])"')

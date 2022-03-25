@@ -11,6 +11,8 @@ spec:
       {{- include "opsera-flyway-integrator.selectorLabels" . | nindent 6 }}
   template:
     metadata:
+      annotations:
+        rollme: {{ randAlphaNum 5 | quote }}
       labels:
         {{- include "opsera-flyway-integrator.selectorLabels" . | nindent 8 }}
     spec:
