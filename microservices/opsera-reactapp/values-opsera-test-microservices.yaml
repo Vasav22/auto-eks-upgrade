@@ -12,3 +12,8 @@ autoscaling:
   maxReplicas: 10
   targetCPUUtilizationPercentage: 60
   targetMemoryUtilizationPercentage: 60
+
+ingress:
+  hosts:
+    - host: test.opsera.io
+      paths: [/]
