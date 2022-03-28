@@ -1,0 +1,87 @@
+
+helm install opsera-informatica-integrator . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-dev 
+
+helm upgrade opsera-informatica-integrator . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-dev 
+
+
+helm uninstall opsera-informatica-integrator . \
+    -n microservices 
+
+
+
+#test
+
+
+helm install opsera-informatica-integrator . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-test 
+
+helm upgrade opsera-informatica-integrator . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-test 
+
+
+
+helm uninstall opsera-informatica-integrator . \
+    -n microservices 
+
+#production
+
+helm install opsera-informatica-integrator . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-prod 
+
+helm upgrade opsera-informatica-integrator . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-prod 
+
+
+helm uninstall opsera-informatica-integrator . \
+    -n microservices 
+
+#honeywell-sandbox
+
+helm install opsera-informatica-integrator . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=honeywell-sandbox
+
+helm upgrade opsera-informatica-integrator . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=honeywell-sandbox 
+
+
+helm uninstall opsera-informatica-integrator . \
+    -n microservices 
+
+
+
+#kubectl 
+kubectl -n microservices get po -l app.kubernetes.io/name=opsera-informatica-integrator
+
+#honeywell
+
+helm install opsera-informatica-integrator . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-prod
+
+helm upgrade opsera-informatica-integrator . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-prod
+
+
+helm uninstall opsera-informatica-integrator . \
+    -n microservices 

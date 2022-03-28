@@ -1,0 +1,87 @@
+
+helm install opsera-buildkite-integrator . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-dev 
+
+helm upgrade opsera-buildkite-integrator . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-dev 
+
+
+helm uninstall opsera-buildkite-integrator . \
+    -n microservices 
+
+
+
+#test
+
+
+helm install opsera-buildkite-integrator . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-test 
+
+helm upgrade opsera-buildkite-integrator . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-test 
+
+
+
+helm uninstall opsera-buildkite-integrator . \
+    -n microservices 
+
+#production
+
+helm install opsera-buildkite-integrator . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-prod 
+
+helm upgrade opsera-buildkite-integrator . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-prod 
+
+
+helm uninstall opsera-buildkite-integrator . \
+    -n microservices 
+
+#production
+
+helm install opsera-buildkite-integrator . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-prod 
+
+helm upgrade opsera-buildkite-integrator . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-prod 
+
+
+helm uninstall opsera-buildkite-integrator . \
+    -n microservices 
+    
+#honeywell-sandbox
+
+helm install opsera-buildkite-integrator . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=honeywell-sandbox
+
+helm upgrade opsera-buildkite-integrator . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=khoneywell-sandbox 
+
+
+helm uninstall opsera-buildkite-integrator . \
+    -n microservices 
+
+
+
+#kubectl 
+kubectl -n microservices get po -l app.kubernetes.io/name=opsera-buildkite-integrator

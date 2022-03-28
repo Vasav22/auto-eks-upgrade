@@ -11,6 +11,8 @@ spec:
       {{- include "opsera-apigateway.selectorLabels" . | nindent 6 }}
   template:
     metadata:
+      annotations:
+        rollme: {{ randAlphaNum 5 | quote }}
       labels:
         {{- include "opsera-apigateway.selectorLabels" . | nindent 8 }}
     spec:
@@ -19,6 +21,7 @@ spec:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       serviceAccountName: {{ include "opsera-apigateway.serviceAccountName" . }}
+      terminationGracePeriodSeconds: 7200
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -31,14 +34,22 @@ spec:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
-          # livenessProbe:
-          #   httpGet:
-          #     path: /swagger-ui.html
-          #     port: http
-          # readinessProbe:
-          #   httpGet:
-          #     path: /swagger-ui.html
-          #     port: http
+          livenessProbe:
+            httpGet:
+              path: /status
+              port: http
+            initialDelaySeconds: 40
+          readinessProbe:
+            httpGet:
+              path: /status
+              port: http
+            initialDelaySeconds: 40
+          lifecycle:
+            preStop:
+              httpGet:
+                path: /stopListener
+                port: http
+                scheme: HTTP
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           env:          
