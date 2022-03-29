@@ -1,0 +1,19 @@
+resources:
+  limits:
+    cpu: 3500m
+    memory: 14Gi
+  requests:
+    cpu: 3500m
+    memory: 14Gi
+
+autoscaling:
+  enabled: true
+  minReplicas: 3
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 60
+  targetMemoryUtilizationPercentage: 60
+
+ingress:
+  hosts:
+    - host: api-integrator-service.honeywell-private.opsera.io
+      paths: [/]
