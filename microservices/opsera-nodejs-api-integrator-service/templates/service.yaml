@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "opsera-nodejs-api-integrator-service.fullname" . }}
+  labels:
+    {{- include "opsera-nodejs-api-integrator-service.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "opsera-nodejs-api-integrator-service.selectorLabels" . | nindent 4 }}
