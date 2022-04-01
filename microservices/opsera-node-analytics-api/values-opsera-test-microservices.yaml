@@ -16,3 +16,4 @@ autoscaling:
 ingress:
   hosts:
     - host: analytics-api.opsera-test.opsera.io
+      paths: [/]

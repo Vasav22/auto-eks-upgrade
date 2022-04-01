@@ -16,3 +16,4 @@ autoscaling:
 ingress:
   hosts:
     - host: analytics-api.honeywell-sandbox.opsera.io
+      paths: [/]
