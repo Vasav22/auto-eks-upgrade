@@ -1,13 +1,13 @@
-# Default values for opsera-node-analytics-api.
+# Default values for opsera-tools-management-service.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 replicaCount: 1
 
 image:
-  repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera-node-analytics-api
+  repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera-tools-management-service
   pullPolicy: Always
-  tag: test
+  tag: tag
 
 imagePullSecrets: []
 nameOverride: ""
@@ -35,16 +35,16 @@ securityContext: {}
 
 service:
   type: ClusterIP
-  port: 5005
+  port: 5057
 
 ingress:
   enabled: true
-  annotations:
-    kubernetes.io/ingress.class: nginx
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: analytics-api.opsera.io
-      paths: [/]
+    - host: chart-example.local
+      paths: []
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
@@ -64,18 +64,16 @@ nodeSelector:
 autoscaling:
   enabled: true
   minReplicas: 1
-  maxReplicas: 10
+  maxReplicas: 5
   targetCPUUtilizationPercentage: 60
-  targetMemoryUtilizationPercentage: 60
+  targetMemoryUtilizationPercentage: 60  
 
 tolerations: []
 
 affinity: {}
 
+
 extraSecretEnvironmentVars:
-  - secretName: microservices-ms-env
-    envName: NODE_ENV
-    secretKey: NODE_ENV
   - secretName: microservices-ms-env
     envName: OPSERA_DB_HOST
     secretKey: OPSERA_DB_HOST
