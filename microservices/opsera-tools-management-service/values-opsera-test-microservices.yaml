@@ -15,5 +15,5 @@ autoscaling:
 
 ingress:
   hosts:
-    - host: api-integrator-service.opsera-test-private.opsera.io
+    - host: tools-management-service.opsera-test-private.opsera.io
       paths: [/]
