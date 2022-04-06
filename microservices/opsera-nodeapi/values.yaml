@@ -92,6 +92,9 @@ extraSecretEnvironmentVars:
     envName: OPSERA_DB_HOST
     secretKey: OPSERA_DB_HOST
   - secretName: microservices-ms-env
+    envName: OPSERA_NODE_API_INTEGRATOR_SERVICE_INTERNAL_URL
+    secretKey: OPSERA_NODE_API_INTEGRATOR_SERVICE_INTERNAL_URL
+  - secretName: microservices-ms-env
     envName: OPSERA_DB_NAME
     secretKey: OPSERA_DB_NAME
   - secretName: microservices-ms-env
