@@ -4,7 +4,7 @@ metadata:
   name: {{ include "opsera-node-analytics-api.fullname" . }}
   labels:
     {{- include "opsera-node-analytics-api.labels" . | nindent 4 }}
-annotations:
+  annotations:
     {{- include "opsera-node-analytics-api.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
