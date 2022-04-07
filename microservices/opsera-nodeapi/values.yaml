@@ -211,3 +211,6 @@ extraSecretEnvironmentVars:
   - secretName: microservices-ms-env
     envName: OPSERA_KAFKA_ENABLE_FLAG
     secretKey: OPSERA_KAFKA_ENABLE_FLAG
+  - secretName: microservices-ms-env
+    envName: OPSERA_ORCHESTRATION_ENABLE_SFDC_WEBHOOK_RUNS_FLAG
+    secretKey: OPSERA_ORCHESTRATION_ENABLE_SFDC_WEBHOOK_RUNS_FLAG
