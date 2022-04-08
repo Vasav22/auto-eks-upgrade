@@ -44,6 +44,17 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
 
 {{/*
+Datadog Service Check Annotations
+*/}}
+{{- define "opsera-analytics-v2.annotations" -}}
+ad.datadoghq.com/service.check_names: '["http_check"]'
+ad.datadoghq.com/service.init_configs: '[{}]'
+ad.datadoghq.com/service.instances: "[\n  {\n    \"name\": \"opsera-analytics-v2\",\n
+  \   \"url\": \"http://%%host%%:%%port%%/status\",\n    \"timeout\": 1,\n  \"content_match\"
+  : \"OK\",\n     \"http_response_status_code\": 200\n  }\n] \n"
+{{- end -}}
+
+{{/*
 Selector labels
 */}}
 {{- define "opsera-analytics-v2.selectorLabels" -}}
