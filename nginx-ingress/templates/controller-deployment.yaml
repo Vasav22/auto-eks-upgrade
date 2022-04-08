@@ -41,7 +41,7 @@ spec:
             "log_processing_rules": [{
               "type": "exclude_at_match",
               "name": "exclude_unuseful_log_event",
-              "pattern" : "+0000] TCP 200 0 0 0"
+              "pattern" : "0000] TCP 200 0 0 0"
             }]
           }]
       {{- end }}
