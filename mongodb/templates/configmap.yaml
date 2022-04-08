@@ -12,3 +12,15 @@ data:
   mongodb.conf: |-
 {{ toYaml .Values.configmap | indent 4 }}
 {{- end }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "mongodb.name" . }}-updater
+  labels:
+    app: {{ template "mongodb.name" . }}
+    chart: {{ template "mongodb.chart" . }}
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+data:
+{{ (.Files.Glob "files/mongo-selector-update.sh").AsConfig | indent 2 }}
