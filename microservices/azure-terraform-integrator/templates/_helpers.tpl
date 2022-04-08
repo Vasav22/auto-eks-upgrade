@@ -45,7 +45,7 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Datadog Service Check Annotations
 */}}
-{{- define "opsera-node-analytics-api.annotations" -}}
+{{- define "azure-terraform-integrator.annotations" -}}
 ad.datadoghq.com/service.check_names: '["http_check"]'
 ad.datadoghq.com/service.init_configs: '[{}]'
 ad.datadoghq.com/service.instances: "[\n  {\n    \"name\": \"azure-terraform-integrator\",\n
