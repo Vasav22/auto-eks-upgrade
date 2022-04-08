@@ -43,7 +43,6 @@ spec:
 {{ toYaml .Values.podAnnotations | indent 8 }}
       {{- end }}
     spec:
-      serviceAccountName: {{ template "mongodb.fullname" . }}-sa
       {{- if .Values.schedulerName }}
       schedulerName: "{{ .Values.schedulerName }}"
       {{- end }}
@@ -72,47 +71,6 @@ spec:
 {{ tpl .Values.extraInitContainers . | indent 6}}
       {{- end }}
       containers:
-        - image: {{ template "mongodb.image" . }}
-          command:
-            - /bin/bash
-            - -c
-            - /opt/opsera/config/mongo-selector-update.sh
-          imagePullPolicy: IfNotPresent
-          name: mongodb-sidecar
-          volumeMounts:
-          - name: "mongodb-updater-config"
-            mountPath: "/opt/opsera/config/"
-          securityContext:
-            runAsUser: 0
-            privileged: true
-          env:
-          {{- if .Values.mongodbUsername }}
-          - name: MONGO_USERNAME
-            value: "root"
-          {{- end }}
-          {{- if .Values.mongodbDatabase }}
-          - name: MONGO_DATABASE
-            value: {{ .Values.mongodbDatabase | quote }}
-          {{- end }}
-            {{- if .Values.usePassword }}
-            {{- if and .Values.mongodbUsername .Values.mongodbDatabase }}
-          - name: MONGO_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ if .Values.existingSecret }}{{ .Values.existingSecret }}{{- else }}{{ template "mongodb.fullname" . }}{{- end }}
-                key: mongodb-password
-            {{- end }}
-          - name: MONGO_ROOT_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ if .Values.existingSecret }}{{ .Values.existingSecret }}{{- else }}{{ template "mongodb.fullname" . }}{{- end }}
-                key: mongodb-root-password
-          - name: MONGODB_REPLICA_SET_KEY
-            valueFrom:
-              secretKeyRef:
-                name: {{ if .Values.existingSecret }}{{ .Values.existingSecret }}{{- else }}{{ template "mongodb.fullname" . }}{{- end }}
-                key: mongodb-replica-set-key
-            {{- end }}
         - name: {{ template "mongodb.name" . }}-arbiter
           image: {{ template "mongodb.image" . }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
@@ -218,10 +176,6 @@ spec:
 {{ toYaml .Values.sidecarsArbiter | indent 8 }}
 {{- end }}
       volumes:
-        - name: mongodb-updater-config
-          configMap:
-            defaultMode: 0744
-            name: {{ template "mongodb.name" . }}-updater
       {{- if .Values.configmap }}
         - name: config
           configMap:
