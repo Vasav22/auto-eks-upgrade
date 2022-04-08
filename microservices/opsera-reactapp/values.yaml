@@ -71,3 +71,44 @@ autoscaling:
 tolerations: []
 
 affinity: {}
+
+extraSecretEnvironmentVars:
+  - secretName: microservices-ms-env
+    envName: OPSERA_OKTA_REDIRECTURI
+    secretKey: OPSERA_OKTA_REDIRECTURI
+  - secretName: microservices-ms-env
+    envName: OPSERA_CLIENT_URL
+    secretKey: OPSERA_CLIENT_URL
+  - secretName: microservices-ms-env
+    envName: OPSERA_OKTA_CLIENT_ID
+    secretKey: OPSERA_OKTA_CLIENT_ID
+  - secretName: microservices-ms-env
+    envName: OPSERA_OKTA_ISSUER
+    secretKey: OPSERA_OKTA_ISSUER
+  - secretName: microservices-ms-env
+    envName: OPSERA_OKTA_ORG_URL
+    secretKey: OPSERA_OKTA_ORG_URL
+  - secretName: microservices-ms-env
+    envName: OPSERA_ENV
+    secretKey: OPSERA_ENV
+  - secretName: microservices-ms-env
+    envName: OPSERA_ORCHESTRATION_SECRET
+    secretKey: OPSERA_ORCHESTRATION_SECRET
+  - secretName: microservices-ms-env
+    envName: OPSERA_S3_STORAGE_URL
+    secretKey: OPSERA_S3_STORAGE_URL
+  - secretName: microservices-ms-env
+    envName: OPSERA_TENANT
+    secretKey: OPSERA_TENANT
+  - secretName: microservices-ms-env
+    envName: OPSERA_NODE_SERVER_URL
+    secretKey: OPSERA_NODE_SERVER_URL
+  - secretName: microservices-ms-env
+    envName: OPSERA_APP_STACK
+    secretKey: OPSERA_APP_STACK
+  - secretName: microservices-ms-env
+    envName: OPSERA_ANALYTICS_BASE_URL
+    secretKey: OPSERA_ANALYTICS_BASE_URL
+
+
+

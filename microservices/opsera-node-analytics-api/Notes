@@ -1,0 +1,67 @@
+
+helm install opsera-node-analytics-api . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-dev \
+    --set ingress.hosts[0].host=analytics-api.opsera-dev.opsera.io \
+    --set ingress.hosts[0].paths[0]=/
+
+
+helm upgrade opsera-node-analytics-api . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-dev \
+    --set ingress.hosts[0].host=analytics-api.opsera-dev.opsera.io \
+    --set ingress.hosts[0].paths[0]=/
+
+
+
+helm uninstall opsera-node-analytics-api . \
+    -n microservices 
+
+
+
+#test
+
+
+helm install opsera-node-analytics-api . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-test \
+    --set ingress.hosts[0].host=analytics-api.opsera-test.opsera.io \
+    --set ingress.hosts[0].paths[0]=/
+
+
+helm upgrade opsera-node-analytics-api . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-test \
+    --set ingress.hosts[0].host=analytics-api.opsera-test.opsera.io \
+    --set ingress.hosts[0].paths[0]=/
+
+
+
+helm uninstall opsera-node-analytics-api . \
+    -n microservices 
+
+#production
+
+helm install opsera-node-analytics-api . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-prod \
+    --set ingress.hosts[0].host=analytics-api.opsera-prod.opsera.io \
+    --set ingress.hosts[0].paths[0]=/
+
+
+helm upgrade opsera-node-analytics-api . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-prod \
+    --set ingress.hosts[0].host=analytics-api.opsera-prod.opsera.io \
+    --set ingress.hosts[0].paths[0]=/
+
+
+
+helm uninstall opsera-node-analytics-api . \
+    -n microservices 

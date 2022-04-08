@@ -11,6 +11,8 @@ spec:
       {{- include "opsera-mongodb-realm-integrator.selectorLabels" . | nindent 6 }}
   template:
     metadata:
+      annotations:
+        rollme: {{ randAlphaNum 5 | quote }}
       labels:
         {{- include "opsera-mongodb-realm-integrator.selectorLabels" . | nindent 8 }}
     spec:
@@ -19,7 +21,7 @@ spec:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       serviceAccountName: {{ include "opsera-mongodb-realm-integrator.serviceAccountName" . }}
-      terminationGracePeriodSeconds: 300
+      terminationGracePeriodSeconds: 7200
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -38,14 +40,22 @@ spec:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
-          # livenessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
-          # readinessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
+          livenessProbe:
+            httpGet:
+              path: /status
+              port: http
+            initialDelaySeconds: 40
+          readinessProbe:
+            httpGet:
+              path: /status
+              port: http
+            initialDelaySeconds: 40
+          lifecycle:
+            preStop:
+              httpGet:
+                path: /stopListener
+                port: http
+                scheme: HTTP
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           env:          
