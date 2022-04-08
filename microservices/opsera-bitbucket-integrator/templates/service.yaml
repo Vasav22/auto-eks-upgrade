@@ -4,6 +4,8 @@ metadata:
   name: {{ include "opsera-bitbucket-integrator.fullname" . }}
   labels:
     {{- include "opsera-bitbucket-integrator.labels" . | nindent 4 }}
+  annotations:
+    {{- include "opsera-bitbucket-integrator.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:

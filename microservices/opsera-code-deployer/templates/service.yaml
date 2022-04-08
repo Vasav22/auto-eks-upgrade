@@ -4,6 +4,8 @@ metadata:
   name: {{ include "opsera-code-deployer.fullname" . }}
   labels:
     {{- include "opsera-code-deployer.labels" . | nindent 4 }}
+  annotations:
+    {{- include "opsera-code-deployer.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:

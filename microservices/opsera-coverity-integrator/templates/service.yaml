@@ -4,6 +4,8 @@ metadata:
   name: {{ include "opsera-coverity-integrator.fullname" . }}
   labels:
     {{- include "opsera-coverity-integrator.labels" . | nindent 4 }}
+  annotations:
+    {{- include "opsera-coverity-integrator.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
