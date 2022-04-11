@@ -11,6 +11,8 @@ spec:
       {{- include "opsera-nodeapi.selectorLabels" . | nindent 6 }}
   template:
     metadata:
+      annotations:
+        rollme: {{ randAlphaNum 5 | quote }}
       labels:
         {{- include "opsera-nodeapi.selectorLabels" . | nindent 8 }}
     spec:
@@ -19,20 +21,10 @@ spec:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       serviceAccountName: {{ include "opsera-nodeapi.serviceAccountName" . }}
+      terminationGracePeriodSeconds: 7200
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: redis
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}"
-          imagePullPolicy: {{ .Values.redis.image.pullPolicy }}
-          ports:
-            - name: redis
-              containerPort: {{ .Values.redis.port }}
-              protocol: TCP
-          resources:
-            {{- toYaml .Values.redis.resources | nindent 12 }}
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
@@ -52,6 +44,10 @@ spec:
               port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          env:          
+          - name: "DOCKER_ENV"
+            value: {{ .Values.DOCKER_ENV }}
+          {{- include "ms.extraSecretEnvironmentVars" .Values | nindent 10 }}
           volumeMounts:
           - name: microservices-efs
             mountPath: /apps/OpsERA/logs/components/
