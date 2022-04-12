@@ -1192,8 +1192,8 @@ server:
   ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/rbac.md
   rbacConfig:
     policy.default: role:readonly
-    # policy.csv: |
-      # g, opsera_admin, role:admin
+    policy.csv: |
+      g, {{ .Values.server.opseraUser.userSecret.username}}, role:admin
     # policy.csv is an file containing user-defined RBAC policies and role definitions (optional).
     # Policy rules are in the form:
     #   p, subject, resource, action, object, effect
