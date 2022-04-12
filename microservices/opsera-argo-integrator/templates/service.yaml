@@ -4,6 +4,8 @@ metadata:
   name: {{ include "opsera-argo-integrator.fullname" . }}
   labels:
     {{- include "opsera-argo-integrator.labels" . | nindent 4 }}
+  annotations:
+  {{- include "opsera-argo-integrator.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
