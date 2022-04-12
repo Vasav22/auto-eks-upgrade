@@ -70,14 +70,17 @@ usePassword: true
 ## MongoDB admin password
 ## ref: https://github.com/bitnami/bitnami-docker-mongodb/blob/master/README.md#setting-the-root-password-on-first-run
 ##
-# mongodbRootPassword:
+mongodbRootPassword: "test123"
 
 ## MongoDB custom user and database
 ## ref: https://github.com/bitnami/bitnami-docker-mongodb/blob/master/README.md#creating-a-user-and-database-on-first-run
 ##
-# mongodbUsername: username
-# mongodbPassword: password
-# mongodbDatabase: database
+mongodbUsername: username
+mongodbPassword: password
+mongodbDatabase: test
+
+serviceAccount:
+  create: true
 
 ## Whether enable/disable IPv6 on MongoDB
 ## ref: https://github.com/bitnami/bitnami-docker-mongodb/blob/master/README.md#enabling/disabling-ipv6
@@ -148,14 +151,14 @@ service:
 # extraEnvVars:
 
 ## Use StatefulSet instead of Deployment when deploying standalone
-useStatefulSet: false
+useStatefulSet: true
 
 ## Setting up replication
 ## ref: https://github.com/bitnami/bitnami-docker-mongodb#setting-up-a-replication
 #
 replicaSet:
   ## Whether to create a MongoDB replica set for high availability or not
-  enabled: false
+  enabled: true
   useHostnames: true
 
   ## Name of the replica set
@@ -169,7 +172,7 @@ replicaSet:
   ## Number of replicas per each node type
   ##
   replicas:
-    secondary: 1
+    secondary: 2
     arbiter: 1
 
   ## Pod Disruption Budget
@@ -205,13 +208,13 @@ podLabels: {}
 ## Configure resource requests and limits
 ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
 ##
-resources:
-  limits:
-    cpu: 2
-    memory: 8Gi
-  requests:
-    cpu: 2
-    memory: 8Gi
+resources: {}
+  # limits:
+  #   cpu: 2
+  #   memory: 8Gi
+  # requests:
+  #   cpu: 2
+  #   memory: 8Gi
 # Define separate resources per arbiter, which are less then primary or secondary
 # used only when replica set is enabled
 resourcesArbiter: {}
@@ -228,8 +231,8 @@ resourcesArbiter: {}
 
 ## Node selector
 ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
-nodeSelector:
-  Name: opsera-node
+nodeSelector: {}
+  # Name: opsera-node
 
 ## Affinity
 ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
@@ -325,7 +328,7 @@ persistence:
 ##
 ingress:
   ## Set to true to enable ingress record generation
-  enabled: true
+  enabled: false
 
   ## Set this to true in order to add the corresponding annotations for cert-manager
   certManager: false

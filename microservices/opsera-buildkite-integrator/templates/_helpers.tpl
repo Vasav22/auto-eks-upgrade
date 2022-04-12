@@ -44,6 +44,16 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
 
 {{/*
+Datadog Service Check Annotations
+*/}}
+{{- define "opsera-buildkite-integrator.annotations" -}}
+ad.datadoghq.com/service.check_names: '["http_check"]'
+ad.datadoghq.com/service.init_configs: '[{}]'
+ad.datadoghq.com/service.instances: "[\n  {\n    \"name\": \"opsera-buildkite-integrator\",\n
+  \   \"url\": \"http://%%host%%:%%port%%/status\",\n    \"timeout\": 1,\n     \"http_response_status_code\": 200\n  }\n] \n"
+{{- end -}}
+
+{{/*
 Selector labels
 */}}
 {{- define "opsera-buildkite-integrator.selectorLabels" -}}

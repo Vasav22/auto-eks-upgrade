@@ -15,5 +15,5 @@ autoscaling:
 
 ingress:
   hosts:
-    - host: analytics-api.honeywell-platform.opsera.io
+    - host: analytics-api.honeywell.opsera.io
       paths: [/]

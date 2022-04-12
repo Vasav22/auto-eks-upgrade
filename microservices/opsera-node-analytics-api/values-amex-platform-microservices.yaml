@@ -15,5 +15,5 @@ autoscaling:
 
 ingress:
   hosts:
-    - host: analytics-api.amex-platform.opsera.io
+    - host: analytics-api.amex.opsera.io
       paths: [/]

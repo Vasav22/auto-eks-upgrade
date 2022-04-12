@@ -4,6 +4,8 @@ metadata:
   name: {{ include "opsera-ansible-integrator.fullname" . }}
   labels:
     {{- include "opsera-ansible-integrator.labels" . | nindent 4 }}
+  annotations:
+  {{- include "opsera-ansible-integrator.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
