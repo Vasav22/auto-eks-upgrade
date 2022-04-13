@@ -4,6 +4,8 @@ metadata:
   name: {{ include "opsera-analytics-v2.fullname" . }}
   labels:
     {{- include "opsera-analytics-v2.labels" . | nindent 4 }}
+  annotations:
+    {{- include "opsera-analytics-v2.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:

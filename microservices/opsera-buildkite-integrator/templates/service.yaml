@@ -4,6 +4,8 @@ metadata:
   name: {{ include "opsera-buildkite-integrator.fullname" . }}
   labels:
     {{- include "opsera-buildkite-integrator.labels" . | nindent 4 }}
+  annotations:
+    {{- include "opsera-buildkite-integrator.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:

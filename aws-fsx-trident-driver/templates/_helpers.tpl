@@ -2,7 +2,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "opsera-argo-integrator.name" -}}
+{{- define "opsera-mongodb.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
@@ -11,7 +11,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "opsera-argo-integrator.fullname" -}}
+{{- define "opsera-mongodb.fullname" -}}
 {{- if .Values.fullnameOverride -}}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
@@ -27,16 +27,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "opsera-argo-integrator.chart" -}}
+{{- define "opsera-mongodb.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
 Common labels
 */}}
-{{- define "opsera-argo-integrator.labels" -}}
-helm.sh/chart: {{ include "opsera-argo-integrator.chart" . }}
-{{ include "opsera-argo-integrator.selectorLabels" . }}
+{{- define "opsera-mongodb.labels" -}}
+helm.sh/chart: {{ include "opsera-mongodb.chart" . }}
+{{ include "opsera-mongodb.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -46,27 +46,17 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "opsera-argo-integrator.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "opsera-argo-integrator.name" . }}
+{{- define "opsera-mongodb.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "opsera-mongodb.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end -}}
-
-{{/*
-Datadog Service Check Annotations
-*/}}
-{{- define "opsera-argo-integrator.annotations" -}}
-ad.datadoghq.com/service.check_names: '["http_check"]'
-ad.datadoghq.com/service.init_configs: '[{}]'
-ad.datadoghq.com/service.instances: "[\n  {\n    \"name\": \"opsera-argo-integrator\",\n
-  \   \"url\": \"http://%%host%%:%%port%%/status\",\n    \"timeout\": 1,\n     \"http_response_status_code\": 200\n  }\n] \n"
 {{- end -}}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "opsera-argo-integrator.serviceAccountName" -}}
+{{- define "opsera-mongodb.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create -}}
-    {{ default (include "opsera-argo-integrator.fullname" .) .Values.serviceAccount.name }}
+    {{ default (include "opsera-mongodb.fullname" .) .Values.serviceAccount.name }}
 {{- else -}}
     {{ default "default" .Values.serviceAccount.name }}
 {{- end -}}
