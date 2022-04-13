@@ -52,6 +52,16 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 
 {{/*
+Datadog Service Check Annotations
+*/}}
+{{- define "opsera-gitlab-integrator.annotations" -}}
+ad.datadoghq.com/service.check_names: '["http_check"]'
+ad.datadoghq.com/service.init_configs: '[{}]'
+ad.datadoghq.com/service.instances: "[\n  {\n    \"name\": \"opsera-gitlab-integrator\",\n
+  \   \"url\": \"http://%%host%%:%%port%%/status\",\n    \"timeout\": 1,\n  \"http_response_status_code\": 200\n  }\n] \n"
+{{- end -}}
+
+{{/*
 Create the name of the service account to use
 */}}
 {{- define "opsera-gitlab-integrator.serviceAccountName" -}}
