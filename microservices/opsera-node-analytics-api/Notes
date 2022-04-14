@@ -1,5 +1,15 @@
 
-helm install opsera-node-analytics-api . \
+service_name=node-analytics-api
+k8_ns=microservices
+values_file_path=values.yaml
+
+helm upgrade opsera-${service_name} . \
+        -n ${k8_ns} \
+        --set DOCKER_ENV=kubernetes \
+        --set image.tag=kube-prod \
+        -f ${values_file_path} 
+        
+        helm install opsera-node-analytics-api . \
     -n microservices \
     --set DOCKER_ENV=kubernetes \
     --set image.tag=kube-dev \

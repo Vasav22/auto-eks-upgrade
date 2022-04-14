@@ -1,32 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "azure-terraform-integrator.fullname" . }}
+  name: {{ include "opsera-code-capthor.fullname" . }}
   labels:
-    {{- include "azure-terraform-integrator.labels" . | nindent 4 }}
+    {{- include "opsera-code-capthor.labels" . | nindent 4 }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
-  {{- end }}
   selector:
     matchLabels:
-      {{- include "azure-terraform-integrator.selectorLabels" . | nindent 6 }}
+      {{- include "opsera-code-capthor.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
         rollme: {{ randAlphaNum 5 | quote }}
-      {{- with .Values.podAnnotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       labels:
-        {{- include "azure-terraform-integrator.selectorLabels" . | nindent 8 }}
+        {{- include "opsera-code-capthor.selectorLabels" . | nindent 8 }}
     spec:
-      {{- with .Values.imagePullSecrets }}
+    {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
-      {{- end }}
-      serviceAccountName: {{ include "azure-terraform-integrator.serviceAccountName" . }}
+    {{- end }}
+      serviceAccountName: {{ include "opsera-code-capthor.serviceAccountName" . }}
       terminationGracePeriodSeconds: 7200
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
@@ -34,7 +28,7 @@ spec:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
@@ -42,20 +36,25 @@ spec:
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /health
+              path: /status
               port: http
             initialDelaySeconds: 40
           readinessProbe:
             httpGet:
-              path: /health
+              path: /status
               port: http
             initialDelaySeconds: 40
+          lifecycle:
+            preStop:
+              httpGet:
+                path: /stopListener
+                port: http
+                scheme: HTTP
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           env:          
           - name: "DOCKER_ENV"
             value: {{ .Values.DOCKER_ENV }}
-          {{- include "ms.extraSecretEnvironmentVars" .Values | nindent 10 }}
           volumeMounts:
           - name: microservices-efs
             mountPath: /apps/OpsERA/logs/components/
@@ -67,11 +66,11 @@ spec:
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.affinity }}
+    {{- with .Values.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.tolerations }}
+    {{- end }}
+    {{- with .Values.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
-      {{- end }}
+    {{- end }}
