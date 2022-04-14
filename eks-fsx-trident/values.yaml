@@ -1,9 +1,0 @@
-# Default values for opsera-mongodb.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-
-fsx_password: "v0\u0026\u003eBXv5sM}\u003eN]li{6Fu"
-
-fsx_managementLIF: "svm-01965eb4d39c14761.fs-0f77e18b8b36a388d.fsx.us-east-2.amazonaws.com"
-
-fsx_dataLIF: "management.fs-0f77e18b8b36a388d.fsx.us-east-2.amazonaws.com"
