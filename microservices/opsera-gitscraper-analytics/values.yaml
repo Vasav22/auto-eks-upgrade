@@ -34,11 +34,7 @@ securityContext: {}
 
 service:
   type: ClusterIP
-<<<<<<< HEAD
   port: 8087
-=======
-  port: 8054
->>>>>>> add new  service
 
 ingress:
   enabled: false
