@@ -4,6 +4,8 @@ metadata:
   name: {{ include "opsera-customer-service.fullname" . }}
   labels:
     {{- include "opsera-customer-service.labels" . | nindent 4 }}
+  annotations:
+    {{- include "opsera-customer-service.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
