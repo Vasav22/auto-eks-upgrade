@@ -4,6 +4,8 @@ metadata:
   name: {{ include "opsera-service-discovery.fullname" . }}
   labels:
     {{- include "opsera-service-discovery.labels" . | nindent 4 }}
+  annotations:
+    {{- include "opsera-service-discovery.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:

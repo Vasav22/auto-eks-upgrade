@@ -4,6 +4,8 @@ metadata:
   name: {{ include "opsera-informatica-integrator.fullname" . }}
   labels:
     {{- include "opsera-informatica-integrator.labels" . | nindent 4 }}
+  annotations:
+    {{- include "opsera-informatica-integrator.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:

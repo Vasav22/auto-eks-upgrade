@@ -4,6 +4,8 @@ metadata:
   name: {{ include "opsera-tools-manager.fullname" . }}
   labels:
     {{- include "opsera-tools-manager.labels" . | nindent 4 }}
+  annotations:
+    {{- include "opsera-tools-manager.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:

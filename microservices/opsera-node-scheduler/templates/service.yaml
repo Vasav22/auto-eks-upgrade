@@ -4,6 +4,8 @@ metadata:
   name: {{ include "opsera-node-scheduler.fullname" . }}
   labels:
     {{- include "opsera-node-scheduler.labels" . | nindent 4 }}
+  annotations:
+    {{- include "opsera-node-scheduler.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:

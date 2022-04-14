@@ -4,6 +4,8 @@ metadata:
   name: {{ include "opsera-log-accumulator.fullname" . }}
   labels:
     {{- include "opsera-log-accumulator.labels" . | nindent 4 }}
+  annotations:
+    {{- include "opsera-log-accumulator.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:

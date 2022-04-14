@@ -4,6 +4,8 @@ metadata:
   name: {{ include "opsera-kafka-integrator.fullname" . }}
   labels:
     {{- include "opsera-kafka-integrator.labels" . | nindent 4 }}
+  annotations:
+    {{- include "opsera-kafka-integrator.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:

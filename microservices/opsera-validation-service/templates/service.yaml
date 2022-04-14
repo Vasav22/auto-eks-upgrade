@@ -4,6 +4,8 @@ metadata:
   name: {{ include "opsera-validation-service.fullname" . }}
   labels:
     {{- include "opsera-validation-service.labels" . | nindent 4 }}
+  annotations:
+    {{- include "opsera-validation-service.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:

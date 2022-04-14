@@ -4,6 +4,8 @@ metadata:
   name: {{ include "opsera-sfdc-integrator.fullname" . }}
   labels:
     {{- include "opsera-sfdc-integrator.labels" . | nindent 4 }}
+  annotations:
+    {{- include "opsera-sfdc-integrator.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:

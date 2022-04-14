@@ -4,6 +4,8 @@ metadata:
   name: {{ include "opsera-reactapp-freetrial.fullname" . }}
   labels:
     {{- include "opsera-reactapp-freetrial.labels" . | nindent 4 }}
+  annotations:
+    {{- include "opsera-reactapp-freetrial.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:

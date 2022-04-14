@@ -4,6 +4,8 @@ metadata:
   name: {{ include "opsera-mail-service.fullname" . }}
   labels:
     {{- include "opsera-mail-service.labels" . | nindent 4 }}
+  annotations:
+    {{- include "opsera-mail-service.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
