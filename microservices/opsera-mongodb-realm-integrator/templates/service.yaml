@@ -4,6 +4,8 @@ metadata:
   name: {{ include "opsera-mongodb-realm-integrator.fullname" . }}
   labels:
     {{- include "opsera-mongodb-realm-integrator.labels" . | nindent 4 }}
+  annotations:
+    {{- include "opsera-mongodb-realm-integrator.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:

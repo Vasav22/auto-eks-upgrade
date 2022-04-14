@@ -4,6 +4,8 @@ metadata:
   name: {{ include "opsera-reactapp.fullname" . }}
   labels:
     {{- include "opsera-reactapp.labels" . | nindent 4 }}
+  annotations:
+    {{- include "opsera-reactapp.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
