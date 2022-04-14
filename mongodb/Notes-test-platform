@@ -1,0 +1,34 @@
+#test platform
+  
+mkdir -p /tmp/mongo-replicas
+cd /tmp/mongo-replicas
+mongodump --username=opsera --password=zfH6X56qD4p3vSK7 --db=opsera --forceTableScan -o .
+
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+
+AWS_DEFAULT_REGION=us-east-2 \
+./aws s3 cp /tmp/mongo-replicas/opsera s3://temp-test-mahantha/mongoexport/test-platform-cluster-mar07-2022 --recursive 
+
+#monog uninstall
+helm -n opsera uninstall mongodb
+
+#install
+helm install mongodb . -n opsera \
+                --set mongodbUsername=opsera \
+                --set mongodbPassword=zfH6X56qD4p3vSK7 \
+                --set mongodbRootPassword=zfH6X56qD4p3vSK7 \
+                --set mongodbDatabase=opsera \
+                --set ingress.hosts[0].name=mongodb.opsera-test-private.opsera.io
+
+#new container
+AWS_DEFAULT_REGION=us-east-2 \
+./aws s3 cp s3://temp-test-mahantha/mongoexport/test-platform-cluster-mar07-2022 /tmp/mongo-replicas/opsera/ --recursive 
+
+mongodump --username=opsera --password=zfH6X56qD4p3vSK7 --db=opsera --forceTableScan -o .
+
+mongorestore --drop --username=opsera --password=zfH6X56qD4p3vSK7 --db=opsera /tmp/mongo-replicas/opsera
+
+
+mongodb.opsera.svc.cluster.local
+mongo --host=mongodb.opsera.svc.cluster.local --port=27017 --username=opsera --password=zfH6X56qD4p3vSK7 

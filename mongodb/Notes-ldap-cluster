@@ -1,0 +1,46 @@
+#ldap platform
+  
+#old
+mkdir -p /tmp/mongo-replicas
+cd /tmp/mongo-replicas
+mongodump --username=mongo_admin --password=jnBr55TG8J --db=opseradb --forceTableScan -o .
+
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+
+cd aws/dist
+AWS_DEFAULT_REGION=us-east-2 \
+./aws s3 cp /tmp/mongo-replicas/opseradb s3://temp-test-mahantha/mongoexport/ldapowner-mar07-2022 --recursive 
+
+#monog uninstall
+ helm -n opsera uninstall mongodb
+#install new 
+helm install mongodb . -n opsera \
+                --set mongodbUsername=mongo_admin \
+                --set mongodbPassword=jnBr55TG8J \
+                --set mongodbRootPassword=jnBr55TG8J \
+                --set mongodbDatabase=opseradb \
+                --set ingress.hosts[0].name=mongodb.ldapowner-private.opsera.io
+
+
+#new container
+mkdir -p /tmp/mongo-replicas
+cd /tmp/mongo-replicas
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+cd aws/dist
+
+AWS_DEFAULT_REGION=us-east-2 \
+./aws s3 cp s3://temp-test-mahantha/mongoexport/ldapowner-mar07-2022 /tmp/mongo-replicas/opseradb --recursive 
+
+mongorestore --drop --username=mongo_admin --password=jnBr55TG8J --db=opseradb /tmp/mongo-replicas/opseradb
+
+mongorestore --host=mongodb.opsera.svc.cluster.local --drop --username=mongo_admin --password=jnBr55TG8J --db=opseradb /tmp/mongo-replicas/opseradb
+
+
+# helm upgrade mongodb . -n opsera \
+#                 --set mongodbUsername=opsera \
+#                 --set mongodbPassword=jnBr55TG8J \
+#                 --set mongodbRootPassword=jnBr55TG8J \
+#                 --set mongodbDatabase=opsera \
+#                 --set ingress.hosts[0].name=mongodb.opsera-test-private.opsera.io
