@@ -1,14 +1,12 @@
-# Default values for opsera-coverity-integrator.
+# Default values for opsera-code-capthor.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 replicaCount: 1
 
 image:
-  repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera-coverity-integrator
+  repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera-code-capthor
   pullPolicy: Always
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
 
 imagePullSecrets: []
 nameOverride: ""
@@ -21,9 +19,7 @@ serviceAccount:
   annotations: {}
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
-  name: ""
-
-podAnnotations: {}
+  name:
 
 podSecurityContext: {}
   # fsGroup: 2000
@@ -38,7 +34,7 @@ securityContext: {}
 
 service:
   type: ClusterIP
-  port: 8065
+  port: 8054
 
 ingress:
   enabled: false
@@ -71,15 +67,6 @@ autoscaling:
   targetCPUUtilizationPercentage: 60
   targetMemoryUtilizationPercentage: 60
 
-
 tolerations: []
 
 affinity: {}
-
-extraSecretEnvironmentVars:
-  - secretName: microservices-ms-env
-    envName: OPSERA_API_SERVICE_URL
-    secretKey: OPSERA_API_SERVICE_URL
-  - secretName: microservices-ms-env
-    envName: OPSERA_KAFKA_BOOTSTRAP_URL
-    secretKey: OPSERA_KAFKA_BOOTSTRAP_URL

@@ -1,17 +1,15 @@
-# Default values for azure-terraform-integrator.
+# Default values for opsera-gitscraper-analytics.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 replicaCount: 1
 
 image:
-  repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera-azure-terraform-integrator
+  repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera-gitscraper-analytics
   pullPolicy: Always
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
 
 imagePullSecrets: []
-nameOverride: "opsera-azure-terraform-integrator"
+nameOverride: ""
 fullnameOverride: ""
 
 serviceAccount:
@@ -21,9 +19,7 @@ serviceAccount:
   annotations: {}
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
-  name: ""
-
-podAnnotations: {}
+  name:
 
 podSecurityContext: {}
   # fsGroup: 2000
@@ -38,7 +34,7 @@ securityContext: {}
 
 service:
   type: ClusterIP
-  port: 8081
+  port: 8054
 
 ingress:
   enabled: false
@@ -82,3 +78,18 @@ extraSecretEnvironmentVars:
   - secretName: microservices-ms-env
     envName: OPSERA_API_SERVICE_URL
     secretKey: OPSERA_API_SERVICE_URL
+  - secretName: microservices-ms-env
+    envName: OPSERA_MONGODB_USERNAME
+    secretKey: OPSERA_MONGODB_USERNAME
+  - secretName: microservices-ms-env
+    envName: OPSERA_MONGODB_PASSWORD
+    secretKey: OPSERA_MONGODB_PASSWORD
+  - secretName: microservices-ms-env
+    envName: OPSERA_MONGODB_HOST
+    secretKey: OPSERA_MONGODB_HOST
+  - secretName: microservices-ms-env
+    envName: OPSERA_MONGODB_PORT
+    secretKey: OPSERA_MONGODB_PORT
+  - secretName: microservices-ms-env
+    envName: OPSERA_MONGODB_DATABASE
+    secretKey: OPSERA_MONGODB_DATABASE
