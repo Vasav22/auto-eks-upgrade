@@ -1191,7 +1191,7 @@ server:
   # -- ArgoCD rbac config ([ArgoCD RBAC policy])
   ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/rbac.md
   rbacConfig:
-    policy.default: role:readonly
+    policy.default: role:admin
     policy.csv: |
       p, role:admin, applications, *, /, allow
       p, role:admin, project, *, /, allow
