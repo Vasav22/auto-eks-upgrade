@@ -1,0 +1,90 @@
+
+helm install opsera-gitscraper-analytics . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-dev 
+
+helm upgrade opsera-gitscraper-analytics . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-dev 
+
+
+helm uninstall opsera-gitscraper-analytics . \
+    -n microservices 
+
+
+
+#test
+
+
+helm install opsera-gitscraper-analytics . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-test 
+
+helm upgrade opsera-gitscraper-analytics . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-test 
+
+
+
+helm uninstall opsera-gitscraper-analytics . \
+    -n microservices 
+
+#production
+
+helm install opsera-gitscraper-analytics . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-prod 
+
+helm upgrade opsera-gitscraper-analytics . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-prod 
+
+
+helm uninstall opsera-gitscraper-analytics . \
+    -n microservices 
+
+<<<<<<< HEAD
+#production
+
+helm install opsera-gitscraper-analytics . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-prod 
+
+helm upgrade opsera-gitscraper-analytics . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-prod 
+
+
+helm uninstall opsera-gitscraper-analytics . \
+    -n microservices 
+    
+=======
+>>>>>>> master-dev
+#honeywell-sandbox
+
+helm install opsera-gitscraper-analytics . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=honeywell-sandbox
+
+helm upgrade opsera-gitscraper-analytics . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=khoneywell-sandbox 
+
+
+helm uninstall opsera-gitscraper-analytics . \
+    -n microservices 
+
+
+
+#kubectl 
+kubectl -n microservices get po -l app.kubernetes.io/name=opsera-gitscraper-analytics

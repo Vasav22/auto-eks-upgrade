@@ -61,6 +61,7 @@ spec:
           env:          
           - name: "DOCKER_ENV"
             value: {{ .Values.DOCKER_ENV }}
+          {{- include "ms.extraSecretEnvironmentVars" .Values | nindent 10 }}
           volumeMounts:
           - name: microservices-efs
             mountPath: /apps/OpsERA/logs/components/

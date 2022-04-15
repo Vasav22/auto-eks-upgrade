@@ -55,8 +55,7 @@ spec:
           env:          
           - name: "DOCKER_ENV"
             value: {{ .Values.DOCKER_ENV }}
-                    - name: "DOCKER_ENV"
-            value: {{ .Values.DOCKER_ENV }}
+          {{- include "ms.extraSecretEnvironmentVars" .Values | nindent 10 }}
           - name: DD_AGENT_HOST
               valueFrom:
                 fieldRef:
