@@ -4,6 +4,8 @@ metadata:
   name: {{ include "opsera-twistlock-integrator.fullname" . }}
   labels:
     {{- include "opsera-twistlock-integrator.labels" . | nindent 4 }}
+  annotations:
+    {{- include "opsera-twistlock-integrator.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:

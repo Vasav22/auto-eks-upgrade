@@ -1,0 +1,18 @@
+helm install opsera-azure-terraform-integrator . -n microservices --set DOCKER_ENV=kubernetes --set image.tag=kube-prod
+
+helm install opsera-azure-terraform-integrator . -n microservices --set DOCKER_ENV=kubernetes --set image.tag=kube-prod
+
+
+
+kafka-topics.sh --create --zookeeper kafka-zookeeper.kafka.svc.cluster.local:2181 --replication-factor 2 --partitions 2 --topic opsera.azure.terraform.integrator.aks.request
+
+
+kafka-topics.sh --create --zookeeper kafka-zookeeper.kafka.svc.cluster.local:2181 --replication-factor 2 --partitions 2 --topic opsera.azure.terraform.integrator.aks.response
+
+
+  2a) opsera.azure.terraform.integrator.aks.request
+
+  2b) opsera.azure.terraform.integrator.aks.response
+
+
+kubectl -n microservices get po -l "app.kubernetes.io/name=opsera-azure-terraform-integrator"

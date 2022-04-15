@@ -51,6 +51,16 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
+Datadog Service Check Annotations
+*/}}
+{{- define "opsera-jfrog-integrator.annotations" -}}
+ad.datadoghq.com/service.check_names: '["http_check"]'
+ad.datadoghq.com/service.init_configs: '[{}]'
+ad.datadoghq.com/service.instances: "[\n  {\n    \"name\": \"opsera-jfrog-integrator\",\n
+  \   \"url\": \"http://%%host%%:%%port%%/\",\n    \"timeout\": 1,\n  \"http_response_status_code\": 200\n  }\n] \n"
+{{- end -}}
+
+{{/*
 Create the name of the service account to use
 */}}
 {{- define "opsera-jfrog-integrator.serviceAccountName" -}}
@@ -60,3 +70,18 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Inject extra environment populated by secrets, if populated
+*/}}
+{{- define "ms.extraSecretEnvironmentVars" -}}
+{{- if .extraSecretEnvironmentVars -}}
+{{- range .extraSecretEnvironmentVars }}
+- name: {{ .envName }}
+  valueFrom:
+   secretKeyRef:
+     name: {{ .secretName }}
+     key: {{ .secretKey }}
+{{- end -}}
+{{- end -}}
+{{- end -}}

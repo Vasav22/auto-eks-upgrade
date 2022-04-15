@@ -4,6 +4,8 @@ metadata:
   name: {{ include "opsera-aws-service.fullname" . }}
   labels:
     {{- include "opsera-aws-service.labels" . | nindent 4 }}
+  annotations:
+  {{- include "opsera-aws-service.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:

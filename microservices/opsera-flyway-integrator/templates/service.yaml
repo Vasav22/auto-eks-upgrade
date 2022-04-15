@@ -4,6 +4,8 @@ metadata:
   name: {{ include "opsera-flyway-integrator.fullname" . }}
   labels:
     {{- include "opsera-flyway-integrator.labels" . | nindent 4 }}
+  annotations:
+    {{- include "opsera-flyway-integrator.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
