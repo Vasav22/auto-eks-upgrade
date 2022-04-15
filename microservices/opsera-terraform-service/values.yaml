@@ -109,5 +109,5 @@ extraSecretEnvironmentVars:
     envName: OPSERA_PLATFORM_DOMAIN
     secretKey: OPSERA_PLATFORM_DOMAIN
 
-HELM_GIT_BRANCH: master-test
+HELM_GIT_BRANCH: master
 GIT_CREDENTIAL: mahantha:glpat-LUeht_nH3LdsWss3A7bt
