@@ -4,6 +4,8 @@ metadata:
   name: {{ include "opsera-logstash-integrator.fullname" . }}
   labels:
     {{- include "opsera-logstash-integrator.labels" . | nindent 4 }}
+  annotations:
+    {{- include "opsera-logstash-integrator.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:

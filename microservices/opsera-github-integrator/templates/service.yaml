@@ -4,6 +4,8 @@ metadata:
   name: {{ include "opsera-github-integrator.fullname" . }}
   labels:
     {{- include "opsera-github-integrator.labels" . | nindent 4 }}
+  annotations:
+    {{- include "opsera-github-integrator.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:

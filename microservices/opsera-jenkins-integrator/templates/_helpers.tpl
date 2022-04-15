@@ -36,6 +36,9 @@ Common labels
 */}}
 {{- define "opsera-jenkins-integrator.labels" -}}
 helm.sh/chart: {{ include "opsera-jenkins-integrator.chart" . }}
+tags.datadoghq.com/env: {{ .Values.datadog.metadata.tags.env }}
+tags.datadoghq.com/service: {{ .Values.datadog.metadata.tags.service }}
+tags.datadoghq.com/version: {{ .Values.datadog.metadata.tags.version }}
 {{ include "opsera-jenkins-integrator.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
@@ -49,6 +52,19 @@ Selector labels
 {{- define "opsera-jenkins-integrator.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "opsera-jenkins-integrator.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
+tags.datadoghq.com/env: {{ .Values.datadog.metadata.tags.env }}
+tags.datadoghq.com/service: {{ .Values.datadog.metadata.tags.service }}
+tags.datadoghq.com/version: {{ .Values.datadog.metadata.tags.version }}
+{{- end -}}
+
+{{/*
+Datadog Service Check Annotations
+*/}}
+{{- define "opsera-jenkins-integrator.annotations" -}}
+ad.datadoghq.com/service.check_names: '["http_check"]'
+ad.datadoghq.com/service.init_configs: '[{}]'
+ad.datadoghq.com/service.instances: "[\n  {\n    \"name\": \"opsera-jenkins-integrator\",\n
+  \   \"url\": \"http://%%host%%:%%port%%/status\",\n    \"timeout\": 1,\n  \"http_response_status_code\": 200\n  }\n] \n"
 {{- end -}}
 
 {{/*
@@ -59,5 +75,20 @@ Create the name of the service account to use
     {{ default (include "opsera-jenkins-integrator.fullname" .) .Values.serviceAccount.name }}
 {{- else -}}
     {{ default "default" .Values.serviceAccount.name }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Inject extra environment populated by secrets, if populated
+*/}}
+{{- define "ms.extraSecretEnvironmentVars" -}}
+{{- if .extraSecretEnvironmentVars -}}
+{{- range .extraSecretEnvironmentVars }}
+- name: {{ .envName }}
+  valueFrom:
+   secretKeyRef:
+     name: {{ .secretName }}
+     key: {{ .secretKey }}
+{{- end -}}
 {{- end -}}
 {{- end -}}
