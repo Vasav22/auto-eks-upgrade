@@ -4,6 +4,8 @@ metadata:
   name: {{ include "opsera-apigateway.fullname" . }}
   labels:
     {{- include "opsera-apigateway.labels" . | nindent 4 }}
+  annotations:
+  {{- include ".annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:

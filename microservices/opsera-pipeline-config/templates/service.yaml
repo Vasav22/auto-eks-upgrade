@@ -4,6 +4,8 @@ metadata:
   name: {{ include "opsera-pipeline-config.fullname" . }}
   labels:
     {{- include "opsera-pipeline-config.labels" . | nindent 4 }}
+  annotations:
+    {{- include "opsera-pipeline-config.annotations" . | nindent 4 }}  
 spec:
   type: {{ .Values.service.type }}
   ports:

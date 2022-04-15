@@ -43,6 +43,17 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
 {{/*
+Datadog Service Check Annotations
+*/}}
+{{- define "opsera-coverity-integrator.annotations" -}}
+ad.datadoghq.com/service.check_names: '["http_check"]'
+ad.datadoghq.com/service.init_configs: '[{}]'
+ad.datadoghq.com/service.instances: "[\n  {\n    \"name\": \"opsera-coverity-integrator\",\n
+  \   \"url\": \"http://%%host%%:%%port%%/status\",\n    \"timeout\": 1,\n     \"http_response_status_code\": 200\n  }\n] \n"
+{{- end -}}
+
+
+{{/*
 Selector labels
 */}}
 {{- define "opsera-coverity-integrator.selectorLabels" -}}
@@ -60,3 +71,18 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Inject extra environment populated by secrets, if populated
+*/}}
+{{- define "ms.extraSecretEnvironmentVars" -}}
+{{- if .extraSecretEnvironmentVars -}}
+{{- range .extraSecretEnvironmentVars }}
+- name: {{ .envName }}
+  valueFrom:
+   secretKeyRef:
+     name: {{ .secretName }}
+     key: {{ .secretKey }}
+{{- end -}}
+{{- end -}}
+{{- end -}}

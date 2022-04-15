@@ -4,6 +4,8 @@ metadata:
   name: {{ include "opsera-packer-integrator.fullname" . }}
   labels:
     {{- include "opsera-packer-integrator.labels" . | nindent 4 }}
+  annotations:
+    {{- include "opsera-packer-integrator.annotations" . | nindent 4 }} 
 spec:
   type: {{ .Values.service.type }}
   ports:

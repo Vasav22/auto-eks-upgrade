@@ -4,6 +4,8 @@ metadata:
   name: {{ include "opsera-monitoring-service.fullname" . }}
   labels:
     {{- include "opsera-monitoring-service.labels" . | nindent 4 }}
+  annotations:
+    {{- include "opsera-monitoring-service.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:

@@ -4,6 +4,8 @@ metadata:
   name: {{ include "opsera-vault-service.fullname" . }}
   labels:
     {{- include "opsera-vault-service.labels" . | nindent 4 }}
+  annotations:
+    {{- include ".annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
