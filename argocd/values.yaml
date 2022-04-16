@@ -1191,9 +1191,20 @@ server:
   # -- ArgoCD rbac config ([ArgoCD RBAC policy])
   ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/rbac.md
   rbacConfig:
-    policy.default: role:readonly
-    # policy.csv: |
-      # g, opsera_admin, role:admin
+    policy.default: role:admin
+    policy.csv: |
+      p, role:admin, applications, *, /, allow
+      p, role:admin, project, *, /, allow
+      p, role:admin, clusters, get, *, allow
+      p, role:admin, clusters, delete, *, allow
+      p, role:admin, clusters, update, *, allow
+      p, role:admin, clusters, create, *, allow
+      p, role:admin, repositories, get, *, allow
+      p, role:admin, repositories, create, *, allow
+      p, role:admin, repositories, update, *, allow
+      p, role:admin, repositories, delete, *, allow
+      g, {{ .Values.server.opseraUser.userSecret.username}}, role:admin
+      
     # policy.csv is an file containing user-defined RBAC policies and role definitions (optional).
     # Policy rules are in the form:
     #   p, subject, resource, action, object, effect
