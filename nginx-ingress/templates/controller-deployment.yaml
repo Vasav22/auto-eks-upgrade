@@ -32,8 +32,20 @@ spec:
   minReadySeconds: {{ .Values.controller.minReadySeconds }}
   template:
     metadata:
-      {{- if or .Values.controller.podAnnotations .Values.controller.podAnnotationConfigChecksum }}
       annotations:
+      {{- if .Values.datadog.logs.filter }}
+        ad.datadoghq.com/nginx-ingress-controller.logs: >-
+          [{
+            "source": "nginx-ingress-controller",
+            "service": "nginx-ingress-controller",
+            "log_processing_rules": [{
+              "type": "exclude_at_match",
+              "name": "exclude_unuseful_log_event",
+              "pattern" : "0000] TCP 200 0 0 0"
+            }]
+          }]
+      {{- end }}
+      {{- if or .Values.controller.podAnnotations .Values.controller.podAnnotationConfigChecksum }}
       {{- range $key, $value := .Values.controller.podAnnotations }}
         {{ $key }}: {{ $value | quote }}
       {{- end }}
