@@ -4,6 +4,8 @@ metadata:
   name: {{ include "opsera-mongo-integrator.fullname" . }}
   labels:
     {{- include "opsera-mongo-integrator.labels" . | nindent 4 }}
+  annotations:
+    {{- include "opsera-mongo-integrator.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:

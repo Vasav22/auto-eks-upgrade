@@ -4,6 +4,8 @@ metadata:
   name: {{ include "opsera-customer-terraform-integrator.fullname" . }}
   labels:
     {{- include "opsera-customer-terraform-integrator.labels" . | nindent 4 }}
+  annotations:
+    {{- include "opsera-customer-terraform-integrator.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:

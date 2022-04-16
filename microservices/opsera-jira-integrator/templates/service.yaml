@@ -4,6 +4,8 @@ metadata:
   name: {{ include "opsera-jira-integrator.fullname" . }}
   labels:
     {{- include "opsera-jira-integrator.labels" . | nindent 4 }}
+  annotations:
+    {{- include "opsera-jira-integrator.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:

@@ -4,6 +4,8 @@ metadata:
   name: {{ include "opsera-nodejs-api-integrator-service.fullname" . }}
   labels:
     {{- include "opsera-nodejs-api-integrator-service.labels" . | nindent 4 }}
+  annotations:
+    {{- include "opsera-nodejs-api-integrator-service.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:

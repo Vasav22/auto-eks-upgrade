@@ -4,6 +4,8 @@ metadata:
   name: {{ include "opsera-jfrog-integrator.fullname" . }}
   labels:
     {{- include "opsera-jfrog-integrator.labels" . | nindent 4 }}
+  annotations:
+    {{- include "opsera-jfrog-integrator.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
