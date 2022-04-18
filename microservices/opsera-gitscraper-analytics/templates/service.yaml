@@ -4,6 +4,8 @@ metadata:
   name: {{ include "opsera-gitscraper-analytics.fullname" . }}
   labels:
     {{- include "opsera-gitscraper-analytics.labels" . | nindent 4 }}
+  annotations:
+    {{- include "opsera-gitscraper-analytics.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
