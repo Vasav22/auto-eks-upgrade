@@ -57,9 +57,9 @@ spec:
             value: {{ .Values.DOCKER_ENV }}
           {{- include "ms.extraSecretEnvironmentVars" .Values | nindent 10 }}
           - name: DD_AGENT_HOST
-              valueFrom:
-                fieldRef:
-                  fieldPath: status.hostIP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.hostIP
           - name: DD_ENV
             valueFrom:
               fieldRef:
