@@ -1,26 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "opsera-code-capthor.fullname" . }}
+  name: {{ include "opsera-code-capthor-service.fullname" . }}
   labels:
-    {{- include "opsera-code-capthor.labels" . | nindent 4 }}
+    {{- include "opsera-code-capthor-service.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "opsera-code-capthor.selectorLabels" . | nindent 6 }}
+      {{- include "opsera-code-capthor-service.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
         rollme: {{ randAlphaNum 5 | quote }}
       labels:
-        {{- include "opsera-code-capthor.selectorLabels" . | nindent 8 }}
+        {{- include "opsera-code-capthor-service.selectorLabels" . | nindent 8 }}
     spec:
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      serviceAccountName: {{ include "opsera-code-capthor.serviceAccountName" . }}
+      serviceAccountName: {{ include "opsera-code-capthor-service.serviceAccountName" . }}
       terminationGracePeriodSeconds: 7200
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
