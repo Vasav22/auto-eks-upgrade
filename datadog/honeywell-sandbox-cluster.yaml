@@ -1,0 +1,37 @@
+# Datadog Agent with Logs, APM, Processes, and System Probe enabled
+# with specific configuration to work on AKS.
+
+targetSystem: "linux"
+datadog:
+  apiKey: a09f33395b68795f7aaf2ec664a59835
+  appKey: da2b9e89-8c87-537f-8f55-dd06edc84cf9
+  clusterName: honeywell-sandbox-cluster
+  tags: 
+    - cluster: honeywell-sandbox-cluster
+    - environment: dev
+    - customer: honeywell
+  logs:
+    enabled: false
+    containerCollectAll: false
+    containerCollectUsingFiles: false
+  processAgent:
+    enabled: true
+    processCollection: false
+  leaderElection: false
+
+# agent:
+#   customAgentConfig:
+#     config_providers:
+#       - name: endpointschecks
+#         polling: true
+
+clusterAgent:
+  replicas: 2
+  rbac:
+    create: true
+    serviceAccountName: default
+  env: 
+  - name: DD_COLLECT_KUBERNETES_EVENTS
+    value: "true"
+  - name: DD_LEADER_ELECTION
+    value: "true"

@@ -1,0 +1,60 @@
+# Datadog Agent with Logs, APM, Processes, and System Probe enabled
+# with specific configuration to work on AKS.
+
+targetSystem: "linux"
+datadog:
+  apiKey: a09f33395b68795f7aaf2ec664a59835
+  appKey: da2b9e89-8c87-537f-8f55-dd06edc84cf9
+  clusterName: opsera-test-platform
+  tags: 
+    - cluster: opsera-test-platform
+    - environment: test
+    - customer: opsera
+  logs:
+    enabled: true
+    containerCollectAll: true
+    containerCollectUsingFiles: true
+  processAgent:
+    enabled: true
+    processCollection: false
+  apm:
+    enabled: true
+  leaderElection: false
+  env: 
+    - name: DD_CONTAINER_EXCLUDE
+      value: "kube_namespace:opsera kube_namespace:kube-system kube_namespace:default image:gcr.io/datadoghq/agent image:docker.elastic.co/beats/metricbeat"
+    - name: DD_CLC_RUNNER_ENABLED
+      value: "true"
+    - name: DD_CLC_RUNNER_HOST
+      valueFrom:
+        fieldRef:
+          fieldPath: status.podIP
+    - name: DD_LEADER_ELECTION
+      value: "false"
+    # - name: DD_EXTRA_CONFIG_PROVIDERS
+    #   value: "endpointschecks"
+  # confd:
+  #   custom_check_nodeanalytics_service.yaml: |-
+  #     init_config:
+  #     instances:
+  #       [{}]
+  clusterChecks:
+    enabled: true
+
+clusterAgent:
+  enabled: true
+  replicas: 2
+  # rbac:
+  #   create: true
+  #   serviceAccountName: default
+  env:
+    - name: DD_CLUSTER_CHECKS_ADVANCED_DISPATCHING_ENABLED
+      value: "true"
+    - name: DD_COLLECT_KUBERNETES_EVENTS
+      value: "true"
+    - name: DD_LEADER_ELECTION
+      value: "true"
+
+clusterChecksRunner:
+  enabled: true
+  replicas: 2
