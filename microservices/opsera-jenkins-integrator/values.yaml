@@ -76,7 +76,6 @@ datadog:
     tags: 
       env: "opsera-test-platform"
       service: "opsera-jenkins-integrator"
-      version: "1"
 extraSecretEnvironmentVars:
   - secretName: microservices-ms-env
     envName: OPSERA_API_SERVICE_URL
