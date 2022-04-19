@@ -1,0 +1,16 @@
+apiVersion: v2
+appVersion: 1.4.0
+description: Datadog Synthetics Private Location
+home: https://www.datadoghq.com
+icon: https://datadog-live.imgix.net/img/dd_logo_70x75.png
+keywords:
+- monitoring
+- synthetics
+maintainers:
+- email: support@datadoghq.com
+  name: Datadog
+name: synthetics-private-location
+sources:
+- https://docs.datadoghq.com/synthetics/private_locations
+- https://app.datadoghq.com/synthetics/settings/private-locations
+version: 0.8.0
