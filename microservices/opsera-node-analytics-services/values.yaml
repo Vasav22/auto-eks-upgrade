@@ -1,28 +1,13 @@
-# Default values for opsera-nodeapi.
+# Default values for opsera-analytics-v2.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 replicaCount: 1
 
-redis:
-  image:
-    repository: redis
-    pullPolicy: Always
-    tag: 6.0-rc3-alpine
-    
-  port: 6379
-  resources:
-    limits:
-      cpu: 500m
-      memory: 2Gi
-    requests:
-      cpu: 100m
-      memory: 1Gi
-
 image:
-  repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera-nodeapi
+  repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera-analytics-v2
   pullPolicy: Always
-  tag: test
+  tag: tag
 
 imagePullSecrets: []
 nameOverride: ""
@@ -50,16 +35,16 @@ securityContext: {}
 
 service:
   type: ClusterIP
-  port: 3000
+  port: 3010
 
 ingress:
-  enabled: true
-  annotations:
-    kubernetes.io/ingress.class: nginx
+  enabled: false
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
     - host: chart-example.local
-      paths: [/]
+      paths: []
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
@@ -78,22 +63,20 @@ nodeSelector:
 
 autoscaling:
   enabled: true
-  minReplicas: 3
-  maxReplicas: 3
+  minReplicas: 1
+  maxReplicas: 10
   targetCPUUtilizationPercentage: 60
-  targetMemoryUtilizationPercentage: 60
+  targetMemoryUtilizationPercentage: 60  
 
 tolerations: []
 
 affinity: {}
 
+
 extraSecretEnvironmentVars:
   - secretName: microservices-ms-env
     envName: OPSERA_DB_HOST
     secretKey: OPSERA_DB_HOST
-  - secretName: microservices-ms-env
-    envName: OPSERA_NODE_API_INTEGRATOR_SERVICE_INTERNAL_URL
-    secretKey: OPSERA_NODE_API_INTEGRATOR_SERVICE_INTERNAL_URL
   - secretName: microservices-ms-env
     envName: OPSERA_DB_NAME
     secretKey: OPSERA_DB_NAME
@@ -211,9 +194,3 @@ extraSecretEnvironmentVars:
   - secretName: microservices-ms-env
     envName: OPSERA_KAFKA_ENABLE_FLAG
     secretKey: OPSERA_KAFKA_ENABLE_FLAG
-  - secretName: microservices-ms-env
-    envName: OPSERA_ORCHESTRATION_ENABLE_SFDC_WEBHOOK_RUNS_FLAG
-    secretKey: OPSERA_ORCHESTRATION_ENABLE_SFDC_WEBHOOK_RUNS_FLAG
-  - secretName: microservices-ms-env
-    envName: OPSERA_NODE_TOOLS_MANAGEMENT_SERVICE_INTERNAL_URL
-    secretKey: OPSERA_NODE_TOOLS_MANAGEMENT_SERVICE_INTERNAL_URL
