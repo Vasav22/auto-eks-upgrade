@@ -1,26 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "opsera-jenkins-integrator.fullname" . }}
+  name: {{ include "opsera-code-capthor-service.fullname" . }}
   labels:
-    {{- include "opsera-jenkins-integrator.labels" . | nindent 4 }}
+    {{- include "opsera-code-capthor-service.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "opsera-jenkins-integrator.selectorLabels" . | nindent 6 }}
+      {{- include "opsera-code-capthor-service.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
         rollme: {{ randAlphaNum 5 | quote }}
       labels:
-        {{- include "opsera-jenkins-integrator.selectorLabels" . | nindent 8 }}
+        {{- include "opsera-code-capthor-service.selectorLabels" . | nindent 8 }}
     spec:
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      serviceAccountName: {{ include "opsera-jenkins-integrator.serviceAccountName" . }}
+      serviceAccountName: {{ include "opsera-code-capthor-service.serviceAccountName" . }}
       terminationGracePeriodSeconds: 7200
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
@@ -56,22 +56,6 @@ spec:
           - name: "DOCKER_ENV"
             value: {{ .Values.DOCKER_ENV }}
           {{- include "ms.extraSecretEnvironmentVars" .Values | nindent 10 }}
-          - name: DD_AGENT_HOST
-            valueFrom:
-              fieldRef:
-                fieldPath: status.hostIP
-          - name: DD_ENV
-            valueFrom:
-              fieldRef:
-                fieldPath: metadata.labels['tags.datadoghq.com/env']
-          - name: DD_VERSION
-            valueFrom:
-              fieldRef:
-                fieldPath: metadata.labels['tags.datadoghq.com/version']
-          - name: DD_LOGS_INJECTION
-            value: "true"
-          - name: DD_PROFILING_ENABLED
-            value: "true"
           volumeMounts:
           - name: microservices-efs
             mountPath: /apps/OpsERA/logs/components/
@@ -88,6 +72,6 @@ spec:
         {{- toYaml . | nindent 8 }}
     {{- end }}
     {{- with .Values.tolerations }}
-    tolerations:
-      {{- toYaml . | nindent 8 }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
     {{- end }}
