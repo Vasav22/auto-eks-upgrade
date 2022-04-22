@@ -1,5 +1,5 @@
 apiVersion: v2
-name: opsera-aws-marketplace-registration-service
+name: opsera-node-aws-marketplace-registration-service
 description: A Helm chart for Kubernetes
 
 # A chart can be either an 'application' or a 'library' chart.

@@ -2,14 +2,14 @@
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "opsera-aws-marketplace-registration-service.fullname" . }}
+  name: {{ include "opsera-node-aws-marketplace-registration-service.fullname" . }}
   labels:
-    {{- include "opsera-aws-marketplace-registration-service.labels" . | nindent 4 }}
+    {{- include "opsera-node-aws-marketplace-registration-service.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "opsera-aws-marketplace-registration-service.fullname" . }}
+    name: {{ include "opsera-node-aws-marketplace-registration-service.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:

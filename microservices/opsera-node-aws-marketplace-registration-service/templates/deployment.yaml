@@ -1,26 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "opsera-aws-marketplace-registration-service.fullname" . }}
+  name: {{ include "opsera-node-aws-marketplace-registration-service.fullname" . }}
   labels:
-    {{- include "opsera-aws-marketplace-registration-service.labels" . | nindent 4 }}
+    {{- include "opsera-node-aws-marketplace-registration-service.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "opsera-aws-marketplace-registration-service.selectorLabels" . | nindent 6 }}
+      {{- include "opsera-node-aws-marketplace-registration-service.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
         rollme: {{ randAlphaNum 5 | quote }}
       labels:
-        {{- include "opsera-aws-marketplace-registration-service.selectorLabels" . | nindent 8 }}
+        {{- include "opsera-node-aws-marketplace-registration-service.selectorLabels" . | nindent 8 }}
     spec:
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      serviceAccountName: {{ include "opsera-aws-marketplace-registration-service.serviceAccountName" . }}
+      serviceAccountName: {{ include "opsera-node-aws-marketplace-registration-service.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:

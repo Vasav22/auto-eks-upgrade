@@ -1,5 +1,5 @@
 
-helm install opsera-aws-marketplace-registration-service . \
+helm install opsera-node-aws-marketplace-registration-service . \
     -n microservices \
     --set DOCKER_ENV=kubernetes \
     --set image.tag=kube-dev \
@@ -7,7 +7,7 @@ helm install opsera-aws-marketplace-registration-service . \
     --set ingress.hosts[0].paths[0]=/
 
 
-helm upgrade opsera-aws-marketplace-registration-service . \
+helm upgrade opsera-node-aws-marketplace-registration-service . \
     -n microservices \
     --set DOCKER_ENV=kubernetes \
     --set image.tag=kube-dev \
@@ -16,7 +16,7 @@ helm upgrade opsera-aws-marketplace-registration-service . \
 
 
 
-helm uninstall opsera-aws-marketplace-registration-service . \
+helm uninstall opsera-node-aws-marketplace-registration-service . \
     -n microservices 
 
 
@@ -24,7 +24,7 @@ helm uninstall opsera-aws-marketplace-registration-service . \
 #test
 
 
-helm install opsera-aws-marketplace-registration-service . \
+helm install opsera-node-aws-marketplace-registration-service . \
     -n microservices \
     --set DOCKER_ENV=kubernetes \
     --set image.tag=kube-test \
@@ -32,7 +32,7 @@ helm install opsera-aws-marketplace-registration-service . \
     --set ingress.hosts[0].paths[0]=/
 
 
-helm upgrade opsera-aws-marketplace-registration-service . \
+helm upgrade opsera-node-aws-marketplace-registration-service . \
     -n microservices \
     --set DOCKER_ENV=kubernetes \
     --set image.tag=kube-test \
@@ -41,12 +41,12 @@ helm upgrade opsera-aws-marketplace-registration-service . \
 
 
 
-helm uninstall opsera-aws-marketplace-registration-service . \
+helm uninstall opsera-node-aws-marketplace-registration-service . \
     -n microservices 
 
 #production
 
-helm install opsera-aws-marketplace-registration-service . \
+helm install opsera-node-aws-marketplace-registration-service . \
     -n microservices \
     --set DOCKER_ENV=kubernetes \
     --set image.tag=kube-prod \
@@ -54,7 +54,7 @@ helm install opsera-aws-marketplace-registration-service . \
     --set ingress.hosts[0].paths[0]=/
 
 
-helm upgrade opsera-aws-marketplace-registration-service . \
+helm upgrade opsera-node-aws-marketplace-registration-service . \
     -n microservices \
     --set DOCKER_ENV=kubernetes \
     --set image.tag=kube-prod \
@@ -63,11 +63,11 @@ helm upgrade opsera-aws-marketplace-registration-service . \
 
 
 
-helm uninstall opsera-aws-marketplace-registration-service . \
+helm uninstall opsera-node-aws-marketplace-registration-service . \
     -n microservices 
 
 
 
-kubectl -n microservices port-forward deployment/opsera-aws-marketplace-registration-service 5007:5007
-kubectl -n microservices get deploy | grep -i "opsera-aws-marketplace-registration-service"
+kubectl -n microservices port-forward deployment/opsera-node-aws-marketplace-registration-service 5007:5007
+kubectl -n microservices get deploy | grep -i "opsera-node-aws-marketplace-registration-service"
 
