@@ -3,7 +3,7 @@ resources:
     cpu: 1000m
     memory: 5Gi
   requests:
-    cpu: 400m
+    cpu: 500m
     memory: 4Gi
 
 autoscaling:
