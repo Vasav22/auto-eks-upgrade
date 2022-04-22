@@ -15,5 +15,5 @@ autoscaling:
 
 ingress:
   hosts:
-    - host: api-integrator-service.opsera-test-private.opsera.io
+    - host: aws-marketplace-registration-service.opsera-test-private.opsera.io
       paths: [/]

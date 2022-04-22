@@ -15,5 +15,5 @@ autoscaling:
 
 ingress:
   hosts:
-    - host: api-integrator-service.honeywell-private.opsera.io
+    - host: aws-marketplace-registration-service.honeywell-private.opsera.io
       paths: [/]
