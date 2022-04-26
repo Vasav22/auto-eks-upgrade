@@ -58,7 +58,7 @@ Datadog Service Check Annotations
 ad.datadoghq.com/service.check_names: '["http_check"]'
 ad.datadoghq.com/service.init_configs: '[{}]'
 ad.datadoghq.com/service.instances: "[\n  {\n    \"name\": \"opsera-nexus-integrator\",\n
-  \   \"url\": \"http://%%host%%:%%port%%/\",\n    \"timeout\": 1,\n  \"http_response_status_code\": 200\n  }\n] \n"
+  \   \"url\": \"http://%%host%%:%%port%%/status\",\n    \"timeout\": 1,\n  \"http_response_status_code\": 200\n  }\n] \n"
 {{- end -}}
 
 
