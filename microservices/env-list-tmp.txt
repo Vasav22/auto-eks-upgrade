@@ -1388,6 +1388,9 @@
 ./opsera-jira-connect/values.yaml-  - secretName: microservices-ms-env
 ./opsera-jira-connect/values.yaml-    envName: OPSERA_API_SERVICE_URL
 ./opsera-jira-connect/values.yaml-    secretKey: OPSERA_API_SERVICE_URL
+./opsera-jira-connect/values.yaml-  - secretName: microservices-ms-env
+./opsera-jira-connect/values.yaml-    envName: OPSERA_JIRACONNECT_APP_KEY
+./opsera-jira-connect/values.yaml-    secretKey: OPSERA_JIRACONNECT_APP_KEY
 --
 ./opsera-coverity-integrator/values.yaml:extraSecretEnvironmentVars:
 ./opsera-coverity-integrator/values.yaml-  - secretName: microservices-ms-env
