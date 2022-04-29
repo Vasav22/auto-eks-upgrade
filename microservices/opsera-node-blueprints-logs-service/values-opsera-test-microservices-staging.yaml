@@ -15,5 +15,5 @@ autoscaling:
 
 ingress:
   hosts:
-    - host: blueprints-logs.opsera-test.opsera.io
+    - host: blueprints-logs.uat-private.opsera.io
       paths: [/]
