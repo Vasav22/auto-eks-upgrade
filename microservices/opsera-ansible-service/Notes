@@ -1,12 +1,90 @@
-helm -n microservices install --set DOCKER_ENV=kubernetes --set image.tag=kube-prod opsera-ansible-integrator .
 
-helm -n microservices install --set DOCKER_ENV=kubernetes --set image.tag=honeywell-sandbox opsera-ansible-integrator .
+helm install opsera-ansible-service . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-dev 
+
+helm upgrade opsera-ansible-service . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-dev 
 
 
-helm -n microservices uninstall  opsera-ansible-integrator
+helm uninstall opsera-ansible-service . \
+    -n microservices 
 
-kubectl -n microservices get all  -l app.kubernetes.io/name=opsera-ansible-integrator
 
-kubectl -n microservices get po  -l app.kubernetes.io/name=opsera-ansible-integrator
 
-kubectl -n microservices get events
+#test
+
+
+helm install opsera-ansible-service . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-test 
+
+helm upgrade opsera-ansible-service . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-test 
+
+
+
+helm uninstall opsera-ansible-service . \
+    -n microservices 
+
+#production
+
+helm install opsera-ansible-service . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-prod 
+
+helm upgrade opsera-ansible-service . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-prod 
+
+
+helm uninstall opsera-ansible-service . \
+    -n microservices 
+
+<<<<<<< HEAD
+#production
+
+helm install opsera-ansible-service . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-prod 
+
+helm upgrade opsera-ansible-service . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-prod 
+
+
+helm uninstall opsera-ansible-service . \
+    -n microservices 
+    
+=======
+>>>>>>> master-dev
+#honeywell-sandbox
+
+helm install opsera-ansible-service . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=honeywell-sandbox
+
+helm upgrade opsera-ansible-service . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=khoneywell-sandbox 
+
+
+helm uninstall opsera-ansible-service . \
+    -n microservices 
+
+
+
+#kubectl 
+kubectl -n microservices get po -l app.kubernetes.io/name=opsera-ansible-service

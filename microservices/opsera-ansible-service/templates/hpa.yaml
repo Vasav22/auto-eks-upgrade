@@ -2,14 +2,14 @@
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "opsera-ansible-integrator.fullname" . }}
+  name: {{ include "opsera-ansible-service.fullname" . }}
   labels:
-    {{- include "opsera-ansible-integrator.labels" . | nindent 4 }}
+    {{- include "opsera-ansible-service.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "opsera-ansible-integrator.fullname" . }}
+    name: {{ include "opsera-ansible-service.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:
