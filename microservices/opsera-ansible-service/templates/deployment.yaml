@@ -1,26 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "opsera-ansible-integrator.fullname" . }}
+  name: {{ include "opsera-ansible-service.fullname" . }}
   labels:
-    {{- include "opsera-ansible-integrator.labels" . | nindent 4 }}
+    {{- include "opsera-ansible-service.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "opsera-ansible-integrator.selectorLabels" . | nindent 6 }}
+      {{- include "opsera-ansible-service.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
         rollme: {{ randAlphaNum 5 | quote }}
       labels:
-        {{- include "opsera-ansible-integrator.selectorLabels" . | nindent 8 }}
+        {{- include "opsera-ansible-service.selectorLabels" . | nindent 8 }}
     spec:
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      serviceAccountName: {{ include "opsera-ansible-integrator.serviceAccountName" . }}
+      serviceAccountName: {{ include "opsera-ansible-service.serviceAccountName" . }}
       terminationGracePeriodSeconds: 7200
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
@@ -55,6 +55,7 @@ spec:
           env:          
           - name: "DOCKER_ENV"
             value: {{ .Values.DOCKER_ENV }}
+          {{- include "ms.extraSecretEnvironmentVars" .Values | nindent 10 }}
           volumeMounts:
           - name: microservices-efs
             mountPath: /apps/OpsERA/logs/components/

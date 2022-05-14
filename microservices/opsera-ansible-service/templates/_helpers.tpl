@@ -2,7 +2,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "opsera-ansible-integrator.name" -}}
+{{- define "opsera-ansible-service.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
@@ -11,7 +11,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "opsera-ansible-integrator.fullname" -}}
+{{- define "opsera-ansible-service.fullname" -}}
 {{- if .Values.fullnameOverride -}}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
@@ -27,16 +27,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "opsera-ansible-integrator.chart" -}}
+{{- define "opsera-ansible-service.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
 Common labels
 */}}
-{{- define "opsera-ansible-integrator.labels" -}}
-helm.sh/chart: {{ include "opsera-ansible-integrator.chart" . }}
-{{ include "opsera-ansible-integrator.selectorLabels" . }}
+{{- define "opsera-ansible-service.labels" -}}
+helm.sh/chart: {{ include "opsera-ansible-service.chart" . }}
+{{ include "opsera-ansible-service.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -46,28 +46,44 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "opsera-ansible-integrator.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "opsera-ansible-integrator.name" . }}
+{{- define "opsera-ansible-service.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "opsera-ansible-service.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 
 {{/*
 Datadog Service Check Annotations
 */}}
-{{- define "opsera-ansible-integrator.annotations" -}}
+{{- define "opsera-ansible-service.annotations" -}}
 ad.datadoghq.com/service.check_names: '["http_check"]'
 ad.datadoghq.com/service.init_configs: '[{}]'
-ad.datadoghq.com/service.instances: "[\n  {\n    \"name\": \"opsera-ansible-integrator\",\n
-  \   \"url\": \"http://%%host%%:%%port%%/status\",\n    \"timeout\": 1,\n    \"http_response_status_code\": 200\n  }\n] \n"
+ad.datadoghq.com/service.instances: "[\n  {\n    \"name\": \"opsera-ansible-service\",\n
+  \   \"url\": \"http://%%host%%:%%port%%/status\",\n    \"timeout\": 1,\n  \"http_response_status_code\": 200\n  }\n] \n"
 {{- end -}}
+
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "opsera-ansible-integrator.serviceAccountName" -}}
+{{- define "opsera-ansible-service.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create -}}
-    {{ default (include "opsera-ansible-integrator.fullname" .) .Values.serviceAccount.name }}
+    {{ default (include "opsera-ansible-service.fullname" .) .Values.serviceAccount.name }}
 {{- else -}}
     {{ default "default" .Values.serviceAccount.name }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Inject extra environment populated by secrets, if populated
+*/}}
+{{- define "ms.extraSecretEnvironmentVars" -}}
+{{- if .extraSecretEnvironmentVars -}}
+{{- range .extraSecretEnvironmentVars }}
+- name: {{ .envName }}
+  valueFrom:
+   secretKeyRef:
+     name: {{ .secretName }}
+     key: {{ .secretKey }}
+{{- end -}}
 {{- end -}}
 {{- end -}}
