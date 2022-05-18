@@ -1,0 +1,73 @@
+
+helm install opsera-apigee-integrator-service . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-dev \
+    --set ingress.hosts[0].host=api-integrator-service.opsera-dev.opsera.io \
+    --set ingress.hosts[0].paths[0]=/
+
+
+helm upgrade opsera-apigee-integrator-service . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-dev \
+    --set ingress.hosts[0].host=api-integrator-service.opsera-dev.opsera.io \
+    --set ingress.hosts[0].paths[0]=/
+
+
+
+helm uninstall opsera-apigee-integrator-service . \
+    -n microservices 
+
+
+
+#test
+
+
+helm install opsera-apigee-integrator-service . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-test \
+    --set ingress.hosts[0].host=api-integrator-service.opsera-test.opsera.io \
+    --set ingress.hosts[0].paths[0]=/
+
+
+helm upgrade opsera-apigee-integrator-service . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-test \
+    --set ingress.hosts[0].host=api-integrator-service.opsera-test.opsera.io \
+    --set ingress.hosts[0].paths[0]=/
+
+
+
+helm uninstall opsera-apigee-integrator-service . \
+    -n microservices 
+
+#production
+
+helm install opsera-apigee-integrator-service . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-prod \
+    --set ingress.hosts[0].host=api-integrator-service.opsera-prod.opsera.io \
+    --set ingress.hosts[0].paths[0]=/
+
+
+helm upgrade opsera-apigee-integrator-service . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-prod \
+    --set ingress.hosts[0].host=api-integrator-service.opsera-prod.opsera.io \
+    --set ingress.hosts[0].paths[0]=/
+
+
+
+helm uninstall opsera-apigee-integrator-service . \
+    -n microservices 
+
+
+
+kubectl -n microservices port-forward deployment/opsera-apigee-integrator-service 5007:5007
+kubectl -n microservices get deploy | grep -i "opsera-apigee-integrator-service"
+
