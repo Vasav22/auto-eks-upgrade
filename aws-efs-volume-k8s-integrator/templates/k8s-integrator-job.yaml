@@ -1,0 +1,50 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "k8s-integrator-volume.fullname" . }}-update-platform-vault
+  namespace: {{ .Values.k8sIntegratorNamespace }}
+  labels:
+    {{- include "k8s-integrator-volume.labels" . | nindent 4 }}
+spec:
+  template:
+    spec:
+      serviceAccount: {{ include "k8s-integrator-volume.fullname" . }}
+      serviceAccountName: {{ include "k8s-integrator-volume.fullname" . }}
+      containers:
+      - name: update-platform-vault
+        image: alpine
+        command:
+        - sh
+        - "-c"
+        - |
+            /bin/sh <<'EOF'
+            ### Install curl
+            apk update && apk add --no-cache curl
+
+            ### Get the service account token from pod filesystem
+            KUBE_TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
+
+            ### Write to platform vault
+            # .Values.microservice_url comes from
+            # AWS Secrets --> Kubernetes Secret --> Terraform Service environment variable
+            # --> Terraform apply variables --> Terraform Helm chart resource --> Helm values.
+            # Terraform service adds /write to the url path
+
+            echo "Connecting to {{ .Values.APIGATEWAY_URL }} to write Kubernetes Cluster URL and Service Account Token into Platform Vault"
+            echo "Customer ID: {{ .Values.customer_id }}"
+            echo "Kubernetes Host: {{ .Values.K8S_HOST }}"
+            echo "Kubernetes Service Account Token: ${KUBE_TOKEN}"
+
+            curl --location --request POST '{{ .Values.APIGATEWAY_URL }}' \
+                --header 'accept: application/json' \
+                --header 'Content-Type: application/json' \
+                --data-raw '{
+                    "customerId": "{{ .Values.customer_id }}",
+                    "data": {
+                        "kubernetes-cluster-url": "{{ .Values.K8S_HOST }}",
+                        "kubernetes-cluster-service-token": "'$KUBE_TOKEN'"
+                    }
+                }' -k -s
+            EOF
+      restartPolicy: Never
+  backoffLimit: 4
