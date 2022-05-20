@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: cron-delete-archive
 spec:
-  schedule: "0 0 * * *"
+  schedule: "0 */6 * * *"
   successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 5
   jobTemplate:
