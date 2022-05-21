@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "opsera-code-capthor.fullname" . }}
+  name: {{ include "opsera-code-capthor-service.fullname" . }}
   labels:
-    {{- include "opsera-code-capthor.labels" . | nindent 4 }}
+    {{- include "opsera-code-capthor-service.labels" . | nindent 4 }}
   annotations:
-    {{- include "opsera-code-capthor.annotations" . | nindent 4 }}
+    {{- include "opsera-code-capthor-service.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -14,4 +14,4 @@ spec:
       protocol: TCP
       name: http
   selector:
-    {{- include "opsera-code-capthor.selectorLabels" . | nindent 4 }}
+    {{- include "opsera-code-capthor-service.selectorLabels" . | nindent 4 }}
