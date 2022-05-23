@@ -2,7 +2,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "opsera-snaplogic-integrator-service.name" -}}
+{{- define "opsera-snaplogic-integrator.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
@@ -11,7 +11,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "opsera-snaplogic-integrator-service.fullname" -}}
+{{- define "opsera-snaplogic-integrator.fullname" -}}
 {{- if .Values.fullnameOverride -}}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
@@ -27,16 +27,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "opsera-snaplogic-integrator-service.chart" -}}
+{{- define "opsera-snaplogic-integrator.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
 Common labels
 */}}
-{{- define "opsera-snaplogic-integrator-service.labels" -}}
-helm.sh/chart: {{ include "opsera-snaplogic-integrator-service.chart" . }}
-{{ include "opsera-snaplogic-integrator-service.selectorLabels" . }}
+{{- define "opsera-snaplogic-integrator.labels" -}}
+helm.sh/chart: {{ include "opsera-snaplogic-integrator.chart" . }}
+{{ include "opsera-snaplogic-integrator.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -46,17 +46,17 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "opsera-snaplogic-integrator-service.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "opsera-snaplogic-integrator-service.name" . }}
+{{- define "opsera-snaplogic-integrator.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "opsera-snaplogic-integrator.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "opsera-snaplogic-integrator-service.serviceAccountName" -}}
+{{- define "opsera-snaplogic-integrator.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create -}}
-    {{ default (include "opsera-snaplogic-integrator-service.fullname" .) .Values.serviceAccount.name }}
+    {{ default (include "opsera-snaplogic-integrator.fullname" .) .Values.serviceAccount.name }}
 {{- else -}}
     {{ default "default" .Values.serviceAccount.name }}
 {{- end -}}

@@ -1,11 +1,11 @@
-# Default values for opsera-snaplogic-integrator-service.
+# Default values for opsera-snaplogic-integrator.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 replicaCount: 1
 
 image:
-  repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera-snaplogic-integrator-service
+  repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera-snaplogic-integrator
   pullPolicy: Always
 
 imagePullSecrets: []
