@@ -1,0 +1,36 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  finalizers:
+  - kubernetes.io/pvc-protection
+  labels:
+    {{- include "k8s-integrator-volume.labels" . | nindent 4 }}
+  name: {{ .Values.k8sIntegratorVolumeName . }}
+  namespace: {{ .Values.k8sIntegratorNamespace }}
+spec:
+  accessModes:
+    {{- range .Values.accessModes }}
+      - {{ . | quote }}
+    {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.volumeSize | quote }}
+  storageClassName: {{ .Values.storageClass }}
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  labels:
+    {{- include "k8s-integrator-volume.labels" . | nindent 4 }}
+  name: {{ include "k8s-integrator-volume.fullname" . }}
+spec:
+  capacity:
+    storage: {{ .Values.volumeSize | quote }}
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: {{ .Values.storageClass }}
+  csi:
+    driver: efs.csi.aws.com
+    volumeHandle: {{ .Values.K8S_INTEGRATOR_EFS_VOLUME_ID }}
