@@ -5,7 +5,7 @@ metadata:
   - kubernetes.io/pvc-protection
   labels:
     {{- include "k8s-integrator-volume.labels" . | nindent 4 }}
-  name: {{ .Values.k8sIntegratorVolumeName . }}
+  name: {{ .Values.k8sIntegratorVolumeName }}
   namespace: {{ .Values.k8sIntegratorNamespace }}
 spec:
   accessModes:
