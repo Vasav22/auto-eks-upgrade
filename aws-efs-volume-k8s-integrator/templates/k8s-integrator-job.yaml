@@ -29,6 +29,7 @@ spec:
                 if [[ $initialized == "true" && $sealed == "false" ]]; then
                     echo "Vault is initialized and not Sealed, updating Kubernetes URL and Kubernetes Token into Vault"
                     echo "Sleeping for 2 minutes before breaking"
+                    sleep 120
                     break
                 else
                     echo "Vault is not initialized or Sealed, waiting for 5 seconds before retrying..."
