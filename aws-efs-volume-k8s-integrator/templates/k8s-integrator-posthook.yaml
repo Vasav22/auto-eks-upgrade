@@ -39,7 +39,7 @@ spec:
           while [ "$pvc_status" == "Pending" ] && [ $count -lt $timeout ]
           do
             sleep 2
-            uri_to_call="{{ .Values.K8S_HOST }}/api/v1/namespaces/{{ .Values.k8sIntegratorNamespace }}/persistentvolumeclaims/{{ include "k8s-integrator-volume.fullname" . }}/status"
+            uri_to_call="{{ .Values.K8S_HOST }}/api/v1/namespaces/{{ .Values.k8sIntegratorNamespace }}/persistentvolumeclaims/{{ .Values.k8sIntegratorVolumeName }}/status"
             echo "Calling, $uri_to_call"
             pvc_status=$(curl $uri_to_call \
                 --header "Authorization: Bearer $KUBE_TOKEN" -s -k \
