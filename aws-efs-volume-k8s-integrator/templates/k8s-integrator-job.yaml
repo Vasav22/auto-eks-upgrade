@@ -19,7 +19,7 @@ spec:
         - |
             /bin/sh <<'EOF'
             ### Install curl
-            apk update && apk add --no-cache curl
+            apk update && apk add --no-cache curl jq
 
             ### Wait for Data Plane Vault to be available
             while [ true ]
