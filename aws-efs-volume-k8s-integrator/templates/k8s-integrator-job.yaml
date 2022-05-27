@@ -28,6 +28,7 @@ spec:
                 sealed=$(curl --location http://vault.opsera.svc.cluster.local:8200/v1/sys/health -s | jq .sealed)
                 if [[ $initialized == "true" && $sealed == "false" ]]; then
                     echo "Vault is initialized and not Sealed, updating Kubernetes URL and Kubernetes Token into Vault"
+                    echo "Sleeping for 2 minutes before breaking"
                     break
                 else
                     echo "Vault is not initialized or Sealed, waiting for 5 seconds before retrying..."
