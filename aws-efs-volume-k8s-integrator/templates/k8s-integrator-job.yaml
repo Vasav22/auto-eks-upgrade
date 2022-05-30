@@ -38,7 +38,7 @@ spec:
             done
 
             ### Get the service account token from pod filesystem
-            KUBE_TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
+            KUBE_TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token | base64 -w 0)
 
             ### Write to platform vault
             # .Values.microservice_url comes from
@@ -46,8 +46,9 @@ spec:
             # --> Terraform apply variables --> Terraform Helm chart resource --> Helm values.
             # Terraform service adds /write to the url path
 
+            K8S_HOST=$(echo -n {{ .Values.K8S_HOST }} | base64 -w 0)
             echo "Customer ID: {{ .Values.customer_id }}"
-            echo "Kubernetes Host: {{ .Values.K8S_HOST }}"
+            echo "Kubernetes Host: ${K8S_HOST}"
             echo "Kubernetes Service Account Token: ${KUBE_TOKEN}"
             echo "Connecting to {{ .Values.APIGATEWAY_URL }} to write Kubernetes Cluster URL and Service Account Token into Platform Vault"
 
@@ -57,7 +58,7 @@ spec:
                 --data-raw '{
                     "customerId": "{{ .Values.customer_id }}",
                     "data": {
-                        "kubernetes-cluster-url": "{{ .Values.K8S_HOST }}",
+                        "kubernetes-cluster-url": "'$K8S_HOST'",
                         "kubernetes-cluster-service-token": "'$KUBE_TOKEN'"
                     }
                 }' -k -s
