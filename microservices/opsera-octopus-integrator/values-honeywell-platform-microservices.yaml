@@ -1,10 +1,10 @@
 resources:
   limits:
+    cpu: 3500m
+    memory: 14Gi
+  requests:
     cpu: 2000m
     memory: 8Gi
-  requests:
-    cpu: 500m
-    memory: 2Gi
 
 autoscaling:
   enabled: true
