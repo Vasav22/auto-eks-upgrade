@@ -3,8 +3,8 @@ resources:
     cpu: 3500m
     memory: 14Gi
   requests:
-    cpu: 2000m
-    memory: 8Gi
+    cpu: 3500m
+    memory: 14Gi
 
 autoscaling:
   enabled: true
