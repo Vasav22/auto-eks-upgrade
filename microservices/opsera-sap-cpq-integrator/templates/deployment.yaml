@@ -1,26 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "opsera-sap-cpq-integrator-service.fullname" . }}
+  name: {{ include "opsera-sap-cpq-integrator.fullname" . }}
   labels:
-    {{- include "opsera-sap-cpq-integrator-service.labels" . | nindent 4 }}
+    {{- include "opsera-sap-cpq-integrator.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "opsera-sap-cpq-integrator-service.selectorLabels" . | nindent 6 }}
+      {{- include "opsera-sap-cpq-integrator.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
         rollme: {{ randAlphaNum 5 | quote }}
       labels:
-        {{- include "opsera-sap-cpq-integrator-service.selectorLabels" . | nindent 8 }}
+        {{- include "opsera-sap-cpq-integrator.selectorLabels" . | nindent 8 }}
     spec:
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      serviceAccountName: {{ include "opsera-sap-cpq-integrator-service.serviceAccountName" . }}
+      serviceAccountName: {{ include "opsera-sap-cpq-integrator.serviceAccountName" . }}
       terminationGracePeriodSeconds: 7200
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
