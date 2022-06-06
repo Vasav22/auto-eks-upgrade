@@ -2,14 +2,14 @@
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "opsera-sap-cpq-integrator-service.fullname" . }}
+  name: {{ include "opsera-sap-cpq-integrator.fullname" . }}
   labels:
-    {{- include "opsera-sap-cpq-integrator-service.labels" . | nindent 4 }}
+    {{- include "opsera-sap-cpq-integrator.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "opsera-sap-cpq-integrator-service.fullname" . }}
+    name: {{ include "opsera-sap-cpq-integrator.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:
