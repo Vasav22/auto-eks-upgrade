@@ -16,4 +16,6 @@ autoscaling:
 ingress:
   hosts:
     - host: uat.opsera.io
-      paths: [/]
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
