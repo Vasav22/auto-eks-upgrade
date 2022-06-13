@@ -10,4 +10,5 @@ ingress:
   hosts:
   - host: freetrial.opsera-dev.opsera.io
     paths:
-    - /
+      - path: /
+        pathType: ImplementationSpecific

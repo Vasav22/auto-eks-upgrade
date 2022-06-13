@@ -5,7 +5,8 @@ ingress:
   hosts:
   - host: freetrial.opsera.io
     paths:
-    - /
+      - path: /
+        pathType: ImplementationSpecific
 autoscaling:
   enabled: true
   minReplicas: 2
