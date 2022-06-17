@@ -220,6 +220,17 @@ spec:
             value: {{ .Values.datadog.prometheusScrape.additionalConfigs | toJson | quote }}
           {{- end }}
           {{- end }}
+
+          {{- if .Values.opseraConfig }}
+          {{- range $configName, $config := $.Values.opseraConfig }}
+          - name: {{ printf "DATADOG_%s_PASSWORD" $configName | replace "-d" "" | upper }}
+            valueFrom:
+              secretKeyRef:
+                key: {{ printf "%s-password" $configName | replace "-d" "" | lower }}
+                name: cluster-agent-opsera-secret
+          {{- end }}
+          {{- end }}
+
 {{- if .Values.clusterAgent.env }}
 {{ toYaml .Values.clusterAgent.env | indent 10 }}
 {{- end }}
@@ -268,6 +279,14 @@ spec:
             readOnly: true
 {{- end}}
 {{- end}}
+
+{{- if .Values.opseraConfig }}
+{{- range $configName, $config := $.Values.opseraConfig }}
+          - name: {{ printf "%s" $configName }}
+            mountPath: {{ printf "/etc/datadog-agent/conf.d/%s" $configName | replace "-d" ".d" }}
+{{- end }}
+{{- end }}
+
       volumes:
         - name: installinfo
           configMap:
@@ -304,6 +323,18 @@ spec:
 
 {{- if .Values.clusterAgent.volumes }}
 {{ toYaml .Values.clusterAgent.volumes | indent 8 }}
+{{- end }}
+
+{{- if .Values.opseraConfig }}
+{{- range $configName, $config := $.Values.opseraConfig }}
+        - configMap:
+            defaultMode: 420
+            items:
+            - key: {{ printf "%s" $configName }}
+              path: conf.yaml
+            name: cluster-agent-opsera-config
+          name: {{ printf "%s" $configName }}
+{{- end }}
 {{- end }}
       {{- if .Values.clusterAgent.tolerations }}
       tolerations:
