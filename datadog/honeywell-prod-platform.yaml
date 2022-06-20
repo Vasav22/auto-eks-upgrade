@@ -1,0 +1,54 @@
+# Datadog Agent with Logs, APM, Processes, and System Probe enabled
+# with specific configuration to work on AKS.
+
+targetSystem: "linux"
+datadog:
+  apiKey: fbd3d7d2d9e097d76e8d81a5f193ca51
+  appKey: d80cea2c-115b-50a5-8f2e-d5f1a73e9d5c
+  clusterName: honeywell-prod-platform
+  tags: 
+    - cluster: honeywell-prod-platform
+    - environment: prod
+    - customer: honeywell
+  logs:
+    enabled: true
+    containerCollectAll: true
+    containerCollectUsingFiles: true
+  processAgent:
+    enabled: true
+    processCollection: false
+  apm:
+    enabled: false
+  leaderElection: true
+  env: 
+    - name: DD_CONTAINER_EXCLUDE_LOGS
+      value: "kube_namespace:opsera kube_namespace:kube-system kube_namespace:default image:gcr.io/datadoghq/agent image:docker.elastic.co/beats/metricbeat kube_namespace:alertmanager image:kubernetesui/dashboard"
+    - name: DD_CLC_RUNNER_ENABLED
+      value: "true"
+    - name: DD_CLC_RUNNER_HOST
+      valueFrom:
+        fieldRef:
+          fieldPath: status.podIP
+    # - name: DD_EXTRA_CONFIG_PROVIDERS
+    #   value: "endpointschecks"
+  # confd:
+  #   custom_check_nodeanalytics_service.yaml: |-
+  #     init_config:
+  #     instances:
+  #       [{}]
+  clusterChecks:
+    enabled: true
+
+clusterAgent:
+  enabled: true
+  replicas: 2
+  rbac:
+    create: true
+    serviceAccountName: default
+  env:
+  - name: DD_CLUSTER_CHECKS_ADVANCED_DISPATCHING_ENABLED
+    value: "true"
+
+clusterChecksRunner:
+  enabled: true
+  replicas: 2
