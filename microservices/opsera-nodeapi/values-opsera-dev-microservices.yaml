@@ -1,24 +1,15 @@
 resources:
-  limits:
-    cpu: 500m
-    memory: 2Gi
   requests:
-    cpu: 100m
-    memory: 1Gi
+    cpu: 500m
+    memory: 768Mi
 
 autoscaling:
   enabled: true
   minReplicas: 1
-  maxReplicas: 5
-  targetCPUUtilizationPercentage: 60
-  targetMemoryUtilizationPercentage: 60
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 70
 
 ingress:
-  annotations:
-    nginx.ingress.kubernetes.io/affinity: "cookie"
-    nginx.ingress.kubernetes.io/session-cookie-name: "INGRESSCOOKIENODE"
-    nginx.ingress.kubernetes.io/session-cookie-expires: "172800"
-    nginx.ingress.kubernetes.io/session-cookie-max-age: "172800"
   hosts:
     - host: api.opsera-dev.opsera.io
       paths: [/]
