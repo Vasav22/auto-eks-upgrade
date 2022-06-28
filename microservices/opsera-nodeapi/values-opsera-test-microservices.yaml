@@ -8,10 +8,10 @@ resources:
 
 autoscaling:
   enabled: true
-  minReplicas: 3
+  minReplicas: 2
   maxReplicas: 3
-  targetCPUUtilizationPercentage: 60
-  targetMemoryUtilizationPercentage: 60
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 70
 
 ingress:
   annotations:
