@@ -1,10 +1,17 @@
 resources:
   limits:
-    cpu: 3500m
-    memory: 5Gi
+    cpu: 2
+    memory: 4Gi
   requests:
-    cpu: 1500m
-    memory: 5Gi
+    cpu: 1
+    memory: 2Gi
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 60
+  targetMemoryUtilizationPercentage: 60
 
 ingress:
   hosts:

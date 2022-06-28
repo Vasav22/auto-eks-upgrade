@@ -1,14 +1,3 @@
-resources:
-  limits:
-    cpu: 3500m
-    memory: 5Gi
-  requests:
-    cpu: 1500m
-    memory: 5Gi
-
-autoscaling:
-  minReplicas: 3
-
 ingress:
   hosts:
     - host: app.opsera.io

@@ -1,9 +1,10 @@
-autoscaling:
-  enabled: true
-  minReplicas: 1
-  maxReplicas: 10
-  targetCPUUtilizationPercentage: 60
-  targetMemoryUtilizationPercentage: 60
+resources:
+  limits:
+    cpu: 2
+    memory: 4Gi
+  requests:
+    cpu: 1
+    memory: 2Gi
 
 ingress:
   hosts:
