@@ -1,4 +1,6 @@
 ingress:
   hosts:
     - host: node-scheduler.honeywell-private.opsera.io
-      paths: [/]
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
