@@ -14,12 +14,6 @@ autoscaling:
   targetMemoryUtilizationPercentage: 60
 
 ingress:
-  annotations:
-    kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/affinity: "cookie"
-    nginx.ingress.kubernetes.io/session-cookie-name: "INGRESSCOOKIENODE"
-    nginx.ingress.kubernetes.io/session-cookie-expires: "172800"
-    nginx.ingress.kubernetes.io/session-cookie-max-age: "172800"
   hosts:
     - host: api.opsera-dev.opsera.io
       paths: [/]
