@@ -60,14 +60,14 @@ resources:
     memory: 2Gi
   requests:
     cpu: 100m
-    memory: 1Gi
+    memory: 512Mi
 
 nodeSelector:
   Name: microservice-node
 
 autoscaling:
   enabled: true
-  minReplicas: 1
+  minReplicas: 2
   maxReplicas: 10
   targetCPUUtilizationPercentage: 60
   targetMemoryUtilizationPercentage: 60
