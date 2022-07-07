@@ -8,6 +8,4 @@ autoscaling:
 ingress:
   hosts:
     - host: api-integrator-service.opsera-dev-private.opsera.io
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
+      paths: [/]
