@@ -17,5 +17,3 @@ ingress:
   hosts:
     - host: api.uat.opsera.io
       paths: [/]
-
-NODE_ENV: staging
