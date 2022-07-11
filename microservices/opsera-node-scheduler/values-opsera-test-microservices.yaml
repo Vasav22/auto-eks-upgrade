@@ -9,3 +9,5 @@ ingress:
   hosts:
     - host: node-scheduler.opsera-test-private.opsera.io
       paths: [/]
+
+NODE_ENV: staging

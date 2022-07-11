@@ -4,3 +4,5 @@ autoscaling:
   maxReplicas: 3
   targetCPUUtilizationPercentage: 70
   targetMemoryUtilizationPercentage: 70
+
+NODE_ENV: staging
