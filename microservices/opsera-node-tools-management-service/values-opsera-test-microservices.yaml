@@ -9,3 +9,5 @@ ingress:
   hosts:
     - host: tools-management-service.opsera-test-private.opsera.io
       paths: [/]
+
+NODE_ENV: staging

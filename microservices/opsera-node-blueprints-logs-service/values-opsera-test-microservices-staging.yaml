@@ -1,4 +1,11 @@
 ingress:
   hosts:
+<<<<<<< HEAD
     - host: blueprints-logs.uat-private.opsera.io
       paths: [/]
+=======
+    - host: blueprints-logs.opsera-test.opsera.io
+      paths: [/]
+
+NODE_ENV: staging
+>>>>>>> 3c7d8a3 (OPL-4815 add node_env to node-services)

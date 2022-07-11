@@ -1,6 +1,12 @@
 ingress:
   hosts:
     - host: api-integrator-service.opsera-test.opsera.io
+<<<<<<< HEAD
       paths:
         - path: /
           pathType: ImplementationSpecific
+=======
+      paths: [/]
+
+NODE_ENV: staging
+>>>>>>> 3c7d8a3 (OPL-4815 add node_env to node-services)
