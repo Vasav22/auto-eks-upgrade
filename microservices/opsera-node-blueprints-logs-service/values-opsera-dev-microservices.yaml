@@ -9,3 +9,5 @@ ingress:
   hosts:
     - host: blueprints-logs.opsera-dev-private.opsera.io
       paths: [/]
+
+NODE_ENV: staging

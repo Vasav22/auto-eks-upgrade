@@ -17,3 +17,5 @@ ingress:
   hosts:
     - host: api.opsera-dev.opsera.io
       paths: [/]
+
+NODE_ENV: staging

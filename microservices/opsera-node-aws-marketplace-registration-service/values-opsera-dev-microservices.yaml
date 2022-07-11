@@ -9,3 +9,5 @@ ingress:
   hosts:
     - host: aws-marketplace-registration-service.opsera-dev-private.opsera.io
       paths: [/]
+
+NODE_ENV: staging
