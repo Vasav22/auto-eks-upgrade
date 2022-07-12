@@ -71,6 +71,7 @@ ingress:
   # kubernetes.io/tls-acme: "true"
   # This property allows for reports up to a certain size to be uploaded to SonarQube
     nginx.ingress.kubernetes.io/proxy-body-size: "1G"
+    nginx.ingress.kubernetes.io/rewrite-target: /*
 
 # Additional labels for Ingress manifest file
   # labels:
