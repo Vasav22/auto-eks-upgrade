@@ -66,11 +66,12 @@ ingress:
       # For additional control over serviceName and servicePort
       # serviceName: someService
       # servicePort: somePort
-  annotations: {}
+  annotations:
   # kubernetes.io/ingress.class: nginx
   # kubernetes.io/tls-acme: "true"
   # This property allows for reports up to a certain size to be uploaded to SonarQube
-  # nginx.ingress.kubernetes.io/proxy-body-size: "8m"
+    nginx.ingress.kubernetes.io/proxy-body-size: "1G"
+    nginx.ingress.kubernetes.io/rewrite-target: /*
 
 # Additional labels for Ingress manifest file
   # labels:
@@ -101,8 +102,8 @@ tolerations: []
 # Ref: https://kubernetes.io/docs/user-guide/node-selection/
 # add a label to a node with the following command
 # kubectl label node <node> sonarqube=true
-nodeSelector: {}
-#  sonarqube: "true"
+nodeSelector:
+  Name: tools-node
 
 # hostAliases allows the modification of the hosts file inside a container
 hostAliases: []
