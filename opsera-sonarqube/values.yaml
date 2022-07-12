@@ -404,8 +404,8 @@ extraConfig:
   secrets: []
   configmaps: []
 
-account:
-  adminPassword: admin
+# account:
+#  adminPassword: admin
 #   currentAdminPassword: admin
 # curlContainerImage: curlimages/curl:latest
 # adminJobAnnotations: {}
