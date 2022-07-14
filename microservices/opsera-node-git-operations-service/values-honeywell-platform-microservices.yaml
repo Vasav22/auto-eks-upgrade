@@ -15,5 +15,5 @@ autoscaling:
 
 ingress:
   hosts:
-    - host: blueprints-logs.honeywell-private.opsera.io
+    - host: git-operations.honeywell-private.opsera.io
       paths: [/]

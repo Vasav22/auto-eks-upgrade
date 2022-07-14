@@ -15,5 +15,5 @@ autoscaling:
 
 ingress:
   hosts:
-    - host: blueprints-logs.opsera-test.opsera.io
+    - host: git-operations.opsera-test.opsera.io
       paths: [/]

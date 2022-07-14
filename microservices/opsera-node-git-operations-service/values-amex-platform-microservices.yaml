@@ -15,5 +15,5 @@ autoscaling:
 
 ingress:
   hosts:
-    - host: blueprints-logs.amex.opsera.io
+    - host: git-operations.amex.opsera.io
       paths: [/]
