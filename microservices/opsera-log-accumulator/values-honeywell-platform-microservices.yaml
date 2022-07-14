@@ -1,14 +1,11 @@
 resources:
   limits:
-    cpu: "1"
+    cpu: 1
     memory: 5Gi
   requests:
-    cpu: "1"
+    cpu: 1
     memory: 5Gi
 
 autoscaling:
   enabled: true
   minReplicas: 1
-  maxReplicas: 10
-  targetCPUUtilizationPercentage: 60
-  targetMemoryUtilizationPercentage: 60
