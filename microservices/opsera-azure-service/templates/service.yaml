@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "opsera-azure-service.labels" . | nindent 4 }}
   annotations:
-  {{- include "opsera-azure-service.annotations" . | nindent 4 }}
+    {{- include "opsera-azure-service.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
