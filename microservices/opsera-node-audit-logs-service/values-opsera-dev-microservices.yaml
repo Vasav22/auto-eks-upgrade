@@ -1,0 +1,15 @@
+resources:
+  limits:
+    memory: 1Gi
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 70
+
+ingress:
+  hosts:
+    - host: audit-logs-service.opsera-dev-private.opsera.io
+      paths: [/]
