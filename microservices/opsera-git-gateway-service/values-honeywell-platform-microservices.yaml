@@ -1,14 +1,10 @@
 resources:
   limits:
     cpu: 1500m
-    memory: 7Gi
+    memory: 3Gi
   requests:
-    cpu: 1500m
-    memory: 7Gi
+    cpu: 1000m
+    memory: 1536Mi
 
 autoscaling:
   enabled: true
-  minReplicas: 3
-  maxReplicas: 3
-  targetCPUUtilizationPercentage: 60
-  targetMemoryUtilizationPercentage: 60
