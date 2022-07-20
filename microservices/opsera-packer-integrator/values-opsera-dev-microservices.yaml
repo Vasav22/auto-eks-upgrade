@@ -1,10 +1,6 @@
 resources:
-  limits:
-    cpu: 500m
-    memory: 2Gi
   requests:
-    cpu: 100m
-    memory: 1Gi
+    memory: 384Mi
 
 autoscaling:
   enabled: true
@@ -12,5 +8,3 @@ autoscaling:
   maxReplicas: 3
   targetCPUUtilizationPercentage: 70
   targetMemoryUtilizationPercentage: 70
-
-HELM_GIT_BRANCH: master-dev
