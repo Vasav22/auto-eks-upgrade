@@ -1,0 +1,19 @@
+resources:
+  limits:
+    cpu: 500m
+    memory: 2Gi
+  requests:
+    cpu: 100m
+    memory: 1Gi
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 60
+  targetMemoryUtilizationPercentage: 60
+
+ingress:
+  hosts:
+    - host: git-operations.opsera-test.opsera.io
+      paths: [/]
