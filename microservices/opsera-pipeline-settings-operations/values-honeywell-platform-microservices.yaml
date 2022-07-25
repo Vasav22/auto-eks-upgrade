@@ -15,5 +15,5 @@ autoscaling:
 
 ingress:
   hosts:
-    - host: git-operations.honeywell-private.opsera.io
+    - host: opsera-pipeline-settings-operations.honeywell-private.opsera.io
       paths: [/]
