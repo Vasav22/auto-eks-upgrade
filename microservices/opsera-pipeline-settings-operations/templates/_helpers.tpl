@@ -2,7 +2,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "opsera-node-git-operations-service.name" -}}
+{{- define "opsera-pipeline-settings-operations.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
@@ -11,7 +11,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "opsera-node-git-operations-service.fullname" -}}
+{{- define "opsera-pipeline-settings-operations.fullname" -}}
 {{- if .Values.fullnameOverride -}}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
@@ -27,16 +27,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "opsera-node-git-operations-service.chart" -}}
+{{- define "opsera-pipeline-settings-operations.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
 Common labels
 */}}
-{{- define "opsera-node-git-operations-service.labels" -}}
-helm.sh/chart: {{ include "opsera-node-git-operations-service.chart" . }}
-{{ include "opsera-node-git-operations-service.selectorLabels" . }}
+{{- define "opsera-pipeline-settings-operations.labels" -}}
+helm.sh/chart: {{ include "opsera-pipeline-settings-operations.chart" . }}
+{{ include "opsera-pipeline-settings-operations.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -46,18 +46,18 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "opsera-node-git-operations-service.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "opsera-node-git-operations-service.name" . }}
+{{- define "opsera-pipeline-settings-operations.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "opsera-pipeline-settings-operations.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 
 {{/*
 Datadog Service Check Annotations
 */}}
-{{- define "opsera-node-git-operations-service.annotations" -}}
+{{- define "opsera-pipeline-settings-operations.annotations" -}}
 ad.datadoghq.com/service.check_names: '["http_check"]'
 ad.datadoghq.com/service.init_configs: '[{}]'
-ad.datadoghq.com/service.instances: "[\n  {\n    \"name\": \"opsera-node-git-operations-service\",\n
+ad.datadoghq.com/service.instances: "[\n  {\n    \"name\": \"opsera-pipeline-settings-operations\",\n
   \   \"url\": \"http://%%host%%:%%port%%/status\",\n    \"timeout\": 1,\n  \"http_response_status_code\": 200\n  }\n] \n"
 {{- end -}}
 
@@ -65,9 +65,9 @@ ad.datadoghq.com/service.instances: "[\n  {\n    \"name\": \"opsera-node-git-ope
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "opsera-node-git-operations-service.serviceAccountName" -}}
+{{- define "opsera-pipeline-settings-operations.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create -}}
-    {{ default (include "opsera-node-git-operations-service.fullname" .) .Values.serviceAccount.name }}
+    {{ default (include "opsera-pipeline-settings-operations.fullname" .) .Values.serviceAccount.name }}
 {{- else -}}
     {{ default "default" .Values.serviceAccount.name }}
 {{- end -}}

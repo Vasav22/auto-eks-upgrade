@@ -1,5 +1,5 @@
 
-helm install opsera-node-git-operations-service . \
+helm install opsera-pipeline-settings-operations . \
     -n microservices \
     --set DOCKER_ENV=kubernetes \
     --set image.tag=kube-dev \
@@ -7,7 +7,7 @@ helm install opsera-node-git-operations-service . \
     --set ingress.hosts[0].paths[0]=/
 
 
-helm upgrade opsera-node-git-operations-service . \
+helm upgrade opsera-pipeline-settings-operations . \
     -n microservices \
     --set DOCKER_ENV=kubernetes \
     --set image.tag=kube-dev \
@@ -16,7 +16,7 @@ helm upgrade opsera-node-git-operations-service . \
 
 
 
-helm uninstall opsera-node-git-operations-service . \
+helm uninstall opsera-pipeline-settings-operations . \
     -n microservices 
 
 
@@ -24,7 +24,7 @@ helm uninstall opsera-node-git-operations-service . \
 #test
 
 
-helm install opsera-node-git-operations-service . \
+helm install opsera-pipeline-settings-operations . \
     -n microservices \
     --set DOCKER_ENV=kubernetes \
     --set image.tag=kube-test \
@@ -32,7 +32,7 @@ helm install opsera-node-git-operations-service . \
     --set ingress.hosts[0].paths[0]=/
 
 
-helm upgrade opsera-node-git-operations-service . \
+helm upgrade opsera-pipeline-settings-operations . \
     -n microservices \
     --set DOCKER_ENV=kubernetes \
     --set image.tag=kube-test \
@@ -41,12 +41,12 @@ helm upgrade opsera-node-git-operations-service . \
 
 
 
-helm uninstall opsera-node-git-operations-service . \
+helm uninstall opsera-pipeline-settings-operations . \
     -n microservices 
 
 #production
 
-helm install opsera-node-git-operations-service . \
+helm install opsera-pipeline-settings-operations . \
     -n microservices \
     --set DOCKER_ENV=kubernetes \
     --set image.tag=kube-prod \
@@ -54,7 +54,7 @@ helm install opsera-node-git-operations-service . \
     --set ingress.hosts[0].paths[0]=/
 
 
-helm upgrade opsera-node-git-operations-service . \
+helm upgrade opsera-pipeline-settings-operations . \
     -n microservices \
     --set DOCKER_ENV=kubernetes \
     --set image.tag=kube-prod \
@@ -63,11 +63,11 @@ helm upgrade opsera-node-git-operations-service . \
 
 
 
-helm uninstall opsera-node-git-operations-service . \
+helm uninstall opsera-pipeline-settings-operations . \
     -n microservices 
 
 
 
-kubectl -n microservices port-forward deployment/opsera-node-git-operations-service 5007:5007
-kubectl -n microservices get deploy | grep -i "opsera-node-git-operations-service"
+kubectl -n microservices port-forward deployment/opsera-pipeline-settings-operations 5007:5007
+kubectl -n microservices get deploy | grep -i "opsera-pipeline-settings-operations"
 

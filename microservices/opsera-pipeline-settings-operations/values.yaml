@@ -1,11 +1,11 @@
-# Default values for opsera-node-git-operations-service.
+# Default values for opsera-pipeline-settings-operations.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 replicaCount: 1
 
 image:
-  repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera-node-git-operations-service
+  repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera-pipeline-settings-operations
   pullPolicy: Always
   tag: tag
 
