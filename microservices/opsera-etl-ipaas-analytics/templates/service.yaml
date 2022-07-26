@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "opsera-etl-ipaas-analytics.fullname" . }}
+  labels:
+    {{- include "opsera-etl-ipaas-analytics.labels" . | nindent 4 }}
+  annotations:
+    {{- include "opsera-etl-ipaas-analytics.annotations" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "opsera-etl-ipaas-analytics.selectorLabels" . | nindent 4 }}
