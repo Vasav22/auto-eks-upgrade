@@ -2,14 +2,14 @@
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "opsera-etl-ipaas-analytics.fullname" . }}
+  name: {{ include "opsera-etl-analytics.fullname" . }}
   labels:
-    {{- include "opsera-etl-ipaas-analytics.labels" . | nindent 4 }}
+    {{- include "opsera-etl-analytics.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "opsera-etl-ipaas-analytics.fullname" . }}
+    name: {{ include "opsera-etl-analytics.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:

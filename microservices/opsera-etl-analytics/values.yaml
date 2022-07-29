@@ -1,11 +1,11 @@
-# Default values for opsera-etl-ipaas-analytics.
+# Default values for opsera-etl-analytics.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 replicaCount: 1
 
 image:
-  repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera-etl-ipaas-analytics
+  repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera-etl-analytics
   pullPolicy: Always
 
 imagePullSecrets: []
