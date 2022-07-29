@@ -1,26 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "opsera-etl-ipaas-analytics.fullname" . }}
+  name: {{ include "opsera-etl-analytics.fullname" . }}
   labels:
-    {{- include "opsera-etl-ipaas-analytics.labels" . | nindent 4 }}
+    {{- include "opsera-etl-analytics.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "opsera-etl-ipaas-analytics.selectorLabels" . | nindent 6 }}
+      {{- include "opsera-etl-analytics.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
         rollme: {{ randAlphaNum 5 | quote }}
       labels:
-        {{- include "opsera-etl-ipaas-analytics.selectorLabels" . | nindent 8 }}
+        {{- include "opsera-etl-analytics.selectorLabels" . | nindent 8 }}
     spec:
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      serviceAccountName: {{ include "opsera-etl-ipaas-analytics.serviceAccountName" . }}
+      serviceAccountName: {{ include "opsera-etl-analytics.serviceAccountName" . }}
       terminationGracePeriodSeconds: 7200
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
