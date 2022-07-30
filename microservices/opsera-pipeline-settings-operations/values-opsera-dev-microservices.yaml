@@ -15,5 +15,5 @@ autoscaling:
 
 ingress:
   hosts:
-    - host: git-operations.amex.opsera.io
+    - host: opsera-pipeline-settings-operations.opsera-dev-private.opsera.io
       paths: [/]
