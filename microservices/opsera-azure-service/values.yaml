@@ -7,8 +7,6 @@ replicaCount: 1
 image:
   repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera-azure-service
   pullPolicy: Always
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
 
 imagePullSecrets: []
 nameOverride: ""
@@ -21,7 +19,7 @@ serviceAccount:
   annotations: {}
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
-  name: ""
+  name:
 
 podAnnotations: {}
 
@@ -74,3 +72,20 @@ autoscaling:
 tolerations: []
 
 affinity: {}
+
+datadog:
+  metadata:
+    tags: 
+      env: "opsera-prod-platform"
+      service: "opsera-azure-service"
+
+extraSecretEnvironmentVars:
+  - secretName: microservices-ms-env
+    envName: OPSERA_API_SERVICE_URL
+    secretKey: OPSERA_API_SERVICE_URL
+  - secretName: microservices-ms-env
+    envName: OPSERA_KAFKA_BOOTSTRAP_URL
+    secretKey: OPSERA_KAFKA_BOOTSTRAP_URL
+  - secretName: microservices-ms-env
+    envName: OPSERA_HAZELCAST_K8_SERVICE_DNS
+    secretKey: OPSERA_HAZELCAST_K8_SERVICE_DNS

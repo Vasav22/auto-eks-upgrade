@@ -19,18 +19,16 @@ datadog:
     processCollection: false
   apm:
     enabled: true
-  leaderElection: false
+  leaderElection: true
   env: 
-    - name: DD_CONTAINER_EXCLUDE
-      value: "kube_namespace:opsera kube_namespace:kube-system kube_namespace:default image:gcr.io/datadoghq/agent image:docker.elastic.co/beats/metricbeat"
+    - name: DD_CONTAINER_EXCLUDE_LOGS
+      value: "kube_namespace:opsera kube_namespace:kube-system kube_namespace:default image:gcr.io/datadoghq/agent image:docker.elastic.co/beats/metricbeat kube_namespace:alertmanager image:kubernetesui/dashboard"
     - name: DD_CLC_RUNNER_ENABLED
       value: "true"
     - name: DD_CLC_RUNNER_HOST
       valueFrom:
         fieldRef:
           fieldPath: status.podIP
-    - name: DD_LEADER_ELECTION
-      value: "false"
     # - name: DD_EXTRA_CONFIG_PROVIDERS
     #   value: "endpointschecks"
   # confd:
@@ -44,16 +42,12 @@ datadog:
 clusterAgent:
   enabled: true
   replicas: 2
-  # rbac:
-  #   create: true
-  #   serviceAccountName: default
+  rbac:
+    create: true
+    serviceAccountName: default
   env:
-    - name: DD_CLUSTER_CHECKS_ADVANCED_DISPATCHING_ENABLED
-      value: "true"
-    - name: DD_COLLECT_KUBERNETES_EVENTS
-      value: "true"
-    - name: DD_LEADER_ELECTION
-      value: "true"
+  - name: DD_CLUSTER_CHECKS_ADVANCED_DISPATCHING_ENABLED
+    value: "true"
 
 clusterChecksRunner:
   enabled: true

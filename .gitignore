@@ -10,4 +10,8 @@ vaul-helm-dev-creds.json
 ./test/unit/vaul-helm-dev-creds.json
 ./test/acceptance/values.yaml
 ./test/acceptance/values.yml
-
+.idea/
+.idea/workspace.xml
+.idea/vcs.xml
+.idea/modules.xml
+.idea/helmcharts.iml

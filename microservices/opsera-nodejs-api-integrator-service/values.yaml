@@ -49,14 +49,15 @@ ingress:
   #  - secretName: chart-example-tls
   #    hosts:
   #      - chart-example.local
+  
 
 resources:
   limits:
     cpu: 500m
-    memory: 2Gi
+    memory: 1Gi
   requests:
     cpu: 100m
-    memory: 1Gi
+    memory: 512Mi
 
 nodeSelector:
   Name: microservice-node

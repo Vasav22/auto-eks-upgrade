@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "opsera-github-actions-analytics.fullname" . }}
+  labels:
+    {{- include "opsera-github-actions-analytics.labels" . | nindent 4 }}
+  annotations:
+    {{- include "opsera-github-actions-analytics.annotations" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "opsera-github-actions-analytics.selectorLabels" . | nindent 4 }}

@@ -51,19 +51,19 @@ ingress:
 
 resources:
   limits:
-    cpu: 500m
+    cpu: 700m
     memory: 2Gi
   requests:
-    cpu: 100m
-    memory: 1Gi
+    cpu: 200m
+    memory: 768Mi
 
 nodeSelector:
   Name: microservice-node
 
 autoscaling:
   enabled: true
-  minReplicas: 1
-  maxReplicas: 10
+  minReplicas: 3
+  maxReplicas: 3
   targetCPUUtilizationPercentage: 60
   targetMemoryUtilizationPercentage: 60
 
@@ -75,3 +75,6 @@ extraSecretEnvironmentVars:
   - secretName: microservices-ms-env
     envName: OPSERA_API_SERVICE_URL
     secretKey: OPSERA_API_SERVICE_URL
+  - secretName: microservices-ms-env
+    envName: OPSERA_CLIENT_HOST
+    secretKey: OPSERA_CLIENT_HOST

@@ -48,7 +48,8 @@ spec:
         nodeAffinity: {{- include "common.affinities.nodes" (dict "type" .Values.pgpool.nodeAffinityPreset.type "key" .Values.pgpool.nodeAffinityPreset.key "values" .Values.pgpool.nodeAffinityPreset.values) | nindent 10 }}
       {{- end }}
       {{- if .Values.pgpool.nodeSelector }}
-      nodeSelector: {{- include "common.tplvalues.render" (dict "value" .Values.pgpool.nodeSelector "context" $) | nindent 8 }}
+      nodeSelector:
+{{ toYaml .Values.pgpool.nodeSelector | indent 8 }}
       {{- end }}
       {{- if .Values.pgpool.tolerations }}
       tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.pgpool.tolerations "context" $) | nindent 8 }}

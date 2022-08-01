@@ -55,7 +55,8 @@ spec:
         nodeAffinity: {{- include "common.affinities.nodes" (dict "type" .Values.postgresql.nodeAffinityPreset.type "key" .Values.postgresql.nodeAffinityPreset.key "values" .Values.postgresql.nodeAffinityPreset.values) | nindent 10 }}
       {{- end }}
       {{- if .Values.postgresql.nodeSelector }}
-      nodeSelector: {{- include "common.tplvalues.render" (dict "value" .Values.postgresql.nodeSelector "context" $) | nindent 8 }}
+      nodeSelector:
+{{ toYaml .Values.postgresql.nodeSelector | indent 8 }}
       {{- end }}
       {{- if .Values.postgresql.tolerations }}
       tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.postgresql.tolerations "context" $) | nindent 8 }}

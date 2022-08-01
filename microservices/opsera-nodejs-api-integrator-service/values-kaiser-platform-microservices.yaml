@@ -1,0 +1,4 @@
+ingress:
+  hosts:
+    - host: api-integrator-service.kaiserpermanente-private.opsera.io
+      paths: [/]
