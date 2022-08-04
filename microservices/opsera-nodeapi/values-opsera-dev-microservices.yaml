@@ -15,4 +15,4 @@ ingress:
     - host: api.opsera-dev.opsera.io
       paths: [/]
 
-NODE_ENV: staging
+NODE_ENV: testing
