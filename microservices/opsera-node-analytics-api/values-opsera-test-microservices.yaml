@@ -10,4 +10,4 @@ ingress:
     - host: analytics-api.opsera-test.opsera.io
       paths: [/]
 
-NODE_ENV: staging
+NODE_ENV: testing
