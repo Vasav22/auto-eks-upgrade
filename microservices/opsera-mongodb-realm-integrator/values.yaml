@@ -70,3 +70,11 @@ autoscaling:
 tolerations: []
 
 affinity: {}
+
+extraSecretEnvironmentVars:
+  - secretName: microservices-ms-env
+    envName: OPSERA_KAFKA_BOOTSTRAP_URL
+    secretKey: OPSERA_KAFKA_BOOTSTRAP_URL
+  - secretName: microservices-ms-env
+    envName: OPSERA_API_SERVICE_URL
+    secretKey: OPSERA_API_SERVICE_URL
