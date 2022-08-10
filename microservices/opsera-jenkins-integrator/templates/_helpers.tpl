@@ -36,9 +36,6 @@ Common labels
 */}}
 {{- define "opsera-jenkins-integrator.labels" -}}
 helm.sh/chart: {{ include "opsera-jenkins-integrator.chart" . }}
-tags.datadoghq.com/env: {{ .Values.datadog.metadata.tags.env }}
-tags.datadoghq.com/service: {{ .Values.datadog.metadata.tags.service }}
-tags.datadoghq.com/version: {{ .Values.image.tag }}
 {{ include "opsera-jenkins-integrator.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}

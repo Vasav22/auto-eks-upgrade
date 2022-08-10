@@ -17,3 +17,9 @@ ingress:
   hosts:
     - host: tools-management-service.opsera-test-private.opsera.io
       paths: [/]
+
+
+clusterName: opsera-test-platform
+
+datadogApm:
+  enabled: true

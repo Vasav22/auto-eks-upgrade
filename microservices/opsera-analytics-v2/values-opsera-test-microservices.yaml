@@ -11,3 +11,9 @@ autoscaling:
   targetMemoryUtilizationPercentage: 60
 
 NODE_ENV: staging
+
+
+clusterName: opsera-test-platform
+
+datadogApm:
+  enabled: true
