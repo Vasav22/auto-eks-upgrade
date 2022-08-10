@@ -89,18 +89,3 @@ extraSecretEnvironmentVars:
   - secretName: microservices-ms-env
     envName: OPSERA_HAZELCAST_K8_SERVICE_DNS
     secretKey: OPSERA_HAZELCAST_K8_SERVICE_DNS
-  - secretName: microservices-ms-env
-    envName: OPSERA_AZURE_CLIENT_ID
-    secretKey: OPSERA_AZURE_CLIENT_ID
-  - secretName: microservices-ms-env
-    envName: OPSERA_AZURE_TENANT_ID
-    secretKey: OPSERA_AZURE_TENANT_ID
-  - secretName: microservices-ms-env
-    envName: OPSERA_AZURE_CLIENT_SECRET
-    secretKey: OPSERA_AZURE_CLIENT_SECRET
-  - secretName: microservices-ms-env
-    envName: OPSERA_AZURE_SUBSCRIPTION_ID
-    secretKey: OPSERA_AZURE_SUBSCRIPTION_ID
-  - secretName: microservices-ms-env
-    envName: OPSERA_AZURE_CONTROL_PLANE_VNET
-    secretKey: OPSERA_AZURE_CONTROL_PLANE_VNET
