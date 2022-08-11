@@ -11,3 +11,8 @@ ingress:
       paths:
         - path: /
           pathType: ImplementationSpecific
+
+clusterName: opsera-test-platform
+
+datadogApm:
+  enabled: true
