@@ -1037,7 +1037,7 @@ server:
     paths:
       - /
     # -- Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific`
-    pathType: Prefix
+    pathType: ImplementationSpecific
     # -- Additional ingress paths
     extraPaths:
       []
