@@ -1019,11 +1019,12 @@ server:
     # -- Enable an ingress resource for the Argo CD server
     enabled: true
     # -- Additional ingress annotations
-    annotations: {}
+    annotations:
+      kubernetes.io/ingress.class: nginx
     # -- Additional ingress labels
     labels: {}
     # -- Defines which ingress controller will implement the resource
-    ingressClassName: "nginx"
+    ingressClassName: ""
 
     # -- List of ingress hosts
     ## Argo Ingress.
