@@ -26,7 +26,7 @@ OpenShift:
 image:
   repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera-pipeline/sonarqube
   tag: test-8.9.9-community
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   # If using a private repository, the name of the imagePullSecret to use
   # pullSecret: my-repo-secret
 
@@ -252,10 +252,10 @@ annotations: {}
 ## Adjust these values to your needs, but make sure that the memory limit is never under 4 GB
 resources:
   limits:
-    cpu: 2048m
-    memory: 8192M
+    cpu: 3072m
+    memory: 12288Mi
   requests:
-    cpu: 1024m
+    cpu: 2048m
     memory: 4096Mi
 persistence:
   enabled: false
