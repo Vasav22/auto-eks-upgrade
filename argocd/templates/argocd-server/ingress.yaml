@@ -40,8 +40,7 @@ spec:
           {{- end }}
           {{- range $p := $paths }}
           {{- if and $.Values.server.ingressGrpc.isAWSALB $.Values.server.ingressGrpc.enabled }}
-          - path: {{ $p }}
-            {{- if eq (include "argo-cd.ingress.apiVersion" $) "networking.k8s.io/v1" }}
+          - {{- if eq (include "argo-cd.ingress.apiVersion" $) "networking.k8s.io/v1" }}
             pathType: Prefix
             {{- end }}
             backend:
@@ -59,8 +58,7 @@ spec:
               servicePort: {{ $servicePort }}
               {{- end }}
             {{- end }}
-          - path: {{ $p }}
-            {{- if eq (include "argo-cd.ingress.apiVersion" $) "networking.k8s.io/v1" }}
+          - {{- if eq (include "argo-cd.ingress.apiVersion" $) "networking.k8s.io/v1" }}
             pathType: {{ $pathType }}
             {{- end }}
             backend:
