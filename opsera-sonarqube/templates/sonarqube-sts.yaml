@@ -59,7 +59,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy  }}
           resources:
 {{ toYaml .Values.initContainers.resources | indent 12 }}
-          command: ["/bin/sh", "-c", "for i in $(seq 1 200); do nc -z -w3 {{ .Release.Name}}-postgresql-ha-postgresql 5432 && exit 0 || sleep 2; done; exit 1"]
+          command: ["/bin/sh", "-c", "for i in $(seq 1 200); do nc -z -w3 {{ include "postgresql.hostname" . }} 5432 && exit 0 || sleep 2; done; exit 1"]
       {{- end }}
       {{- if or .Values.initSysctl.enabled .Values.elasticsearch.configureNode }}
       {{- if .Values.caCerts }}
