@@ -1,4 +1,4 @@
 ingress:
   hosts:
-    - host: api-integrator-service.opsera-prod.opsera.io
+    - host: tools-management-service.opsera-prod-private.opsera.io
       paths: [/]

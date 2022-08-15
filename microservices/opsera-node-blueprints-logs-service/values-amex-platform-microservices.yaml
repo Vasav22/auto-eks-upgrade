@@ -1,4 +1,4 @@
 ingress:
   hosts:
-    - host: blueprints-logs.amex.opsera.io
+    - host: blueprints-logs.amex-private.opsera.io
       paths: [/]
