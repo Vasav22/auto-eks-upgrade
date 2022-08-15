@@ -44,6 +44,9 @@ spec:
               port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          env: 
+          - name: "NODE_ENV"
+            value: {{default "production" .Values.NODE_ENV }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

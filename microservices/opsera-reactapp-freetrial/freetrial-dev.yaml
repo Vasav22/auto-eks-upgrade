@@ -2,13 +2,11 @@ image:
   repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera-reactapp-freetrial
   tag: kube-dev
 ingress:
-  annotations:
-    nginx.ingress.kubernetes.io/affinity: "cookie"
-    nginx.ingress.kubernetes.io/session-cookie-name: "INGRESSCOOKIENODEFT"
-    nginx.ingress.kubernetes.io/session-cookie-expires: "172800"
-    nginx.ingress.kubernetes.io/session-cookie-max-age: "172800"
   hosts:
   - host: freetrial.opsera-dev.opsera.io
     paths:
       - path: /
         pathType: ImplementationSpecific
+
+
+NODE_ENV: testing
