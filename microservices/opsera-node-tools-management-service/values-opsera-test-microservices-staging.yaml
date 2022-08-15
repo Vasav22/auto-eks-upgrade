@@ -1,4 +1,4 @@
 ingress:
   hosts:
-    - host: tools-management-service.opsera-test.opsera.io
+    - host: tools-management-service.opsera-uat-private.opsera.io
       paths: [/]
