@@ -4,6 +4,8 @@ metadata:
   name: {{ include "opsera-node-audit-logs-service.fullname" . }}
   labels:
     {{- include "opsera-node-audit-logs-service.labels" . | nindent 4 }}
+  annotations:
+    {{- include "opsera-node-audit-logs-service.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
