@@ -2,3 +2,11 @@ ingress:
   hosts:
     - host: apigateway.honeywell-sandbox-private.opsera.io
       paths: [/]
+
+resources:
+  limits:
+    cpu: 1000m
+    memory: 4Gi
+  requests:
+    cpu: 250m
+    memory: 1Gi
