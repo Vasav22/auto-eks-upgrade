@@ -2,3 +2,5 @@ ingress:
   hosts:
     - host: uat.opsera.io
       paths: [/]
+
+NODE_ENV: staging
