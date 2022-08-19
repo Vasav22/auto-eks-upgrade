@@ -11,9 +11,9 @@ datadog:
     - environment: dev
     - customer: honeywell
   logs:
-    enabled: true
-    containerCollectAll: true
-    containerCollectUsingFiles: true
+    enabled: false
+    containerCollectAll: false
+    containerCollectUsingFiles: false
   processAgent:
     enabled: true
     processCollection: false
