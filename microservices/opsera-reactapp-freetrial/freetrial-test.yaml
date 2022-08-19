@@ -13,3 +13,5 @@ ingress:
   - host: freetrial.opsera-test.opsera.io
     paths:
     - /
+
+NODE_ENV: testing

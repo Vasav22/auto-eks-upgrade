@@ -17,3 +17,5 @@ ingress:
   hosts:
     - host: dev.opsera.io
       paths: [/]
+
+NODE_ENV: testing
