@@ -4,6 +4,8 @@ metadata:
   name: {{ include "opsera-apigee-integrator-service.fullname" . }}
   labels:
     {{- include "opsera-apigee-integrator-service.labels" . | nindent 4 }}
+  annotations:
+    {{- include "opsera-apigee-integrator-service.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
