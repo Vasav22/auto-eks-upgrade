@@ -4,6 +4,8 @@ metadata:
   name: {{ include "opsera-git-gateway-service.fullname" . }}
   labels:
     {{- include "opsera-git-gateway-service.labels" . | nindent 4 }}
+  annotations:
+    {{- include "opsera-git-gateway-service.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
