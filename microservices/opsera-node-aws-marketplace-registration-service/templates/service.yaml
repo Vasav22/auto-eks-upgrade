@@ -4,6 +4,8 @@ metadata:
   name: {{ include "opsera-node-aws-marketplace-registration-service.fullname" . }}
   labels:
     {{- include "opsera-node-aws-marketplace-registration-service.labels" . | nindent 4 }}
+  annotations:
+    {{- include "opsera-node-aws-marketplace-registration-service.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
