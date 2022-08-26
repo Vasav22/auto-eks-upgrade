@@ -21,9 +21,14 @@ spec:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       serviceAccountName: {{ include "opsera-reactapp-freetrial.serviceAccountName" . }}
-      terminationGracePeriodSeconds: 7200
+      terminationGracePeriodSeconds: 300
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      volumes:
+        - name: configmap-volume
+          configMap:
+            defaultMode: 0777
+            name: post-script-configmap-freetrial
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -47,6 +52,16 @@ spec:
           env: 
           - name: "NODE_ENV"
             value: {{default "production" .Values.NODE_ENV }}
+          {{- include "ms.extraSecretEnvironmentVars" .Values | nindent 10 }}
+          volumeMounts:
+            - name: configmap-volume
+              mountPath: /tmp/entrypoint.sh
+              subPath: entrypoint.sh
+          lifecycle:
+            postStart:
+              exec:
+                command: ["/bin/bash", "/tmp/entrypoint.sh"]
+                # command: [ '/bin/sh', 'ls; while IFS="=" read -r -d "" n v; do find /usr/local/apache2/htdocs -type f | xargs sed -i  "s|ENV_${n}|${v}|g";done < <(env -0)']
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
