@@ -1,4 +1,4 @@
 ingress:
   hosts:
-    - host: blueprints-logs.opsera-test.opsera.io
+    - host: blueprints-logs.opsera-test-private.opsera.io
       paths: [/]

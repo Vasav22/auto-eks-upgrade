@@ -1,4 +1,4 @@
 ingress:
   hosts:
-    - host: api.amex.opsera.io
+    - host: tools-management-service.amex-private.opsera.io
       paths: [/]

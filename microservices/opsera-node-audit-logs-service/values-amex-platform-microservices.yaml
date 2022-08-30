@@ -7,5 +7,5 @@ autoscaling:
 
 ingress:
   hosts:
-    - host: audit-logs-service.amex.opsera.io
+    - host: audit-logs-service.amex-private.opsera.io
       paths: [/]

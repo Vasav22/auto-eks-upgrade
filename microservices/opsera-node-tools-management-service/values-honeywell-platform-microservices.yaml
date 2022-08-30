@@ -1,4 +1,4 @@
 ingress:
   hosts:
-    - host: api-integrator-service.honeywell-private.opsera.io
+    - host: tools-management-service.honeywell-private.opsera.io
       paths: [/]

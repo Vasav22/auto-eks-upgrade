@@ -15,5 +15,5 @@ autoscaling:
 
 ingress:
   hosts:
-    - host: audit-logs-service.opsera-prod.opsera.io
+    - host: audit-logs-service.opsera-prod-private.opsera.io
       paths: [/]
