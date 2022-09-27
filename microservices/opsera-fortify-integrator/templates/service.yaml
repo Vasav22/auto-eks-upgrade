@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "opsera-fortify-integrator.fullname" . }}
+  labels:
+    {{- include "opsera-fortify-integrator.labels" . | nindent 4 }}
+  annotations:
+    {{- include "opsera-fortify-integrator.annotations" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "opsera-fortify-integrator.selectorLabels" . | nindent 4 }}
