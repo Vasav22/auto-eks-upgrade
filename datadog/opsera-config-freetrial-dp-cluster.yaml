@@ -1,0 +1,26 @@
+opseraConfig:
+  mongo-d:
+    cluster_check: true
+    init_config: null
+    instances:
+    - custom_queries:
+      - count_type: gauge
+        database: opsera
+        metric_prefix: opsera.mongo.collection.documents.count
+        query:
+          count: useractivities
+        tags:
+        - replicaname:primary-0
+        - cluster_name:freetrial-dp-cluster
+        - kube_namespace:opsera
+        - collection:useractivities
+      database: admin
+      hosts:
+      - mongodb.opsera.svc.cluster.local:27017
+      password: '%%env_DATADOG_MONGO_PASSWORD%%'
+      replica_check: true
+      tags:
+      - replicaname:primary-0
+      - cluster_name:freetrial-dp-cluster
+      - kube_namespace:opsera
+      username: datadog
