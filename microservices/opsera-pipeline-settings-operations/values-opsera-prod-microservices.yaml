@@ -1,4 +1,1 @@
-ingress:
-  hosts:
-    - host: opsera-pipeline-settings-operations.opsera-prod.opsera.io
-      paths: [/]
+---
