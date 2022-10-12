@@ -123,7 +123,7 @@ Datadog APM Environment Variable
 - name: DD_LOGS_INJECTION
   value: "true"
 - name: DD_PROFILING_ENABLED
-  value: "true"
+  value: "false"
 - name: JAVA_OPTS
   value: "-javaagent:/opt/dd-agent/dd-java-agent.jar"
 {{- end -}}
