@@ -1,1 +1,8 @@
-#EMPTY
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 60
+  targetMemoryUtilizationPercentage: 60
+
+NODE_ENV: honeywell
