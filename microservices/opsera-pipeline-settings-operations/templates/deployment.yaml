@@ -14,7 +14,6 @@ spec:
       annotations:
         rollme: {{ randAlphaNum 5 | quote }}
       labels:
-        {{- include "datadogApm.selectorLabels" . | nindent 8 }}
         {{- include "opsera-pipeline-settings-operations.selectorLabels" . | nindent 8 }}
     spec:
     {{- with .Values.imagePullSecrets }}
@@ -24,9 +23,6 @@ spec:
       serviceAccountName: {{ include "opsera-pipeline-settings-operations.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-      {{- include "datadogApm.initContainer" . | nindent 6 }}
-      volumes:
-        {{- include "datadogApm.volumes" . | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -46,11 +42,8 @@ spec:
           #     path: /
           #     port: http
           resources:
-          volumeMounts:
-          {{- include "datadogApm.volumeMounts" . | nindent 10 }}
             {{- toYaml .Values.resources | nindent 12 }}
           env:
-          {{- include "datadogApm.environmentVars" . | nindent 10 }}
           {{- include "ms.extraSecretEnvironmentVars" .Values | nindent 10 }}
       {{- with .Values.nodeSelector }}
       nodeSelector:

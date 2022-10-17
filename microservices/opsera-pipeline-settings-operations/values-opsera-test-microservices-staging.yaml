@@ -1,4 +1,14 @@
-ingress:
-  hosts:
-    - host: opsera-pipeline-settings-operations.opsera-test.opsera.io
-      paths: [/]
+resources:
+  limits:
+    cpu: 500m
+    memory: 2Gi
+  requests:
+    cpu: 100m
+    memory: 1Gi
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 60
+  targetMemoryUtilizationPercentage: 60
