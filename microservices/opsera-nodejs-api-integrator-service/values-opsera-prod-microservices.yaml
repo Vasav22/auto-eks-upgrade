@@ -1,4 +1,6 @@
 ingress:
   hosts:
     - host: api-integrator-service.opsera-prod.opsera.io
-      paths: [/]
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
