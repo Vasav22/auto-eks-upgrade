@@ -8,6 +8,8 @@ autoscaling:
 ingress:
   hosts:
     - host: api-integrator-service.opsera-dev-private.opsera.io
-      paths: [/]
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
 
 NODE_ENV: staging
