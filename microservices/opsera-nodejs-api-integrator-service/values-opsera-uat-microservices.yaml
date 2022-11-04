@@ -1,0 +1,8 @@
+ingress:
+  hosts:
+    - host: api-integrator-service.uat-private.opsera.io
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+
+NODE_ENV: staging
