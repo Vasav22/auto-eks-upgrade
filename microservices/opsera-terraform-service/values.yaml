@@ -110,4 +110,4 @@ extraSecretEnvironmentVars:
     secretKey: OPSERA_PLATFORM_DOMAIN
 
 HELM_GIT_BRANCH: master
-GIT_CREDENTIAL: mahantha:glpat-LUeht_nH3LdsWss3A7bt
+GIT_CREDENTIAL: opsera-nawaz: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
