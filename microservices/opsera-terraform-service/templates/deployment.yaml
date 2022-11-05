@@ -73,7 +73,7 @@ spec:
               - -b
               - {{ .Values.HELM_GIT_BRANCH }}
               - --single-branch
-              - https://{{ .Values.GIT_CREDENTIAL }}@gitlab.com/opsera-repo/cloud-infrastructure/helmcharts.git
+              - https://{{ .Values.GIT_CREDENTIAL }}@github.com/OpseraEngineering/infra-helmcharts.git
               - /data
           volumeMounts:
           - mountPath: /data
