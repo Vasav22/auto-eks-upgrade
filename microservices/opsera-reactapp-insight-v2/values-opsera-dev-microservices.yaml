@@ -1,0 +1,21 @@
+resources:
+  limits:
+    cpu: 500m
+    memory: 1Gi
+  requests:
+    cpu: 100m
+    memory: 512Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 70
+
+ingress:
+  hosts:
+    - host: insights-v2.opsera-dev-private.opsera.io
+      paths: [/]
+
+NODE_ENV: testing
