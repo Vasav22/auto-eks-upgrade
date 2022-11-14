@@ -1,4 +1,0 @@
-ingress:
-  hosts:
-    - host: opsera-pipeline-settings-operations.honeywell-sandbox-private.opsera.io
-      paths: [/]
