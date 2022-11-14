@@ -8,3 +8,5 @@ resources:
 
 autoscaling:
   maxReplicas: 5
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 70
