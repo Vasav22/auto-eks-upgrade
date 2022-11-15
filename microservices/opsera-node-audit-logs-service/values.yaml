@@ -38,7 +38,7 @@ service:
   port: 5025
 
 ingress:
-  enabled: true
+  enabled: false
   annotations: {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
@@ -52,10 +52,10 @@ ingress:
 
 resources:
   limits:
-    cpu: 500m
+    cpu: 1000m
     memory: 2Gi
   requests:
-    cpu: 100m
+    cpu: 500m
     memory: 1Gi
 
 nodeSelector:
@@ -65,8 +65,8 @@ autoscaling:
   enabled: false
   minReplicas: 1
   maxReplicas: 5
-  targetCPUUtilizationPercentage: 60
-  targetMemoryUtilizationPercentage: 60  
+  targetCPUUtilizationPercentage: 150
+  targetMemoryUtilizationPercentage: 150  
 
 tolerations: []
 

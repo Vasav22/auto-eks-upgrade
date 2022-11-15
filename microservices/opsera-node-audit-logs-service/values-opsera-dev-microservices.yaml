@@ -9,13 +9,6 @@ resources:
 autoscaling:
   enabled: true
   minReplicas: 1
-  maxReplicas: 10
-  targetCPUUtilizationPercentage: 60
-  targetMemoryUtilizationPercentage: 60
-
-ingress:
-  hosts:
-    - host: audit-logs-service.opsera-dev-private.opsera.io
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 300
+  targetMemoryUtilizationPercentage: 150
