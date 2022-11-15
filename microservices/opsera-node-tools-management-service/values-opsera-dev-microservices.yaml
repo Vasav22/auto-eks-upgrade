@@ -5,9 +5,4 @@ autoscaling:
   targetCPUUtilizationPercentage: 70
   targetMemoryUtilizationPercentage: 70
 
-ingress:
-  hosts:
-    - host: tools-management-service.opsera-dev-private.opsera.io
-      paths: [/]
-
-NODE_ENV: staging
+NODE_ENV: testing
