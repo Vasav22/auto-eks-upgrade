@@ -1,8 +1,11 @@
 resources:
   limits:
     memory: 1Gi
+    cpu: 250m
 
 autoscaling:
   enabled: true
   minReplicas: 1
   maxReplicas: 3
+  targetCPUUtilizationPercentage: 200
+  targetMemoryUtilizationPercentage: 150
