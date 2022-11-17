@@ -3,4 +3,4 @@ autoscaling:
   minReplicas: 1
   maxReplicas: 3
 
-NODE_ENV: staging
+NODE_ENV: testing
