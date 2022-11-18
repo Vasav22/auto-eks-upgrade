@@ -1,4 +1,0 @@
-ingress:
-  hosts:
-    - host: tools-management-service.honeywell-private.opsera.io
-      paths: [/]
