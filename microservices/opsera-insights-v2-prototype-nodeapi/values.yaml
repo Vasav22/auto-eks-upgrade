@@ -50,7 +50,7 @@ securityContext: {}
 
 service:
   type: ClusterIP
-  port: 3000
+  port: 5015
 
 ingress:
   enabled: true
