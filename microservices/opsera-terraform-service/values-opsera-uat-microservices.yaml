@@ -5,4 +5,4 @@ autoscaling:
   targetCPUUtilizationPercentage: 70
   targetMemoryUtilizationPercentage: 70
 
-HELM_GIT_BRANCH: master-test
+HELM_GIT_BRANCH: master-v1.22
