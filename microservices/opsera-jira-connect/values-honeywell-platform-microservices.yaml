@@ -1,4 +1,6 @@
 ingress:
   hosts:
     - host: jira-connect.honeywell.opsera.io
-      paths: [/]
+      paths:
+        - path: /
+          pathType: ImplementationSpecific

@@ -8,4 +8,11 @@ autoscaling:
 ingress:
   hosts:
     - host: jira-connect.opsera-test.opsera.io
-      paths: [/]
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+
+clusterName: opsera-test-platform
+
+datadogApm:
+  enabled: true
