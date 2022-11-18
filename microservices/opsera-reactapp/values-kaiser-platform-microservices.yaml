@@ -1,0 +1,4 @@
+ingress:
+  hosts:
+    - host: portal.kaiserpermanente.opsera.io
+      paths: [/]

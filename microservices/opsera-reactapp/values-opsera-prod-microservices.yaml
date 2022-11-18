@@ -1,4 +1,6 @@
 ingress:
   hosts:
     - host: portal.opsera.io
-      paths: [/]
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
