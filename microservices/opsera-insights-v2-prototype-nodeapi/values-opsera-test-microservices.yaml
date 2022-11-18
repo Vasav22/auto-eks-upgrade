@@ -15,7 +15,7 @@ autoscaling:
 
 ingress:
   hosts:
-    - host: api.opsera-test.opsera.io
+    - host: nextgen-api.opsera-test.opsera.io
       paths: [/]
 
 NODE_ENV: testing
