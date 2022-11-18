@@ -1,16 +1,16 @@
 {{- if .Values.ingress.enabled -}}
-{{- $fullName := include "opsera-node-tools-management-service.fullname" . -}}
+{{- $fullName := include "opsera-insights-v2-prototype-nodeapi.fullname" . -}}
 {{- $svcPort := .Values.service.port -}}
-{{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.GitVersion -}}
+{{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
 apiVersion: networking.k8s.io/v1
 {{- else -}}
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 {{- end }}
 kind: Ingress
 metadata:
   name: {{ $fullName }}
   labels:
-    {{- include "opsera-node-tools-management-service.labels" . | nindent 4 }}
+    {{- include "opsera-insights-v2-prototype-nodeapi.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -33,7 +33,7 @@ spec:
         paths:
         {{- range .paths }}
           - path: {{ . }}
-            pathType: ImplementationSpecific
+            pathType: Prefix
             backend:
               service:
                 name: {{ $fullName }}

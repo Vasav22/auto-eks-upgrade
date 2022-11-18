@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "opsera-insights-v2-prototype-nodeapi.fullname" . }}
+  labels:
+    {{- include "opsera-insights-v2-prototype-nodeapi.labels" . | nindent 4 }}
+  annotations:
+    {{- include "opsera-insights-v2-prototype-nodeapi.annotations" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "opsera-insights-v2-prototype-nodeapi.selectorLabels" . | nindent 4 }}

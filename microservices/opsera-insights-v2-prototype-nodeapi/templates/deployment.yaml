@@ -1,31 +1,29 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "opsera-jira-connect.fullname" . }}
+  name: {{ include "opsera-insights-v2-prototype-nodeapi.fullname" . }}
   labels:
-    {{- include "opsera-jira-connect.labels" . | nindent 4 }}
+    {{- include "opsera-insights-v2-prototype-nodeapi.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "opsera-jira-connect.selectorLabels" . | nindent 6 }}
+      {{- include "opsera-insights-v2-prototype-nodeapi.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
         rollme: {{ randAlphaNum 5 | quote }}
       labels:
-        {{- include "datadogApm.selectorLabels" . | nindent 8 }}
-        {{- include "opsera-jira-connect.selectorLabels" . | nindent 8 }}
+        {{- include "opsera-insights-v2-prototype-nodeapi.selectorLabels" . | nindent 8 }}
     spec:
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      serviceAccountName: {{ include "opsera-jira-connect.serviceAccountName" . }}
+      serviceAccountName: {{ include "opsera-insights-v2-prototype-nodeapi.serviceAccountName" . }}
       terminationGracePeriodSeconds: 7200
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-      {{- include "datadogApm.initContainer" . | nindent 6 }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -40,31 +38,22 @@ spec:
             httpGet:
               path: /status
               port: http
-            initialDelaySeconds: 40
           readinessProbe:
             httpGet:
               path: /status
               port: http
-            initialDelaySeconds: 40
-          lifecycle:
-            preStop:
-              httpGet:
-                path: /stopListener
-                port: http
-                scheme: HTTP
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           env:          
-          {{- include "datadogApm.environmentVars" . | nindent 10 }}
           - name: "DOCKER_ENV"
             value: {{ .Values.DOCKER_ENV }}
+          - name: "NODE_ENV"
+            value: {{default "production" .Values.NODE_ENV }}
           {{- include "ms.extraSecretEnvironmentVars" .Values | nindent 10 }}
           volumeMounts:
-          {{- include "datadogApm.volumeMounts" . | nindent 10 }}
           - name: microservices-efs
             mountPath: /apps/OpsERA/logs/components/
       volumes:
-        {{- include "datadogApm.volumes" . | nindent 8 }}
         - name: microservices-efs
           persistentVolumeClaim:
             claimName: microservices-efs

@@ -1,3 +1,8 @@
+resources:
+  requests:
+    cpu: 500m
+    memory: 768Mi
+
 autoscaling:
   enabled: true
   minReplicas: 1
@@ -7,5 +12,7 @@ autoscaling:
 
 ingress:
   hosts:
-    - host: audit-logs-service.amex-private.opsera.io
+    - host: nextgen-api.opsera-dev.opsera.io
       paths: [/]
+
+NODE_ENV: testing
