@@ -13,3 +13,5 @@ volumeSize: 1024Gi
 storageClass: efs-sc
 
 accessModes: [ReadWriteMany]
+
+sharedWorkspaceBrowserName: shared-workspace-browser
