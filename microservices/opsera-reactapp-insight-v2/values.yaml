@@ -107,7 +107,7 @@ extraSecretEnvironmentVars:
     envName: OPSERA_TENANT
     secretKey: OPSERA_TENANT
   - secretName: microservices-ms-env
-    envName: OPSERA_NODE_SERVER_URL
+    envName: OPSERA_NODE_INSIGHTSV2_SERVER_URL
     secretKey: OPSERA_NODE_SERVER_URL
   - secretName: microservices-ms-env
     envName: OPSERA_APP_STACK
