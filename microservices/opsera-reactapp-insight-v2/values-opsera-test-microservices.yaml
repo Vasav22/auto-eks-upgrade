@@ -16,6 +16,8 @@ autoscaling:
 ingress:
   hosts:
     - host: insights-v2.opsera-test-private.opsera.io
-      paths: [/]
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
 
 NODE_ENV: testing
