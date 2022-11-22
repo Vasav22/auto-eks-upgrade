@@ -15,7 +15,8 @@ autoscaling:
 
 ingress:
   hosts:
-    - host: insights-v2.opsera-dev-private.opsera.io
+    # - host: vnextpoc.opsera-dev.opsera.io
+    - host: vnextpoc.opsera-dev-private.opsera.io
       paths:
         - path: /
           pathType: ImplementationSpecific

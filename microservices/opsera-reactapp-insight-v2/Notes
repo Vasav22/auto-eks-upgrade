@@ -1,7 +1,6 @@
 helm upgrade --install opsera-reactapp-insight-v2 . \
      -n microservices \
     --set DOCKER_ENV=kubernetes \
-    --set image.tag=kube-staging \
-    --set ingress.hosts[0].host=insights-v2.opsera-dev-private.opsera.io \
-    --set ingress.hosts[0].paths[0]=/ \
+    --set image.tag=d423401b8121186970b7602f879d6aa8b0523bc5 \
+    --set ingress.hosts[0].host=insights-v2.opsera-dev.opsera.io \
     -f values-opsera-dev-microservices.yaml
