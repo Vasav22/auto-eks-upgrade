@@ -83,6 +83,9 @@ extraSecretEnvironmentVars:
     envName: OPSERA_OKTA_REDIRECTURI
     secretKey: OPSERA_INSIGHT_V2_OKTA_REDIRECTURI
   - secretName: microservices-ms-env
+    envName: OPSERA_NODE_INSIGHTSV2_SERVER_URL
+    secretKey: OPSERA_NODE_SERVER_URL
+  - secretName: microservices-ms-env
     envName: OPSERA_CLIENT_URL
     secretKey: OPSERA_INSIGHT_V2_CLIENT_URL
   - secretName: microservices-ms-env
@@ -106,9 +109,6 @@ extraSecretEnvironmentVars:
   - secretName: microservices-ms-env
     envName: OPSERA_TENANT
     secretKey: OPSERA_TENANT
-  - secretName: microservices-ms-env
-    envName: OPSERA_NODE_INSIGHTSV2_SERVER_URL
-    secretKey: OPSERA_NODE_SERVER_URL
   - secretName: microservices-ms-env
     envName: OPSERA_APP_STACK
     secretKey: OPSERA_APP_STACK
