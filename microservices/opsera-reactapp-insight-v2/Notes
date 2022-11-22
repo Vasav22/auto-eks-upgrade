@@ -14,6 +14,6 @@ helm upgrade --install opsera-reactapp-insight-v2 . \
     -f values-opsera-dev-microservices.yaml
 
 
-OPSERA_NODE_ORCHESTRATION	
-OPSERA_NODE_SERVER_URL
-OPSERA_API_NODE_URL
+OPSERA_NODE_ORCHESTRATION=
+OPSERA_NODE_SERVER_URL=
+OPSERA_API_NODE_URL=
