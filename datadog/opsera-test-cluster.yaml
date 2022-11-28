@@ -20,6 +20,8 @@ datadog:
   apm:
     enabled: true
   leaderElection: true
+  containerExclude: "kube_namespace:.*"
+  containerInclude: "kube_namespace:microservices kube_namespace:opsera kube_namespace:kafka"
   env: 
     - name: DD_CONTAINER_EXCLUDE_LOGS
       value: "kube_namespace:opsera kube_namespace:kube-system kube_namespace:default image:gcr.io/datadoghq/agent image:docker.elastic.co/beats/metricbeat kube_namespace:alertmanager image:kubernetesui/dashboard"
@@ -41,6 +43,9 @@ datadog:
   clusterChecks:
     enabled: true
 
+  kubeStateMetricsCore:
+    enabled: true
+
 clusterAgent:
   enabled: true
   replicas: 2
@@ -54,6 +59,3 @@ clusterAgent:
 clusterChecksRunner:
   enabled: true
   replicas: 2
-
-kubeStateMetricsCore:
-  enabled: true
