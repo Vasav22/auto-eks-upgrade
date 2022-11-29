@@ -65,22 +65,6 @@ spec:
           - name: "DOCKER_ENV"
             value: {{ .Values.DOCKER_ENV }}
           {{- include "ms.extraSecretEnvironmentVars" .Values | nindent 10 }}
-          - name: DD_AGENT_HOST
-            valueFrom:
-              fieldRef:
-                fieldPath: status.hostIP
-          - name: DD_ENV
-            valueFrom:
-              fieldRef:
-                fieldPath: metadata.labels['tags.datadoghq.com/env']
-          - name: DD_VERSION
-            valueFrom:
-              fieldRef:
-                fieldPath: metadata.labels['tags.datadoghq.com/version']
-          - name: DD_LOGS_INJECTION
-            value: "true"
-          - name: DD_PROFILING_ENABLED
-            value: "true"
           volumeMounts:
           {{- include "datadogApm.volumeMounts" . | nindent 10 }}
           - name: microservices-efs
