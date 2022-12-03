@@ -18,15 +18,14 @@ datadog:
     enabled: true
     processCollection: false
   apm:
-    enabled: true
+    enabled: false
+    socketEnabled: false
   leaderElection: true
   containerExclude: "kube_namespace:.*"
   containerInclude: "kube_namespace:microservices kube_namespace:opsera kube_namespace:kafka"
   env: 
     - name: DD_CONTAINER_EXCLUDE_LOGS
       value: "kube_namespace:opsera kube_namespace:kube-system kube_namespace:default image:gcr.io/datadoghq/agent image:docker.elastic.co/beats/metricbeat kube_namespace:alertmanager image:kubernetesui/dashboard"
-    - name: DD_CONTAINER_EXCLUDE
-      value: "kube_namespace:kube-system kube_namespace:deepfactor kube_namespace:calico-system kube_namespace:cortex kube_namespace:default"
     - name: DD_CLC_RUNNER_ENABLED
       value: "true"
     - name: DD_CLC_RUNNER_HOST
