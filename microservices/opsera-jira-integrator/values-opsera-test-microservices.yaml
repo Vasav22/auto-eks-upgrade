@@ -12,4 +12,4 @@ autoscaling:
 clusterName: opsera-test-platform
 
 datadogApm:
-  enabled: true
+  enabled: false
