@@ -6,3 +6,6 @@ resources:
     cpu: 1000m
     memory: 1Gi
 
+autoscaling:
+  targetCPUUtilizationPercentage: 90
+  targetMemoryUtilizationPercentage: 120

@@ -4,3 +4,4 @@ resources:
 
 autoscaling:
   enabled: true
+  targetMemoryUtilizationPercentage: 180

@@ -4,6 +4,9 @@ resources:
   requests:
     cpu: 250m
 
+autoscaling:
+  targetCPUUtilizationPercentage: 240
+
 ingress:
   hosts:
     - host: apigateway.honeywell-private.opsera.io
