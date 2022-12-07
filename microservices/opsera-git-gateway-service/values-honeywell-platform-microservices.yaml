@@ -8,3 +8,5 @@ resources:
 
 autoscaling:
   enabled: true
+  targetCPUUtilizationPercentage: 90
+  targetMemoryUtilizationPercentage: 120

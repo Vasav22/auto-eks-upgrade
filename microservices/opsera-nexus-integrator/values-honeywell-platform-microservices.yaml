@@ -8,3 +8,5 @@ resources:
 
 autoscaling:
   minReplicas: 1
+  targetCPUUtilizationPercentage: 300
+  targetMemoryUtilizationPercentage: 100

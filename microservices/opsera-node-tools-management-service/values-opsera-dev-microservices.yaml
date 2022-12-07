@@ -1,6 +1,6 @@
 autoscaling:
   enabled: true
   minReplicas: 1
-  maxReplicas: 3
+  maxReplicas: 2
 
 NODE_ENV: testing
