@@ -1,8 +1,6 @@
 autoscaling:
   enabled: true
   minReplicas: 1
-  maxReplicas: 5
-  targetCPUUtilizationPercentage: 70
-  targetMemoryUtilizationPercentage: 70
+  maxReplicas: 3
 
 HELM_GIT_BRANCH: master-test
