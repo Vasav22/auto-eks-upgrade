@@ -1,0 +1,4 @@
+ingress:
+  hosts:
+    - host: api.kaiserpermanente.opsera.io
+      paths: [/]
