@@ -1,0 +1,7 @@
+ingress:
+  hosts:
+    - host: jira-connect.amex-sandbox.opsera.io
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+    
