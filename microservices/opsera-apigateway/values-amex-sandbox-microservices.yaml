@@ -1,0 +1,4 @@
+ingress:
+  hosts:
+    - host: apigateway.amex-sandbox-private.opsera.io
+      paths: [/]

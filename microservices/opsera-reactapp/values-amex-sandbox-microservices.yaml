@@ -1,0 +1,4 @@
+ingress:
+  hosts:
+    - host: portal.amex-sandbox.opsera.io
+      paths: [/]

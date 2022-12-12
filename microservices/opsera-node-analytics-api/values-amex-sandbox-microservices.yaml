@@ -1,0 +1,4 @@
+ingress:
+  hosts:
+    - host: analytics-api.amex-sandbox.opsera.io
+      paths: [/]
