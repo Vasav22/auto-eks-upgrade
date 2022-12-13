@@ -1,1 +1,2 @@
-#EMPTY
+autoscaling:
+  minReplicas: 2
