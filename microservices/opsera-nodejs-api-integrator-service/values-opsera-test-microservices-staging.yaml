@@ -1,4 +1,0 @@
-ingress:
-  hosts:
-    - host: api-integrator-service.opsera-test.opsera.io
-      paths: [/]

@@ -1,4 +1,0 @@
-ingress:
-  hosts:
-    - host: blueprints-logs.opsera-uat-private.opsera.io
-      paths: [/]

@@ -3,9 +3,4 @@ autoscaling:
   minReplicas: 1
   maxReplicas: 3
 
-ingress:
-  hosts:
-    - host: blueprints-logs.opsera-test-private.opsera.io
-      paths: [/]
-
 NODE_ENV: staging

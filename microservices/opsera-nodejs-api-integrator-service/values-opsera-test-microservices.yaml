@@ -3,11 +3,4 @@ autoscaling:
   minReplicas: 1
   maxReplicas: 3
 
-ingress:
-  hosts:
-    - host: api-integrator-service.opsera-test-private.opsera.io
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-
 NODE_ENV: staging
