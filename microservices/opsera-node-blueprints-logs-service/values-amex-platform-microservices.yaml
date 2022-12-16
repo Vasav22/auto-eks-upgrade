@@ -1,4 +1,1 @@
-ingress:
-  hosts:
-    - host: blueprints-logs.amex-private.opsera.io
-      paths: [/]
+#EMPTY
