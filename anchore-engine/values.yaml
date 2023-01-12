@@ -21,6 +21,10 @@ postgresql:
     resourcePolicy: nil
     size: 20Gi
 
+  master:
+    nodeSelector:
+      Name: tools-node
+
   # If running operator on OpenShift - uncomment the image, imageTag & extraEnv values below.
   # image: registry.access.redhat.com/rhscl/postgresql-96-rhel7
   # imageTag: latest
