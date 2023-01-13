@@ -37,12 +37,12 @@ spec:
             httpGet:
               path: /status
               port: http
-            initialDelaySeconds: 40
+            initialDelaySeconds: 90
           readinessProbe:
             httpGet:
               path: /status
               port: http
-            initialDelaySeconds: 40
+            initialDelaySeconds: 90
           lifecycle:
             preStop:
               httpGet:
