@@ -15,7 +15,7 @@ autoscaling:
 
 ingress:
   hosts:
-    - host: freetrial.opsera-uat.opsera.io
+    - host: portal.freetrial.opsera.io
       paths: 
         - path: /
           pathType: ImplementationSpecific
