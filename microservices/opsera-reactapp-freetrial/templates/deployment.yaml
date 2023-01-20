@@ -59,7 +59,7 @@ spec:
           lifecycle:
             postStart:
               exec:
-                command: ["/bin/bash", "/tmp/entrypoint.sh"]
+                command: ["/bin/sh", "/tmp/entrypoint.sh"]
                 # command: [ '/bin/sh', 'ls; while IFS="=" read -r -d "" n v; do find /usr/local/apache2/htdocs -type f | xargs sed -i  "s|ENV_${n}|${v}|g";done < <(env -0)']
       {{- with .Values.nodeSelector }}
       nodeSelector:
