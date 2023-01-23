@@ -40,7 +40,7 @@ spec:
             initialDelaySeconds: 90
           readinessProbe:
             httpGet:
-              path: /status
+              path: /readiness
               port: http
             initialDelaySeconds: 90
           lifecycle:
