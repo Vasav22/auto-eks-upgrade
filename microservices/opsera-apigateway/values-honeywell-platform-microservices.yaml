@@ -6,7 +6,12 @@ resources:
     cpu: 250m
     memory: 1Gi
 
+autoscaling:
+  targetCPUUtilizationPercentage: 240
+
 ingress:
   hosts:
     - host: apigateway.honeywell-private.opsera.io
-      paths: [/]
+      paths:
+        - path: /
+          pathType: ImplementationSpecific

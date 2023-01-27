@@ -1,7 +1,9 @@
 ingress:
   hosts:
     - host: apigateway.honeywell-sandbox-private.opsera.io
-      paths: [/]
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
 
 resources:
   limits:
