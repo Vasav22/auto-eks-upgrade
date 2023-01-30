@@ -705,7 +705,8 @@ anchoreEnterpriseUi:
 
   labels: {}
   annotations: {}
-  nodeSelector: {}
+  nodeSelector:
+    Name: tools-node
   tolerations: []
   affinity: {}
 
