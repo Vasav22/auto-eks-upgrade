@@ -21,7 +21,7 @@ spec:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       serviceAccountName: {{ include "opsera-terraform-service.serviceAccountName" . }}
-      terminationGracePeriodSeconds: 7200
+      terminationGracePeriodSeconds: 900
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -96,3 +96,4 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
+

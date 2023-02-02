@@ -27,7 +27,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "opsera-informatica-integrator.serviceAccountName" . }}
-      terminationGracePeriodSeconds: 7200
+      terminationGracePeriodSeconds: 4500
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -81,3 +81,4 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+
