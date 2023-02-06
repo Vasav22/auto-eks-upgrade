@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "opsera-twistlock-integrator.name" -}}
+{{- define "opsera-containerscan-service.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "opsera-twistlock-integrator.fullname" -}}
+{{- define "opsera-containerscan-service.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,16 +26,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "opsera-twistlock-integrator.chart" -}}
+{{- define "opsera-containerscan-service.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "opsera-twistlock-integrator.labels" -}}
-helm.sh/chart: {{ include "opsera-twistlock-integrator.chart" . }}
-{{ include "opsera-twistlock-integrator.selectorLabels" . }}
+{{- define "opsera-containerscan-service.labels" -}}
+helm.sh/chart: {{ include "opsera-containerscan-service.chart" . }}
+{{ include "opsera-containerscan-service.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -45,18 +45,18 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "opsera-twistlock-integrator.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "opsera-twistlock-integrator.name" . }}
+{{- define "opsera-containerscan-service.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "opsera-containerscan-service.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Datadog Service Check Annotations
 */}}
-{{- define "opsera-twistlock-integrator.annotations" -}}
+{{- define "opsera-containerscan-service.annotations" -}}
 ad.datadoghq.com/service.check_names: '["http_check"]'
 ad.datadoghq.com/service.init_configs: '[{}]'
-ad.datadoghq.com/service.instances: "[\n  {\n    \"name\": \"opsera-twistlock-integrator\",\n
+ad.datadoghq.com/service.instances: "[\n  {\n    \"name\": \"opsera-containerscan-service\",\n
   \   \"url\": \"http://%%host%%:%%port%%/status\",\n    \"timeout\": 1,\n  \"http_response_status_code\": 200\n  }\n] \n"
 {{- end -}}
 
@@ -64,9 +64,9 @@ ad.datadoghq.com/service.instances: "[\n  {\n    \"name\": \"opsera-twistlock-in
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "opsera-twistlock-integrator.serviceAccountName" -}}
+{{- define "opsera-containerscan-service.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "opsera-twistlock-integrator.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "opsera-containerscan-service.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
