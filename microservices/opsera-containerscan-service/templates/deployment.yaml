@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "opsera-twistlock-integrator.fullname" . }}
+  name: {{ include "opsera-containerscan-service.fullname" . }}
   labels:
-    {{- include "opsera-twistlock-integrator.labels" . | nindent 4 }}
+    {{- include "opsera-containerscan-service.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "opsera-twistlock-integrator.selectorLabels" . | nindent 6 }}
+      {{- include "opsera-containerscan-service.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
@@ -20,13 +20,13 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "opsera-twistlock-integrator.selectorLabels" . | nindent 8 }}
+        {{- include "opsera-containerscan-service.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "opsera-twistlock-integrator.serviceAccountName" . }}
+      serviceAccountName: {{ include "opsera-containerscan-service.serviceAccountName" . }}
       terminationGracePeriodSeconds: 300
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
