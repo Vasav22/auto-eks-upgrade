@@ -10,12 +10,12 @@ autoscaling:
   enabled: true
   minReplicas: 2
   maxReplicas: 3
-  targetCPUUtilizationPercentage: 160
+  targetCPUUtilizationPercentage: 140
   targetMemoryUtilizationPercentage: 80
 
 ingress:
   hosts:
-    - host: vnext-api.opsera-test-private.opsera.io
+    - host: vnext-api.honeywell-private.opsera.io
       paths: [/]
 
-NODE_ENV: testing
+NODE_ENV: default

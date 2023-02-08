@@ -21,4 +21,4 @@ ingress:
         - path: /
           pathType: ImplementationSpecific
 
-NODE_ENV: testing
+NODE_ENV: test
