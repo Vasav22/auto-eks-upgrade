@@ -8,3 +8,5 @@ autoscaling:
   maxReplicas: 2
   targetCPUUtilizationPercentage: 120
   targetMemoryUtilizationPercentage: 120
+
+NODE_ENV: testing

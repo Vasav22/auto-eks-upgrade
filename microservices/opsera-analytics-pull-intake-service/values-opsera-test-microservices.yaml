@@ -2,7 +2,5 @@ autoscaling:
   enabled: true
   minReplicas: 1
   maxReplicas: 3
-  targetCPUUtilizationPercentage: 120
-  targetMemoryUtilizationPercentage: 120
 
-NODE_ENV: kube-test
+NODE_ENV: testing
