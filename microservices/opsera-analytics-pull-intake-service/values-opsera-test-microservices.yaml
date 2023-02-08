@@ -3,4 +3,4 @@ autoscaling:
   minReplicas: 1
   maxReplicas: 3
 
-NODE_ENV: kube-test
+NODE_ENV: testing

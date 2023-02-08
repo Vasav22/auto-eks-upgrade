@@ -3,4 +3,4 @@ autoscaling:
   minReplicas: 1
   maxReplicas: 5
 
-NODE_ENV: kube-staging
+NODE_ENV: staging
