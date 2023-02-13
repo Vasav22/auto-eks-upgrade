@@ -11,14 +11,13 @@ autoscaling:
   minReplicas: 1
   maxReplicas: 3
   targetCPUUtilizationPercentage: 400
-  targetMemoryUtilizationPercentage: 160
+  targetMemoryUtilizationPercentage: 120
 
 ingress:
   hosts:
-    # - host: vnextpoc.opsera-test.opsera.io
-    - host: vnextpoc.opsera-test-private.opsera.io
+    - host: vnext.opsera-test.opsera.io
       paths:
         - path: /
           pathType: ImplementationSpecific
 
-NODE_ENV: test
+NODE_ENV: testing

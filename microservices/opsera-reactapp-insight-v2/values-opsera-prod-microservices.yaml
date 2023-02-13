@@ -1,23 +1,6 @@
-resources:
-  limits:
-    cpu: 500m
-    memory: 1Gi
-  requests:
-    cpu: 100m
-    memory: 512Mi
-
-autoscaling:
-  enabled: true
-  minReplicas: 1
-  maxReplicas: 3
-  targetCPUUtilizationPercentage: 300
-  targetMemoryUtilizationPercentage: 120
-
 ingress:
   hosts:
-    - host: vnextpoc.opsera-prod-private.opsera.io
+    - host: vnext.opsera-prod.opsera.io
       paths:
         - path: /
           pathType: ImplementationSpecific
-
-NODE_ENV: production

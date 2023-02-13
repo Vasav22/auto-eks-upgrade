@@ -1,6 +1,8 @@
 ingress:
   hosts:
-    - host: vnext.honeywell.opsera.io
+    - host: vnext.opsera-uat.opsera.io
       paths:
         - path: /
           pathType: ImplementationSpecific
+
+NODE_ENV: staging

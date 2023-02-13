@@ -1,21 +1,4 @@
-resources:
-  limits:
-    cpu: 2
-    memory: 2Gi
-  requests:
-    cpu: 1
-    memory: 2Gi
-
-autoscaling:
-  enabled: true
-  minReplicas: 2
-  maxReplicas: 3
-  targetCPUUtilizationPercentage: 140
-  targetMemoryUtilizationPercentage: 80
-
 ingress:
   hosts:
-    - host: vnext-api.opsera-prod-private.opsera.io
+    - host: vnext-api.opsera-prod.opsera.io
       paths: [/]
-
-NODE_ENV: default
