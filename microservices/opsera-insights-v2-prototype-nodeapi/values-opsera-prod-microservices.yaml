@@ -1,0 +1,4 @@
+ingress:
+  hosts:
+    - host: vnext-api.opsera-prod.opsera.io
+      paths: [/]
