@@ -5,9 +5,9 @@ autoscaling:
 
 ingress:
   hosts:
-    - host: node-scheduler.opsera-test-private.opsera.io
+    - host: node-scheduler.opsera-uat-private.opsera.io
       paths:
         - path: /
           pathType: ImplementationSpecific
 
-NODE_ENV: testing
+NODE_ENV: staging
