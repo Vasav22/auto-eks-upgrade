@@ -1,4 +1,4 @@
-service_name=insights-v2-prototype-nodeapi
+service_name=opsera-vnxt-insights-api
 values_file_path=values-opsera-dev-microservices.yaml
 k8_ns=microservices
 
