@@ -8,12 +8,6 @@ This chart bootstraps a SonarQube LTS instance with a PostgreSQL database. If yo
 
 Please note that this chart only supports SonarQube Community, Developer, and Enterprise Editions.
 
-## Compatibility
-
-| SonarQube Version | Kubernetes Version | Helm Chart Version |
-|-------------------|--------------------|--------------------|
-| 8.9               | 1.19, 1.20, 1.21   | 1.0                |
-
 ## Installing the chart
 
 To install the chart:
