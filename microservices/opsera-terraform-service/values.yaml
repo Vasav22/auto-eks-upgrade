@@ -109,5 +109,5 @@ extraSecretEnvironmentVars:
     envName: OPSERA_PLATFORM_DOMAIN
     secretKey: OPSERA_PLATFORM_DOMAIN
 
-HELM_GIT_BRANCH: master
+HELM_GIT_BRANCH: master-v1.22
 GIT_CREDENTIAL: opsera-nawaz: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
