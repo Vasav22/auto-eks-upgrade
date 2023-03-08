@@ -122,7 +122,7 @@ service:
 ingress:
   ## If true, Kubernetes Dashboard Ingress will be created.
   ##
-  enabled: true
+  enabled: false
 
   ## Kubernetes Dashboard Ingress annotations
   ##

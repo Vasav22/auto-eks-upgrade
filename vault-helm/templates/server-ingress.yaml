@@ -10,7 +10,7 @@
 {{ if .Capabilities.APIVersions.Has "networking.k8s.io/v1beta1" }}
 apiVersion: networking.k8s.io/v1beta1
 {{ else }}
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 {{ end }}
 kind: Ingress
 metadata:
@@ -36,6 +36,7 @@ spec:
       secretName: {{ .secretName }}
   {{- end }}
 {{- end }}
+  # ingressClassName: "nginx"
   rules:
   {{- range .Values.server.ingress.hosts }}
     - host: {{ .host | quote }}
@@ -43,9 +44,14 @@ spec:
         paths:
         {{- range (.paths | default (list "/")) }}
           - path: {{ . }}
+            pathType: ImplementationSpecific
             backend:
-              serviceName: {{ $serviceName }}
-              servicePort: {{ $servicePort }}
+              service:
+                name: {{ $serviceName }}
+                port:
+                  number: {{ $servicePort }}
+              # serviceName: {{ $serviceName }}
+              # servicePort: {{ $servicePort }}
         {{- end }}
   {{- end }}
 {{- end }}

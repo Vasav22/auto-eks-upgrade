@@ -1524,7 +1524,8 @@ repoServer:
   #    emptyDir: {}
 
   # -- [Node selector]
-  nodeSelector: {}
+  nodeSelector:
+    Name: tools-node
   # -- [Tolerations] for use with node taints
   tolerations: []
   # -- Assign custom [affinity] rules to the deployment
