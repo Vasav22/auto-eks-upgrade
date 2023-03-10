@@ -25,7 +25,7 @@ OpenShift:
 
 image:
   repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera-pipeline/sonarqube
-  tag: test-8.9.9-community
+  tag: 9.9.0-community
   pullPolicy: Always
   # If using a private repository, the name of the imagePullSecret to use
   # pullSecret: my-repo-secret
