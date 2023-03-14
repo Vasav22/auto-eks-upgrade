@@ -1,5 +1,5 @@
 
-helm install opsera-apigee-integrator-service . \
+helm install opsera-apigee-integrator . \
     -n microservices \
     --set DOCKER_ENV=kubernetes \
     --set image.tag=kube-dev \
@@ -7,7 +7,7 @@ helm install opsera-apigee-integrator-service . \
     --set ingress.hosts[0].paths[0]=/
 
 
-helm upgrade opsera-apigee-integrator-service . \
+helm upgrade opsera-apigee-integrator . \
     -n microservices \
     --set DOCKER_ENV=kubernetes \
     --set image.tag=kube-dev \
@@ -16,7 +16,7 @@ helm upgrade opsera-apigee-integrator-service . \
 
 
 
-helm uninstall opsera-apigee-integrator-service . \
+helm uninstall opsera-apigee-integrator . \
     -n microservices 
 
 
@@ -24,7 +24,7 @@ helm uninstall opsera-apigee-integrator-service . \
 #test
 
 
-helm install opsera-apigee-integrator-service . \
+helm install opsera-apigee-integrator . \
     -n microservices \
     --set DOCKER_ENV=kubernetes \
     --set image.tag=kube-test \
@@ -32,7 +32,7 @@ helm install opsera-apigee-integrator-service . \
     --set ingress.hosts[0].paths[0]=/
 
 
-helm upgrade opsera-apigee-integrator-service . \
+helm upgrade opsera-apigee-integrator . \
     -n microservices \
     --set DOCKER_ENV=kubernetes \
     --set image.tag=kube-test \
@@ -41,12 +41,12 @@ helm upgrade opsera-apigee-integrator-service . \
 
 
 
-helm uninstall opsera-apigee-integrator-service . \
+helm uninstall opsera-apigee-integrator . \
     -n microservices 
 
 #production
 
-helm install opsera-apigee-integrator-service . \
+helm install opsera-apigee-integrator . \
     -n microservices \
     --set DOCKER_ENV=kubernetes \
     --set image.tag=kube-prod \
@@ -54,7 +54,7 @@ helm install opsera-apigee-integrator-service . \
     --set ingress.hosts[0].paths[0]=/
 
 
-helm upgrade opsera-apigee-integrator-service . \
+helm upgrade opsera-apigee-integrator . \
     -n microservices \
     --set DOCKER_ENV=kubernetes \
     --set image.tag=kube-prod \
@@ -63,11 +63,11 @@ helm upgrade opsera-apigee-integrator-service . \
 
 
 
-helm uninstall opsera-apigee-integrator-service . \
+helm uninstall opsera-apigee-integrator . \
     -n microservices 
 
 
 
-kubectl -n microservices port-forward deployment/opsera-apigee-integrator-service 5007:5007
-kubectl -n microservices get deploy | grep -i "opsera-apigee-integrator-service"
+kubectl -n microservices port-forward deployment/opsera-apigee-integrator 5007:5007
+kubectl -n microservices get deploy | grep -i "opsera-apigee-integrator"
 

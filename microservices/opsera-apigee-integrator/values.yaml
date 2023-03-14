@@ -1,11 +1,11 @@
-# Default values for opsera-apigee-integrator-service.
+# Default values for opsera-apigee-integrator.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 replicaCount: 1
 
 image:
-  repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera-apigee-integrator-service
+  repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera-apigee-integrator
   pullPolicy: Always
 
 imagePullSecrets: []
@@ -52,17 +52,17 @@ ingress:
 resources:
   limits:
     cpu: 500m
-    memory: 1Gi
+    memory: 2Gi
   requests:
     cpu: 100m
-    memory: 512Mi
+    memory: 1Gi
 
 nodeSelector:
   Name: microservice-node
 
 autoscaling:
   enabled: true
-  minReplicas: 3
+  minReplicas: 1
   maxReplicas: 10
   targetCPUUtilizationPercentage: 300
   targetMemoryUtilizationPercentage: 120

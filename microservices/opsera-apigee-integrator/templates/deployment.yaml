@@ -1,31 +1,29 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "opsera-apigee-integrator-service.fullname" . }}
+  name: {{ include "opsera-apigee-integrator.fullname" . }}
   labels:
-    {{- include "opsera-apigee-integrator-service.labels" . | nindent 4 }}
+    {{- include "opsera-apigee-integrator.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "opsera-apigee-integrator-service.selectorLabels" . | nindent 6 }}
+      {{- include "opsera-apigee-integrator.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
         rollme: {{ randAlphaNum 5 | quote }}
       labels:
-        {{- include "datadogApm.selectorLabels" . | nindent 8 }}
-        {{- include "opsera-apigee-integrator-service.selectorLabels" . | nindent 8 }}
+        {{- include "opsera-apigee-integrator.selectorLabels" . | nindent 8 }}
     spec:
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      serviceAccountName: {{ include "opsera-apigee-integrator-service.serviceAccountName" . }}
-      terminationGracePeriodSeconds: 7200
+      serviceAccountName: {{ include "opsera-apigee-integrator.serviceAccountName" . }}
+      terminationGracePeriodSeconds: 300
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-      {{- include "datadogApm.initContainer" . | nindent 6 }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -55,16 +53,13 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           env:          
-          {{- include "datadogApm.environmentVars" . | nindent 10 }}
           - name: "DOCKER_ENV"
             value: {{ .Values.DOCKER_ENV }}
           {{- include "ms.extraSecretEnvironmentVars" .Values | nindent 10 }}
           volumeMounts:
-          {{- include "datadogApm.volumeMounts" . | nindent 10 }}
           - name: microservices-efs
             mountPath: /apps/OpsERA/logs/components/
       volumes:
-        {{- include "datadogApm.volumes" . | nindent 8 }}
         - name: microservices-efs
           persistentVolumeClaim:
             claimName: microservices-efs
@@ -80,3 +75,4 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
+

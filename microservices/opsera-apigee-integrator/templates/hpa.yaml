@@ -2,14 +2,14 @@
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "opsera-apigee-integrator-service.fullname" . }}
+  name: {{ include "opsera-apigee-integrator.fullname" . }}
   labels:
-    {{- include "opsera-apigee-integrator-service.labels" . | nindent 4 }}
+    {{- include "opsera-apigee-integrator.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "opsera-apigee-integrator-service.fullname" . }}
+    name: {{ include "opsera-apigee-integrator.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:
