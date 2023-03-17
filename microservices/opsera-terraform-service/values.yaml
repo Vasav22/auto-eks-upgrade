@@ -108,6 +108,9 @@ extraSecretEnvironmentVars:
   - secretName: microservices-ms-env
     envName: OPSERA_PLATFORM_DOMAIN
     secretKey: OPSERA_PLATFORM_DOMAIN
+  - secretName: microservices-ms-env
+    envName: OPSERA_VAULT_WRITE_EXTERNAL_URL
+    secretKey: OPSERA_VAULT_WRITE_EXTERNAL_URL
 
 HELM_GIT_BRANCH: master
 GIT_CREDENTIAL: opsera-nawaz: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
