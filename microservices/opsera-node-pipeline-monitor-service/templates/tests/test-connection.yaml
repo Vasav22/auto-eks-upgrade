@@ -3,7 +3,7 @@ kind: Pod
 metadata:
   name: "{{ include "opsera-node-pipeline-monitor.fullname" . }}-test-connection"
   labels:
-    {{- include opsera-node-pipeline-monitor.labels" . | nindent 4 }}
+    {{- include "opsera-node-pipeline-monitor.labels" . | nindent 4 }}
   annotations:
     "helm.sh/hook": test
 spec:
