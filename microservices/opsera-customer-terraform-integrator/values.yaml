@@ -88,3 +88,5 @@ extraSecretEnvironmentVars:
   - secretName: microservices-ms-env
     envName: OPSERA_KAFKA_SERVER
     secretKey: OPSERA_KAFKA_SERVER
+
+serviceCategory: Infrastructure_as_Code_Services    

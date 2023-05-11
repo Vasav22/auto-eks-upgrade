@@ -14,8 +14,9 @@ spec:
       annotations:
         rollme: {{ randAlphaNum 5 | quote }}
       labels:
-        {{- include "opsera-analytics-v2.selectorLabels" . | nindent 8 }}
-    spec:
+        {{ if .Values.serviceCategory }}
+        serviceCategory: {{ .Values.serviceCategory }}
+        {{ end }}    spec:
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}

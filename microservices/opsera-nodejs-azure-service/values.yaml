@@ -192,3 +192,5 @@ extraSecretEnvironmentVars:
   - secretName: microservices-ms-env
     envName: OPSERA_KAFKA_ENABLE_FLAG
     secretKey: OPSERA_KAFKA_ENABLE_FLAG
+
+serviceCategory: Cloud_Management_Services

@@ -75,3 +75,5 @@ extraSecretEnvironmentVars:
   - secretName: microservices-ms-env
     envName: OPSERA_API_SERVICE_URL
     secretKey: OPSERA_API_SERVICE_URL
+
+serviceCategory: Source_Code_Management_Services

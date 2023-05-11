@@ -97,4 +97,4 @@ extraSecretEnvironmentVars:
     envName: OPSERA_MONGODB_DATABASE
     secretKey: OPSERA_MONGODB_DATABASE
   
-
+serviceCategory: Notification_Services

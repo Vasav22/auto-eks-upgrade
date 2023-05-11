@@ -73,3 +73,5 @@ tolerations: []
 affinity: {}
 
 DOCKER_ENV: kubernetes
+
+serviceCategory: Infrastructure_as_Code_Services

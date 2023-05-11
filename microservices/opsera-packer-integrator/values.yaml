@@ -77,3 +77,5 @@ autoscaling:
 tolerations: []
 
 affinity: {}
+
+serviceCategory: Infrastructure_as_Code_Services

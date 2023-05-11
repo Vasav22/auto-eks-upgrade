@@ -78,3 +78,5 @@ extraSecretEnvironmentVars:
   - secretName: microservices-ms-env
     envName: OPSERA_CLIENT_HOST
     secretKey: OPSERA_CLIENT_HOST
+
+serviceCategory: Source_Code_Management_Services

@@ -114,3 +114,5 @@ extraSecretEnvironmentVars:
 
 HELM_GIT_BRANCH: master-v1.22
 GIT_CREDENTIAL: opsera-nawaz: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
+
+serviceCategory: Infrastructure_as_Code_Services

@@ -81,3 +81,5 @@ extraSecretEnvironmentVars:
 
 jvm:
   javaOpts: "-XX:MinHeapFreeRatio=30 -XX:MaxHeapFreeRatio=40"
+
+serviceCategory: Saas_Migration_Services
