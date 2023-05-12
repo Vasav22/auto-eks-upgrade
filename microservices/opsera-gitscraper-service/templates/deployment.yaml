@@ -12,6 +12,9 @@ spec:
   template:
     metadata:
       labels:
+        {{ if .Values.serviceCategory }}
+        serviceCategory: {{ .Values.serviceCategory }}
+        {{ end }}
         {{- include "opsera-gitscraper-service.selectorLabels" . | nindent 8 }}
     spec:
     {{- with .Values.imagePullSecrets }}
