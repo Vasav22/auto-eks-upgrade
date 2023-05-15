@@ -1,4 +1,0 @@
-ingress:
-  hosts:
-    - host: tools-management-service.opsera-prod-private.opsera.io
-      paths: [/]

@@ -14,6 +14,9 @@ spec:
       annotations:
         rollme: {{ randAlphaNum 5 | quote }}
       labels:
+        {{ if .Values.serviceCategory }}
+        serviceCategory: {{ .Values.serviceCategory }}
+        {{ end }}
         {{- include "opsera-nodejs-azure-service.selectorLabels" . | nindent 8 }}
     spec:
     {{- with .Values.imagePullSecrets }}
@@ -21,7 +24,6 @@ spec:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       serviceAccountName: {{ include "opsera-nodejs-azure-service.serviceAccountName" . }}
-      terminationGracePeriodSeconds: 7200
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:

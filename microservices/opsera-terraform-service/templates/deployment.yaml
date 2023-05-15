@@ -14,6 +14,10 @@ spec:
       annotations:
         rollme: {{ randAlphaNum 5 | quote }}
       labels:
+        {{ if .Values.serviceCategory }}
+        serviceCategory: {{ .Values.serviceCategory }}
+        {{ end }}
+        {{- include "datadogApm.selectorLabels" . | nindent 8 }}
         {{- include "opsera-terraform-service.selectorLabels" . | nindent 8 }}
     spec:
     {{- with .Values.imagePullSecrets }}
@@ -21,9 +25,10 @@ spec:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       serviceAccountName: {{ include "opsera-terraform-service.serviceAccountName" . }}
-      terminationGracePeriodSeconds: 7200
+      terminationGracePeriodSeconds: 900
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- include "datadogApm.initContainer" . | nindent 6 }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -52,11 +57,13 @@ spec:
                 scheme: HTTP
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          env:          
+          env:
+          {{- include "datadogApm.environmentVars" . | nindent 10 }}
           - name: "DOCKER_ENV"
             value: {{ .Values.DOCKER_ENV }}
           {{- include "ms.extraSecretEnvironmentVars" .Values | nindent 10 }}
           volumeMounts:
+          {{- include "datadogApm.volumeMounts" . | nindent 10 }}
           - name: microservices-efs
             mountPath: /apps/OpsERA/logs/components/
           - mountPath: "/apps/OpsERA/components/helmcharts"
@@ -73,12 +80,13 @@ spec:
               - -b
               - {{ .Values.HELM_GIT_BRANCH }}
               - --single-branch
-              - https://{{ .Values.GIT_CREDENTIAL }}@gitlab.com/opsera-repo/cloud-infrastructure/helmcharts.git
+              - https://{{ .Values.GIT_CREDENTIAL }}@github.com/OpseraEngineering/infra-helmcharts.git
               - /data
           volumeMounts:
           - mountPath: /data
             name: helm-charts
       volumes:
+        {{- include "datadogApm.volumes" . | nindent 8 }}
         - name: helm-charts
           emptyDir: {}
         - name: microservices-efs
@@ -96,3 +104,4 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
+

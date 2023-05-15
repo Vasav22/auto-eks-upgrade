@@ -10,10 +10,5 @@ autoscaling:
   enabled: true
   minReplicas: 1
   maxReplicas: 10
-  targetCPUUtilizationPercentage: 60
-  targetMemoryUtilizationPercentage: 60
-
-ingress:
-  hosts:
-    - host: opsera-pipeline-settings-operations.honeywell-sandbox-private.opsera.io
-      paths: [/]
+  targetCPUUtilizationPercentage: 300
+  targetMemoryUtilizationPercentage: 120

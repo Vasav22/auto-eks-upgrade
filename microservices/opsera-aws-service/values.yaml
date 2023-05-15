@@ -64,8 +64,8 @@ autoscaling:
   enabled: true
   minReplicas: 1
   maxReplicas: 10
-  targetCPUUtilizationPercentage: 60
-  targetMemoryUtilizationPercentage: 60
+  targetCPUUtilizationPercentage: 300
+  targetMemoryUtilizationPercentage: 120
 
 tolerations: []
 
@@ -87,3 +87,5 @@ extraSecretEnvironmentVars:
   - secretName: microservices-ms-env
     envName: OPSERA_AWS_HOSTER_ZONEID
     secretKey: OPSERA_AWS_HOSTER_ZONEID
+
+serviceCategory: Cloud_Management_Services

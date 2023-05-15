@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "opsera-oracle-fusion-integrator.fullname" . }}
+  labels:
+    {{- include "opsera-oracle-fusion-integrator.labels" . | nindent 4 }}
+  annotations:
+    {{- include "opsera-oracle-fusion-integrator.annotations" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "opsera-oracle-fusion-integrator.selectorLabels" . | nindent 4 }}

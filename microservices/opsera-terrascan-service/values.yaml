@@ -65,11 +65,13 @@ autoscaling:
   enabled: true
   minReplicas: 1
   maxReplicas: 10
-  targetCPUUtilizationPercentage: 60
-  targetMemoryUtilizationPercentage: 60
+  targetCPUUtilizationPercentage: 300
+  targetMemoryUtilizationPercentage: 240
 
 tolerations: []
 
 affinity: {}
 
 DOCKER_ENV: kubernetes
+
+serviceCategory: Infrastructure_as_Code_Services

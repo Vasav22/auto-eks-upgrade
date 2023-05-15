@@ -71,8 +71,8 @@ autoscaling:
   enabled: true
   minReplicas: 2
   maxReplicas: 10
-  targetCPUUtilizationPercentage: 60
-  targetMemoryUtilizationPercentage: 60
+  targetCPUUtilizationPercentage: 300
+  targetMemoryUtilizationPercentage: 240
 
 tolerations: []
 
@@ -116,5 +116,4 @@ extraSecretEnvironmentVars:
     envName: OPSERA_ANALYTICS_BASE_URL
     secretKey: OPSERA_ANALYTICS_BASE_URL
 
-
-
+serviceCategory: Client_UI_Services

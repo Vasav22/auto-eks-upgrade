@@ -68,8 +68,8 @@ autoscaling:
   enabled: true
   minReplicas: 1
   maxReplicas: 10
-  targetCPUUtilizationPercentage: 60
-  targetMemoryUtilizationPercentage: 60
+  targetCPUUtilizationPercentage: 300
+  targetMemoryUtilizationPercentage: 240
 
 tolerations: []
 
@@ -82,3 +82,5 @@ extraSecretEnvironmentVars:
   - secretName: microservices-ms-env
     envName: OPSERA_API_SERVICE_URL
     secretKey: OPSERA_API_SERVICE_URL
+
+serviceCategory: Infrastructure_as_Code_Services    

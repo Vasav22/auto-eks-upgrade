@@ -1,0 +1,6 @@
+ingress:
+  hosts:
+    - host: vnext-insights-api.opsera-uat.opsera.io
+      paths: [/]
+
+NODE_ENV: staging

@@ -20,6 +20,9 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
+        {{ if .Values.serviceCategory }}
+        serviceCategory: {{ .Values.serviceCategory }}
+        {{ end }}
         {{- include "datadogApm.selectorLabels" . | nindent 8 }}
         {{- include "opsera-azure-service.selectorLabels" . | nindent 8 }}
     spec:
@@ -28,7 +31,7 @@ spec:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       serviceAccountName: {{ include "opsera-azure-service.serviceAccountName" . }}
-      terminationGracePeriodSeconds: 7200
+      terminationGracePeriodSeconds: 600
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       {{- include "datadogApm.initContainer" . | nindent 6 }}
@@ -65,22 +68,6 @@ spec:
           - name: "DOCKER_ENV"
             value: {{ .Values.DOCKER_ENV }}
           {{- include "ms.extraSecretEnvironmentVars" .Values | nindent 10 }}
-          - name: DD_AGENT_HOST
-            valueFrom:
-              fieldRef:
-                fieldPath: status.hostIP
-          - name: DD_ENV
-            valueFrom:
-              fieldRef:
-                fieldPath: metadata.labels['tags.datadoghq.com/env']
-          - name: DD_VERSION
-            valueFrom:
-              fieldRef:
-                fieldPath: metadata.labels['tags.datadoghq.com/version']
-          - name: DD_LOGS_INJECTION
-            value: "true"
-          - name: DD_PROFILING_ENABLED
-            value: "true"
           volumeMounts:
           {{- include "datadogApm.volumeMounts" . | nindent 10 }}
           - name: microservices-efs
@@ -102,3 +89,4 @@ spec:
     tolerations:
       {{- toYaml . | nindent 8 }}
     {{- end }}
+

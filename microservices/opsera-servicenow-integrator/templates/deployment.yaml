@@ -20,6 +20,9 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
+        {{ if .Values.serviceCategory }}
+        serviceCategory: {{ .Values.serviceCategory }}
+        {{ end }}
         {{- include "datadogApm.selectorLabels" . | nindent 8 }}
         {{- include "opsera-servicenow-integrator.selectorLabels" . | nindent 8 }}
     spec:
@@ -28,7 +31,6 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "opsera-servicenow-integrator.serviceAccountName" . }}
-      terminationGracePeriodSeconds: 7200
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       {{- include "datadogApm.initContainer" . | nindent 6 }}

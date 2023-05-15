@@ -1,8 +1,0 @@
-ingress:
-  hosts:
-    - host: uat.opsera.io
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-
-NODE_ENV: staging

@@ -10,8 +10,8 @@ autoscaling:
   enabled: true
   minReplicas: 3
   maxReplicas: 3
-  targetCPUUtilizationPercentage: 60
-  targetMemoryUtilizationPercentage: 60
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
 
 ingress:
   hosts:
@@ -22,4 +22,4 @@ ingress:
 clusterName: opsera-test-platform
 
 datadogApm:
-  enabled: true
+  enabled: false

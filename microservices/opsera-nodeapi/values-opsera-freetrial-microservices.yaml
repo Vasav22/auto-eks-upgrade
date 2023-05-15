@@ -8,5 +8,5 @@ resources:
 
 ingress:
   hosts:
-    - host: app.freetrial.opsera.io
+    - host: api.freetrial.opsera.io
       paths: [/]

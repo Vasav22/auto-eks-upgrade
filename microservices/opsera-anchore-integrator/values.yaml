@@ -64,8 +64,8 @@ autoscaling:
   enabled: true
   minReplicas: 1
   maxReplicas: 10
-  targetCPUUtilizationPercentage: 60
-  targetMemoryUtilizationPercentage: 60 
+  targetCPUUtilizationPercentage: 300
+  targetMemoryUtilizationPercentage: 160
 
 tolerations: []
 
@@ -81,3 +81,5 @@ extraSecretEnvironmentVars:
   - secretName: microservices-ms-env
     envName: OPSERA_HAZELCAST_K8_SERVICE_DNS
     secretKey: OPSERA_HAZELCAST_K8_SERVICE_DNS
+
+serviceCategory: Container_Scanning_Services

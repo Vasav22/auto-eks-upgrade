@@ -65,8 +65,8 @@ autoscaling:
   enabled: true
   minReplicas: 2
   maxReplicas: 10
-  targetCPUUtilizationPercentage: 60
-  targetMemoryUtilizationPercentage: 60
+  targetCPUUtilizationPercentage: 300
+  targetMemoryUtilizationPercentage: 120
 
 tolerations: []
 
@@ -193,3 +193,5 @@ extraSecretEnvironmentVars:
   - secretName: microservices-ms-env
     envName: OPSERA_KAFKA_ENABLE_FLAG
     secretKey: OPSERA_KAFKA_ENABLE_FLAG
+
+serviceCategory: Client_API_Services

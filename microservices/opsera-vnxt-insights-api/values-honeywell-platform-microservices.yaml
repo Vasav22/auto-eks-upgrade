@@ -1,0 +1,4 @@
+ingress:
+  hosts:
+    - host: vnext-insights-api.honeywell.opsera.io
+      paths: [/]

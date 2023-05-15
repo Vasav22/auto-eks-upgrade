@@ -38,7 +38,7 @@ service:
   port: 5021
 
 ingress:
-  enabled: true
+  enabled: false
   annotations: {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
@@ -65,8 +65,8 @@ autoscaling:
   enabled: true
   minReplicas: 1
   maxReplicas: 5
-  targetCPUUtilizationPercentage: 60
-  targetMemoryUtilizationPercentage: 60  
+  targetCPUUtilizationPercentage: 300
+  targetMemoryUtilizationPercentage: 120
 
 tolerations: []
 
@@ -197,3 +197,5 @@ extraSecretEnvironmentVars:
   - secretName: microservices-ms-env
     envName: OPSERA_NODE_TOOLS_MANAGEMENT_SERVICE_INTERNAL_URL
     secretKey: OPSERA_NODE_TOOLS_MANAGEMENT_SERVICE_INTERNAL_URL
+
+serviceCategory: Platform_Services

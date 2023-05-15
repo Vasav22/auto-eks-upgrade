@@ -14,6 +14,9 @@ spec:
       annotations:
         rollme: {{ randAlphaNum 5 | quote }}
       labels:
+        {{ if .Values.serviceCategory }}
+        serviceCategory: {{ .Values.serviceCategory }}
+        {{ end }}
         {{- include "datadogApm.selectorLabels" . | nindent 8 }}
         {{- include "opsera-jira-connect.selectorLabels" . | nindent 8 }}
     spec:
@@ -22,7 +25,6 @@ spec:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       serviceAccountName: {{ include "opsera-jira-connect.serviceAccountName" . }}
-      terminationGracePeriodSeconds: 7200
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       {{- include "datadogApm.initContainer" . | nindent 6 }}

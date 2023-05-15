@@ -1,0 +1,13 @@
+service_name=insights-v2-prototype-nodeapi
+values_file_path=values-opsera-dev-microservices.yaml
+k8_ns=microservices
+
+helm upgrade opsera-${service_name} . \
+        --install \
+        -n ${k8_ns} \
+        --set DOCKER_ENV=kubernetes \
+        --set image.tag=git-955db3a4036b88763990bd7cfe293fb55cf6b315 \
+        -f ${values_file_path} 
+
+
+kubectl -n microservices get po -l app.kubernetes.io/name=opsera-insights-v2-prototype-nodeapi

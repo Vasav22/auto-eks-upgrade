@@ -1,4 +1,1 @@
-ingress:
-  hosts:
-    - host: blueprints-logs.honeywell-sandbox-private.opsera.io
-      paths: [/]
+#EMPTY

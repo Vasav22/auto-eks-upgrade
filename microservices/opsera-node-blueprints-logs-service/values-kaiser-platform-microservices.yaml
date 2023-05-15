@@ -1,4 +1,1 @@
-ingress:
-  hosts:
-    - host: blueprints-logs.kaiserpermanente-private.opsera.io
-      paths: [/]
+#EMPTY

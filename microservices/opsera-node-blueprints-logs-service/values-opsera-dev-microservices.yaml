@@ -1,13 +1,6 @@
 autoscaling:
   enabled: true
   minReplicas: 1
-  maxReplicas: 3
-  targetCPUUtilizationPercentage: 70
-  targetMemoryUtilizationPercentage: 70
-
-ingress:
-  hosts:
-    - host: blueprints-logs.opsera-dev-private.opsera.io
-      paths: [/]
+  maxReplicas: 2
 
 NODE_ENV: staging

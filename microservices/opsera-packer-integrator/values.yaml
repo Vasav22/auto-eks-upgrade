@@ -71,9 +71,11 @@ autoscaling:
   enabled: true
   minReplicas: 1
   maxReplicas: 10
-  targetCPUUtilizationPercentage: 60
-  targetMemoryUtilizationPercentage: 60
+  targetCPUUtilizationPercentage: 300
+  targetMemoryUtilizationPercentage: 120
 
 tolerations: []
 
 affinity: {}
+
+serviceCategory: Infrastructure_as_Code_Services

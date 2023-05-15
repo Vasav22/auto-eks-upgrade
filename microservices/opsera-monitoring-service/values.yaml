@@ -64,8 +64,8 @@ autoscaling:
   enabled: true
   minReplicas: 1
   maxReplicas: 10
-  targetCPUUtilizationPercentage: 60
-  targetMemoryUtilizationPercentage: 60
+  targetCPUUtilizationPercentage: 240
+  targetMemoryUtilizationPercentage: 120
 
 tolerations: []
 
@@ -81,3 +81,23 @@ extraSecretEnvironmentVars:
   - secretName: microservices-ms-env
     envName: OPSERA_HAZELCAST_K8_SERVICE_DNS
     secretKey: OPSERA_HAZELCAST_K8_SERVICE_DNS
+  - secretName: microservices-ms-env
+    envName: OPSERA_MONGODB_USERNAME
+    secretKey: OPSERA_MONGODB_USERNAME
+  - secretName: microservices-ms-env
+    envName: OPSERA_MONGODB_PASSWORD
+    secretKey: OPSERA_MONGODB_PASSWORD
+  - secretName: microservices-ms-env
+    envName: OPSERA_MONGODB_HOST
+    secretKey: OPSERA_MONGODB_HOST
+  - secretName: microservices-ms-env
+    envName: OPSERA_MONGODB_PORT
+    secretKey: OPSERA_MONGODB_PORT
+  - secretName: microservices-ms-env
+    envName: OPSERA_MONGODB_DATABASE
+    secretKey: OPSERA_MONGODB_DATABASE
+  - secretName: microservices-ms-env
+    envName: OPSERA_ANALYTICS_V2_INTERNAL_SERVICE_URL
+    secretKey: OPSERA_ANALYTICS_V2_INTERNAL_SERVICE_URL
+
+serviceCategory: Platform_Services

@@ -1,0 +1,58 @@
+# Datadog Agent with Logs, APM, Processes, and System Probe enabled
+# with specific configuration to work on AKS.
+
+targetSystem: "linux"
+datadog:
+  apiKey: a09f33395b68795f7aaf2ec664a59835
+  appKey: da2b9e89-8c87-537f-8f55-dd06edc84cf9
+  clusterName: opsera-freetrial-platform
+  tags: 
+    - cluster: opsera-freetrial-platform
+    - environment: freetrial 
+    - customer: opsera
+  logs:
+    enabled: true
+    containerCollectAll: true
+    containerCollectUsingFiles: true
+  processAgent:
+    enabled: true
+    processCollection: false
+  apm:
+    enabled: false
+  leaderElection: true
+  containerExclude: "kube_namespace:.*"
+  containerInclude: "kube_namespace:microservices kube_namespace:opsera kube_namespace:kafka kube_namespace:ingress-nginx kube_namespace:velero"
+  env: 
+    - name: DD_CONTAINER_EXCLUDE_LOGS
+      value: "kube_namespace:opsera kube_namespace:kube-system kube_namespace:default image:gcr.io/datadoghq/agent image:docker.elastic.co/beats/metricbeat kube_namespace:alertmanager image:kubernetesui/dashboard"
+    - name: DD_CLC_RUNNER_ENABLED
+      value: "true"
+    - name: DD_CLC_RUNNER_HOST
+      valueFrom:
+        fieldRef:
+          fieldPath: status.podIP
+    # - name: DD_EXTRA_CONFIG_PROVIDERS
+    #   value: "endpointschecks"
+  # confd:
+  #   custom_check_nodeanalytics_service.yaml: |-
+  #     init_config:
+  #     instances:
+  #       [{}]
+  clusterChecks:
+    enabled: true
+  kubeStateMetricsCore:
+    enabled: true
+
+clusterAgent:
+  enabled: true
+  replicas: 2
+  rbac:
+    create: true
+    serviceAccountName: default
+  env:
+  - name: DD_CLUSTER_CHECKS_ADVANCED_DISPATCHING_ENABLED
+    value: "true"
+
+clusterChecksRunner:
+  enabled: true
+  replicas: 2

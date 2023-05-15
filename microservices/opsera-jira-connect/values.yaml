@@ -64,8 +64,8 @@ autoscaling:
   enabled: true
   minReplicas: 1
   maxReplicas: 10
-  targetCPUUtilizationPercentage: 60
-  targetMemoryUtilizationPercentage: 60
+  targetCPUUtilizationPercentage: 300
+  targetMemoryUtilizationPercentage: 160
 
 tolerations: []
 
@@ -97,4 +97,4 @@ extraSecretEnvironmentVars:
     envName: OPSERA_MONGODB_DATABASE
     secretKey: OPSERA_MONGODB_DATABASE
   
-
+serviceCategory: Notification_Services

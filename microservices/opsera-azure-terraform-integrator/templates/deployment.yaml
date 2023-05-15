@@ -20,6 +20,9 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
+        {{ if .Values.serviceCategory }}
+        serviceCategory: {{ .Values.serviceCategory }}
+        {{ end }}
         {{- include "datadogApm.selectorLabels" . | nindent 8 }}
         {{- include "azure-terraform-integrator.selectorLabels" . | nindent 8 }}
     spec:
@@ -28,7 +31,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "azure-terraform-integrator.serviceAccountName" . }}
-      terminationGracePeriodSeconds: 7200
+      terminationGracePeriodSeconds: 1800
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       {{- include "datadogApm.initContainer" . | nindent 6 }}
@@ -80,3 +83,4 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+
