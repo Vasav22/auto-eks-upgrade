@@ -15,7 +15,7 @@ autoscaling:
 
 ingress:
   hosts:
-    - host: vnext.opsera-test.opsera.io
+    - host: test.opsera.io
       paths:
         - path: /vnext
           pathType: ImplementationSpecific
