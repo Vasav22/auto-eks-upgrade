@@ -17,7 +17,7 @@ ingress:
   hosts:
     - host: vnext.opsera-test.opsera.io
       paths:
-        - path: /
+        - path: /vnext
           pathType: ImplementationSpecific
 
 NODE_ENV: testing
