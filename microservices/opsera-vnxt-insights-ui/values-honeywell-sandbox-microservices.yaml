@@ -1,6 +1,6 @@
 ingress:
   hosts:
-    - host: vnext.honeywell-sandbox.opsera.io
+    - host: portal.honeywell-sandbox.opsera.io
       paths:
-        - path: /
+        - path: /vnext
           pathType: ImplementationSpecific

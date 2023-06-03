@@ -49,9 +49,9 @@ spec:
           #     path: /
           #     port: http
           resources:
+            {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
           {{- include "datadogApm.volumeMounts" . | nindent 10 }}
-            {{- toYaml .Values.resources | nindent 12 }}
           env:
           {{- include "datadogApm.environmentVars" . | nindent 10 }}
           - name: "NODE_ENV"
