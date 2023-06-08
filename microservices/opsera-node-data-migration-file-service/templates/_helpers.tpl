@@ -50,8 +50,7 @@ Datadog Service Check Annotations
 ad.datadoghq.com/service.check_names: '["http_check"]'
 ad.datadoghq.com/service.init_configs: '[{}]'
 ad.datadoghq.com/service.instances: "[\n  {\n    \"name\": \"opsera-node-data-migration-file-service\",\n
-  \   \"url\": \"http://%%host%%:%%port%%/\",\n    \"timeout\": 1,\n    \"content_match\"
-  : \"Welcome to OpsERA!\",\n   \"http_response_status_code\": 200\n  }\n] \n"
+  \   \"url\": \"http://%%host%%:%%port%%/data-migration-file/readiness\",\n    \"timeout\": 1,\n   \"http_response_status_code\": 200\n  }\n] \n"
 {{- end -}}
 
 {{/*
