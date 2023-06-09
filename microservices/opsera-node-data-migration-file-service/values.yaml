@@ -1,0 +1,213 @@
+# Default values for opsera-node-data-migration-file-service.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera-node-data-migration-file-service
+  pullPolicy: Always
+  tag: test
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name:
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    # nginx.ingress.kubernetes.io/affinity: "cookie"
+    # nginx.ingress.kubernetes.io/session-cookie-name: "INGRESSCOOKIENODE"
+    # nginx.ingress.kubernetes.io/session-cookie-expires: "172800"
+    # nginx.ingress.kubernetes.io/session-cookie-max-age: "172800"
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths: [/]
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 1Gi
+  requests:
+    cpu: 250m
+    memory: 512Mi
+
+nodeSelector:
+  Name: microservice-node
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 240
+  targetMemoryUtilizationPercentage: 120
+
+tolerations: []
+
+affinity: {}
+
+extraSecretEnvironmentVars:
+  - secretName: microservices-ms-env
+    envName: OPSERA_DB_HOST
+    secretKey: OPSERA_DB_HOST
+  - secretName: microservices-ms-env
+    envName: OPSERA_NODE_API_INTEGRATOR_SERVICE_INTERNAL_URL
+    secretKey: OPSERA_NODE_API_INTEGRATOR_SERVICE_INTERNAL_URL
+  - secretName: microservices-ms-env
+    envName: OPSERA_DB_NAME
+    secretKey: OPSERA_DB_NAME
+  - secretName: microservices-ms-env
+    envName: OPSERA_DB_USER
+    secretKey: OPSERA_DB_USER
+  - secretName: microservices-ms-env
+    envName: OPSERA_DB_PASSWORD
+    secretKey: OPSERA_DB_PASSWORD
+  - secretName: microservices-ms-env
+    envName: OPSERA_REDIS_HOST
+    secretKey: OPSERA_REDIS_HOST
+  - secretName: microservices-ms-env
+    envName: OPSERA_KAFKA_CLIENT_ID
+    secretKey: OPSERA_KAFKA_CLIENT_ID
+  - secretName: microservices-ms-env
+    envName: OPSERA_KAFKA_BORKERS
+    secretKey: OPSERA_KAFKA_BORKERS
+  - secretName: microservices-ms-env
+    envName: OPSERA_ORCHESTRATION_ENABLE_QUEUING_FLAG
+    secretKey: OPSERA_ORCHESTRATION_ENABLE_QUEUING_FLAG
+  - secretName: microservices-ms-env
+    envName: OPSERA_ORCHESTRATION_ENABLE_PIPELINE_RESTART_FLAG
+    secretKey: OPSERA_ORCHESTRATION_ENABLE_PIPELINE_RESTART_FLAG
+  - secretName: microservices-ms-env
+    envName: OPSERA_ORCHESTRATION_ENABLE_WEBHOOK_CACHE_FLAG
+    secretKey: OPSERA_ORCHESTRATION_ENABLE_WEBHOOK_CACHE_FLAG
+  - secretName: microservices-ms-env
+    envName: OPSERA_ORCHESTRATION_ENABLE_PRERUN_STEPS_FLAG
+    secretKey: OPSERA_ORCHESTRATION_ENABLE_PRERUN_STEPS_FLAG
+  - secretName: microservices-ms-env
+    envName: OPSERA_LOGGING_ENABLE_DATADOG_PROFILING_FLAG
+    secretKey: OPSERA_LOGGING_ENABLE_DATADOG_PROFILING_FLAG
+  - secretName: microservices-ms-env
+    envName: OPSERA_LOGGING_ENABLE_LOG_HEAP_ON_CRASH_FLAG
+    secretKey: OPSERA_LOGGING_ENABLE_LOG_HEAP_ON_CRASH_FLAG
+  - secretName: microservices-ms-env
+    envName: OPSERA_LDAP_URL
+    secretKey: OPSERA_LDAP_URL
+  - secretName: microservices-ms-env
+    envName: OPSERA_LDAP_SERVICE_ACC_PASS
+    secretKey: OPSERA_LDAP_SERVICE_ACC_PASS
+  - secretName: microservices-ms-env
+    envName: LDAP_DIR_ACC_PASS
+    secretKey: LDAP_DIR_ACC_PASS
+  - secretName: microservices-ms-env
+    envName: OPSERA_API_GATEWAY_API_URL
+    secretKey: OPSERA_API_GATEWAY_API_URL
+  - secretName: microservices-ms-env
+    envName: OPSERA_NODE_ORCHESTRATION
+    secretKey: OPSERA_NODE_ORCHESTRATION
+  - secretName: microservices-ms-env
+    envName: OPSERA_WEBHOOK_PROCESS
+    secretKey: OPSERA_WEBHOOK_PROCESS
+  - secretName: microservices-ms-env
+    envName: OPSERA_ORCHESTRATION_URL
+    secretKey: OPSERA_ORCHESTRATION_URL
+  - secretName: microservices-ms-env
+    envName: OPSERA_OKTA_CLIENT_ID
+    secretKey: OPSERA_OKTA_CLIENT_ID
+  - secretName: microservices-ms-env
+    envName: OPSERA_OKTA_ISSUER
+    secretKey: OPSERA_OKTA_ISSUER
+  - secretName: microservices-ms-env
+    envName: OPSERA_OKTA_ASSERT_CID
+    secretKey: OPSERA_OKTA_ASSERT_CID
+  - secretName: microservices-ms-env
+    envName: OPSERA_OKTA_TOKEN
+    secretKey: OPSERA_OKTA_TOKEN
+  - secretName: microservices-ms-env
+    envName: OPSERA_OKTA_ORG_URL
+    secretKey: OPSERA_OKTA_ORG_URL
+  - secretName: microservices-ms-env
+    envName: OPSERA_CLIENT_URL
+    secretKey: OPSERA_CLIENT_URL
+  - secretName: microservices-ms-env
+    envName: OPSERA_ENV
+    secretKey: OPSERA_ENV
+  - secretName: microservices-ms-env
+    envName: OPSERA_API_GATEWAY_SERVICE_URL
+    secretKey: OPSERA_API_GATEWAY_SERVICE_URL
+  - secretName: microservices-ms-env
+    envName: OPSERA_ANALYTICS_URL
+    secretKey: OPSERA_ANALYTICS_URL
+  - secretName: microservices-ms-env
+    envName: OPSERA_ANALYTICS_PASS
+    secretKey: OPSERA_ANALYTICS_PASS
+  - secretName: microservices-ms-env
+    envName: OPSERA_NODE_SERVER_URL
+    secretKey: OPSERA_NODE_SERVER_URL
+  - secretName: microservices-ms-env
+    envName: OPSERA_INTEGRATION_TESTING_TOKEN
+    secretKey: OPSERA_INTEGRATION_TESTING_TOKEN
+  - secretName: microservices-ms-env
+    envName: OPSERA_INTEGRATION_TESTING_SSO_USERID
+    secretKey: OPSERA_INTEGRATION_TESTING_SSO_USERID
+  - secretName: microservices-ms-env
+    envName: OPSERA_ORCHESTRATION_SECRET
+    secretKey: OPSERA_ORCHESTRATION_SECRET
+  - secretName: microservices-ms-env
+    envName: OPSERA_TEAMS_INTEGRATOR_GUID
+    secretKey: OPSERA_TEAMS_INTEGRATOR_GUID
+  - secretName: microservices-ms-env
+    envName: OPSERA_JENKINS_INTEGRATOR_GUID
+    secretKey: OPSERA_JENKINS_INTEGRATOR_GUID
+  - secretName: microservices-ms-env
+    envName: OPSERA_API_GATEWAY_SERVICE_PASS
+    secretKey: OPSERA_API_GATEWAY_SERVICE_PASS
+  - secretName: microservices-ms-env
+    envName: OPSERA_NODE_SCHEDULER_SERVICE_URL
+    secretKey: OPSERA_NODE_SCHEDULER_SERVICE_URL
+  - secretName: microservices-ms-env
+    envName: OPSERA_NODE_AZURE_SERVICE_URL
+    secretKey: OPSERA_NODE_AZURE_SERVICE_URL
+  - secretName: microservices-ms-env
+    envName: OPSERA_KAFKA_ENABLE_FLAG
+    secretKey: OPSERA_KAFKA_ENABLE_FLAG
+  - secretName: microservices-ms-env
+    envName: OPSERA_ORCHESTRATION_ENABLE_SFDC_WEBHOOK_RUNS_FLAG
+    secretKey: OPSERA_ORCHESTRATION_ENABLE_SFDC_WEBHOOK_RUNS_FLAG
+  - secretName: microservices-ms-env
+    envName: OPSERA_NODE_TOOLS_MANAGEMENT_SERVICE_INTERNAL_URL
+    secretKey: OPSERA_NODE_TOOLS_MANAGEMENT_SERVICE_INTERNAL_URL
+  - secretName: microservices-ms-env
+    envName: OPSERA_BLUEPRINT_AND_LOGGING_SERVICE_INTERNAL_URL
+    secretKey: OPSERA_BLUEPRINT_AND_LOGGING_SERVICE_INTERNAL_URL
+
+serviceCategory: Client_API_Services
