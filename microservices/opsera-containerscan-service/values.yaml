@@ -75,6 +75,13 @@ tolerations: []
 
 affinity: {}
 
+datadog:
+  metadata:
+    tags: 
+      env: "opsera-prod-platform"
+      service: "opsera-containerscan-service"
+
+
 extraSecretEnvironmentVars:
   - secretName: microservices-ms-env
     envName: OPSERA_API_SERVICE_URL

@@ -39,7 +39,7 @@ data:
       vault policy write developer dev-policy.hcl
 
       vault auth enable kubernetes
-      vault write auth/kubernetes/config kubernetes_host="{{ .Values.K8S_HOST }}"
+      vault write auth/kubernetes/config kubernetes_host="{{ .Values.K8S_HOST }}" disable_iss_validation=true
       vault write auth/kubernetes/role/dev \
         bound_service_account_names=vault \
         bound_service_account_namespaces=opsera \

@@ -18,7 +18,8 @@ datadog:
     enabled: true
     processCollection: false
   apm:
-    enabled: true
+    enabled: false
+    socketEnabled: false
   leaderElection: true
   containerExclude: "kube_namespace:.*"
   containerInclude: "kube_namespace:microservices kube_namespace:opsera kube_namespace:kafka"

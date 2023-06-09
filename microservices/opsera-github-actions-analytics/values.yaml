@@ -93,3 +93,5 @@ extraSecretEnvironmentVars:
   - secretName: microservices-ms-env
     envName: OPSERA_MONGODB_DATABASE
     secretKey: OPSERA_MONGODB_DATABASE
+
+serviceCategory: Analytics_Services

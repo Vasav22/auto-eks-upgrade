@@ -482,3 +482,35 @@ Inject extra environment populated by secrets, if populated
 {{ "https" }}
 {{- end -}}
 {{- end -}}
+
+
+{{/*
+Sets extra injector webhook annotations
+*/}}
+{{- define "injector.webhookAnnotations" -}}
+  {{- if or (((.Values.injector.webhook)).annotations) (.Values.injector.webhookAnnotations)  }}
+  annotations:
+    {{- $tp := typeOf (or (((.Values.injector.webhook)).annotations) (.Values.injector.webhookAnnotations)) }}
+    {{- if eq $tp "string" }}
+      {{- tpl (((.Values.injector.webhook)).annotations | default .Values.injector.webhookAnnotations) . | nindent 4 }}
+    {{- else }}
+      {{- toYaml (((.Values.injector.webhook)).annotations | default .Values.injector.webhookAnnotations) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+{{- end -}}
+
+{{/*
+Set's the injector webhook objectSelector
+*/}}
+{{- define "injector.objectSelector" -}}
+  {{- $v := or (((.Values.injector.webhook)).objectSelector) (.Values.injector.objectSelector) -}}
+  {{ if $v }}
+    objectSelector:
+    {{- $tp := typeOf $v -}}
+    {{ if eq $tp "string" }}
+      {{ tpl $v . | indent 6 | trim }}
+    {{ else }}
+      {{ toYaml $v | indent 6 | trim }}
+    {{ end }}
+  {{ end }}
+{{ end }}

@@ -16,7 +16,9 @@ spec:
       labels:
         {{ if .Values.serviceCategory }}
         serviceCategory: {{ .Values.serviceCategory }}
-        {{ end }}    spec:
+        {{ end }}
+        {{- include "opsera-vnxt-insights-api.selectorLabels" . | nindent 8 }}
+    spec:
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}

@@ -87,7 +87,7 @@ extraSecretEnvironmentVars:
     secretKey: OPSERA_NODE_SERVER_URL
   - secretName: microservices-ms-env
     envName: OPSERA_CLIENT_URL
-    secretKey: OPSERA_VNXT_INSIGHTS_CLIENT_URL
+    secretKey: OPSERA_CLIENT_URL
   - secretName: microservices-ms-env
     envName: OPSERA_OKTA_CLIENT_ID
     secretKey: OPSERA_OKTA_CLIENT_ID

@@ -17,6 +17,7 @@ spec:
         {{ if .Values.serviceCategory }}
         serviceCategory: {{ .Values.serviceCategory }}
         {{ end }}
+        {{- include "datadogApm.selectorLabels" . | nindent 8 }}
         {{- include "opsera-jenkins-integrator.selectorLabels" . | nindent 8 }}
     spec:
     {{- with .Values.imagePullSecrets }}
@@ -27,6 +28,7 @@ spec:
       terminationGracePeriodSeconds: 300
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- include "datadogApm.initContainer" . | nindent 6 }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -56,29 +58,16 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           env:          
+          {{- include "datadogApm.environmentVars" . | nindent 10 }}
           - name: "DOCKER_ENV"
             value: {{ .Values.DOCKER_ENV }}
           {{- include "ms.extraSecretEnvironmentVars" .Values | nindent 10 }}
-          - name: DD_AGENT_HOST
-            valueFrom:
-              fieldRef:
-                fieldPath: status.hostIP
-          - name: DD_ENV
-            valueFrom:
-              fieldRef:
-                fieldPath: metadata.labels['tags.datadoghq.com/env']
-          - name: DD_VERSION
-            valueFrom:
-              fieldRef:
-                fieldPath: metadata.labels['tags.datadoghq.com/version']
-          - name: DD_LOGS_INJECTION
-            value: "true"
-          - name: DD_PROFILING_ENABLED
-            value: "true"
           volumeMounts:
+          {{- include "datadogApm.volumeMounts" . | nindent 10 }}
           - name: microservices-efs
             mountPath: /apps/OpsERA/logs/components/
       volumes:
+        {{- include "datadogApm.volumes" . | nindent 8 }}
         - name: microservices-efs
           persistentVolumeClaim:
             claimName: microservices-efs

@@ -1,4 +1,0 @@
-ingress:
-  hosts:
-    - host: api.freetrial.opsera.io
-      paths: [/data-migration-file/]

@@ -80,6 +80,6 @@ extraSecretEnvironmentVars:
     secretKey: OPSERA_KAFKA_BOOTSTRAP_URL
   - secretName: microservices-ms-env
     envName: OPSERA_HAZELCAST_K8_SERVICE_DNS
-    secretKey: OPSERA_HAZELCAST_K8_SERVICE_DNS    
+    secretKey: OPSERA_HAZELCAST_K8_SERVICE_DNS
 
 serviceCategory: Threat_Vulnerability_Scanning_Services

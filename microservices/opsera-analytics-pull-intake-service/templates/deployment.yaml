@@ -24,6 +24,7 @@ spec:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       serviceAccountName: {{ include "opsera-analytics-pull-intake-service.serviceAccountName" . }}
+      terminationGracePeriodSeconds: 7200
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -58,7 +59,7 @@ spec:
           - name: "DOCKER_ENV"
             value: {{ .Values.DOCKER_ENV }}
           - name: "NODE_ENV"
-            value: {{default "production" .Values.NODE_ENV }}
+            value: {{default "kube-prod" .Values.NODE_ENV }}
           {{- include "ms.extraSecretEnvironmentVars" .Values | nindent 10 }}
           volumeMounts:
           - name: microservices-efs

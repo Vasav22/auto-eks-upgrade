@@ -6,7 +6,6 @@ metadata:
     {{- include "opsera-deployment-analytics-service.labels" . | nindent 4 }}
   annotations:
     {{- include "opsera-deployment-analytics-service.annotations" . | nindent 4 }}
-
 spec:
   type: {{ .Values.service.type }}
   ports:

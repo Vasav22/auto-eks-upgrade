@@ -1,4 +1,0 @@
-ingress:
-  hosts:
-    - host: app.opsera.io
-      paths: [/data-migration-file/]

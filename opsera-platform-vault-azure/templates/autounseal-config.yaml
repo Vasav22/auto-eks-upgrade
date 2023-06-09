@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: my-configmap
+data:
+  entrypoint.sh: |-
+    #!/bin/bash
+    echo starting;
+    # sleep 60 
+    # cd vault/
+    # status=$(vault status | grep Sealed | awk '{print $2}')
+    # if $status; then 
+    #   vault operator unseal Cfygi6lCWVd+S5nUCVHPg4276OsIy15kEuIEtdjipuQB
+    #   vault operator unseal nwFggmmOk6Y2YrEV/eOtN6o5n+ahz+gQXA9T3wLj409O
+    #   vault operator unseal nQfsr3/fI2Q/bjWop7r2hSO4anHJD1ZXRX1tyvjOG1O3
+    # else 
+    #   echo 'Unsealed'
+    # fi
+    
+    echo done;

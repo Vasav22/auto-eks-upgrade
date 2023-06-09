@@ -14,9 +14,6 @@ spec:
       annotations:
         rollme: {{ randAlphaNum 5 | quote }}
       labels:
-        {{ if .Values.serviceCategory }}
-        serviceCategory: {{ .Values.serviceCategory }}
-        {{ end }}
         {{- include "opsera-apigee-integrator.selectorLabels" . | nindent 8 }}
     spec:
     {{- with .Values.imagePullSecrets }}

@@ -12,3 +12,8 @@ autoscaling:
   maxReplicas: 3
   targetCPUUtilizationPercentage: 320
   targetMemoryUtilizationPercentage: 160
+
+clusterName: opsera-test-platform
+
+datadogApm:
+  enabled: false

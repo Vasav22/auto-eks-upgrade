@@ -4,3 +4,8 @@ autoscaling:
   maxReplicas: 3
 
 HELM_GIT_BRANCH: master-test
+
+clusterName: opsera-test-platform
+
+datadogApm:
+  enabled: false
