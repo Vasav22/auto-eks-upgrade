@@ -3,4 +3,14 @@ autoscaling:
   minReplicas: 1
   maxReplicas: 2
 
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+  hosts:
+    - host: node-ml-engine.opsera-dev-private.opsera.io
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+
 NODE_ENV: testing
