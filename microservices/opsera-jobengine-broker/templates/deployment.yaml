@@ -54,7 +54,7 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
           env:
           - name: "REST_PORT"
-            value: {{default "80" .Values.service.port  }}
+            value: "{{ .Values.service.port  }}"
           {{- include "ms.extraSecretEnvironmentVars" .Values | nindent 10 }}
           volumeMounts:
           - name: microservices-efs
