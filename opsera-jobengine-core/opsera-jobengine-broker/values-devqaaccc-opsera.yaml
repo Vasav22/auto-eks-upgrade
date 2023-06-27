@@ -8,7 +8,7 @@ ingress:
   annotations:
     kubernetes.io/ingress.class: nginx
   hosts:
-    - host: jobengine-broker.opsera-dev-private.opsera.io
+    - host: jobengine-broker.devqaaccc-private.opsera.io
       paths:
         - path: /
           pathType: ImplementationSpecific
