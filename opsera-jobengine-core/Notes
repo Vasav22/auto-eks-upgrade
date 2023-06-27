@@ -1,0 +1,1 @@
+helm -n opsera install opsera-jobengine-core --ingress.hosts[1].host=jobengine-broker.devqaaccc-private.opsera.io
