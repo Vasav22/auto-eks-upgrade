@@ -1,1 +1,4 @@
 helm -n opsera install opsera-jobengine-core --ingress.hosts[1].host=jobengine-broker.devqaaccc-private.opsera.io
+
+helm upgrade  opsera-jobengine-core . -n opsera --install --set image.tag=39d4cb54dbad02541c5a820130e0c23fa2bd7f4f -f values-devqaaccc-opsera.yaml
+

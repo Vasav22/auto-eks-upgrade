@@ -54,15 +54,15 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
           env:
           - name: "REST_PORT"
-            value: "{{ .Values.service.port  }}"
-          {{- include "ms.extraSecretEnvironmentVars" .Values | nindent 10 }}
-          volumeMounts:
-          - name: microservices-efs
-            mountPath: /apps/OpsERA/logs/components/
-      volumes:
-        - name: microservices-efs
-          persistentVolumeClaim:
-            claimName: microservices-efs
+            value: "{{ .Values.service.port }}"
+          - name: "REDIS_HOST"
+            value: "{{ .Values.REDIS_HOST }}"
+          - name: "REDIS_PASSWORD"
+            value: "{{ .Values.REDIS_PASSWORD }}"
+          - name: "REDIS_DB"
+            value: "{{ .Values.REDIS_DB }}"
+          - name: "REST_PORT"
+            value: "{{ .Values.REST_PORT }}"
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

@@ -66,10 +66,14 @@ autoscaling:
   targetMemoryUtilizationPercentage: 120
 
 nodeSelector:
-  Name: microservice-node
+  Name: tools-node
 
 tolerations: []
 
 affinity: {}
+REDIS_HOST: opsera-redis:6379
+REDIS_PASSWORD: opsera
+REDIS_DB: 0
+REST_PORT: 80
 
 serviceCategory: Platform_Services

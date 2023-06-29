@@ -71,18 +71,3 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
-
-{{/*
-Inject extra environment populated by secrets, if populated
-*/}}
-{{- define "ms.extraSecretEnvironmentVars" -}}
-{{- if .extraSecretEnvironmentVars -}}
-{{- range .extraSecretEnvironmentVars }}
-- name: {{ .envName }}
-  valueFrom:
-   secretKeyRef:
-     name: {{ .secretName }}
-     key: {{ .secretKey }}
-{{- end -}}
-{{- end -}}
-{{- end -}}
