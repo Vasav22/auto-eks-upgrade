@@ -1,0 +1,4 @@
+
+docker run -d --name my-redis -p 6379:6379 redis:6.0-rc3-alpine --requirepass change_me
+
+helm -n opsera upgrade opsera-redis . -f values-dataplane.yaml --set REDIS_PASSWORD=change_me
