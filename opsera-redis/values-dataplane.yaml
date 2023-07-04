@@ -8,7 +8,7 @@ ingress:
     nginx.ingress.kubernetes.io/session-cookie-max-age: "172800"
     # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: redis.ldapowner-private.opsera.io
+    - host: redis.devqaaccc-private.opsera.io
       paths:
         - path: /
           pathType: ImplementationSpecific
