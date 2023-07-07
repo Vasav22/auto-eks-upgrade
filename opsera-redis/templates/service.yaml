@@ -4,6 +4,8 @@ metadata:
   name: {{ include "opsera-redis.fullname" . }}
   labels:
     {{- include "opsera-redis.labels" . | nindent 4 }}
+  # annotations: 
+  # service.beta.kubernetes.io/aws-load-balancer-type: nlb
 spec:
   type: {{ .Values.service.type }}
   ports:

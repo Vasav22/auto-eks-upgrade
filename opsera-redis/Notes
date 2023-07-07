@@ -4,3 +4,18 @@ docker run -d --name my-redis -p 6379:6379 redis:6.0-rc3-alpine --requirepass ch
 helm -n opsera upgrade opsera-redis . -f values-dataplane.yaml --set REDIS_PASSWORD=change_me
 
 helm -n opsera upgrade opsera-redis . -f values-dataplane.yaml --set REDIS_PASSWORD=opsera
+
+kubectl --context=arn:aws:eks:us-east-2:440953937617:cluster/opsera-dev-cluster -n microservices run redis-cli-sh-pod \
+    --image=redis --restart=Never \
+    -- /bin/sh -c 'sleep 1d' --overrides='{"apiVersion":"v1","spec":{"containers":[{"name":"redis-cli","image":"redis"},{"name":"sh","image":"alpine"}]}}'
+
+kubectl --context=arn:aws:eks:us-east-2:440953937617:cluster/opsera-dev-cluster -n microservices exec -it redis-cli-sh-pod -- sh
+
+redis-cli --tls -h redis.devqaaccc-private.opsera.io -p 6379
+
+redis-cli -h redis.devqaaccc-private.opsera.io -p 6379
+
+redis-cli -h ab419804531214a7cbdcb020c9429fc2-855532686.us-east-2.elb.amazonaws.com -p 6379
+
+
+redis-cli -h redis.devqaaccc-private.opsera.io -p 6379
