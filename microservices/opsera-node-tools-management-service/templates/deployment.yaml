@@ -50,6 +50,13 @@ spec:
           - name: "NODE_ENV"
             value: {{default "production" .Values.NODE_ENV }}
           {{- include "ms.extraSecretEnvironmentVars" .Values | nindent 10 }}
+          volumeMounts:
+          - name: microservices-efs
+            mountPath: /apps/OpsERA/logs/components/
+      volumes:
+        - name: microservices-efs
+          persistentVolumeClaim:
+            claimName: microservices-efs
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
