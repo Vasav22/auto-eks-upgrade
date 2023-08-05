@@ -1,1 +1,7 @@
 helm -n anchore-upgrade-jul2023 install anchore . -f dev-values.yaml
+
+helm -n aug052023-temp uninstall anchore 
+helm -n aug052023-temp install anchore . -f sample-values.yaml
+
+helm -n aug052023-temp upgrade --install anchore . -f sample-values.yaml
+
