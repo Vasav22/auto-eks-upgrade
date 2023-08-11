@@ -21,6 +21,3 @@ rules:
 - apiGroups: [""]
   resources: ["pods/log"]
   verbs: ["get", "list", "watch"]
-- apiGroups: [""]
-  resources: ["namespaces"]
-  verbs: ["create", "delete", "deletecollection", "get", "list", "patch", "update", "watch"]
