@@ -62,8 +62,6 @@ spec:
             value: "{{ .Values.REDIS_PASSWORD }}"
           - name: "REDIS_DB"
             value: "{{ .Values.REDIS_DB }}"
-          - name: "REST_PORT"
-            value: "{{ .Values.REST_PORT }}"
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
