@@ -1,0 +1,7 @@
+helm -n opsera install opsera-jobengine-core --ingress.hosts[1].host=jobengine-core.devqaaccc-private.opsera.io
+
+helm upgrade --install opsera-jobengine-core . \
+    -n opsera --set image.tag=39d4cb54dbad02541c5a820130e0c23fa2bd7f4f \
+    --ingress.hosts[1].host=jobengine-core.devqaaccc-private.opsera.io \
+    -f values-devqaaccc-opsera.yaml
+

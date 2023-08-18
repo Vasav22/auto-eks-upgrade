@@ -1,30 +1,35 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "opsera-redis.fullname" . }}
+  name: {{ include "opsera-jobengine-broker.fullname" . }}
   labels:
-    {{- include "opsera-redis.labels" . | nindent 4 }}
+    {{- include "opsera-jobengine-broker.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "opsera-redis.selectorLabels" . | nindent 6 }}
+      {{- include "opsera-jobengine-broker.selectorLabels" . | nindent 6 }}
   template:
     metadata:
+      annotations:
+        rollme: {{ randAlphaNum 5 | quote }}
       {{- with .Values.podAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "opsera-redis.selectorLabels" . | nindent 8 }}
+        {{ if .Values.serviceCategory }}
+        serviceCategory: {{ .Values.serviceCategory }}
+        {{ end }}
+        {{- include "opsera-jobengine-broker.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "opsera-redis.serviceAccountName" . }}
+      serviceAccountName: {{ include "opsera-jobengine-broker.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -33,25 +38,31 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["redis-server"]
-          args: ["--requirepass", {{ .Values.REDIS_PASSWORD }} ]
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
-          env:
-            - name: "REDIS_PASSWORD"
-              value: {{ .Values.REDIS_PASSWORD }}
-          # livenessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
-          # readinessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
+          livenessProbe:
+            httpGet:
+              path: /status
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /status
+              port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          env:
+          - name: "REST_PORT"
+            value: "{{ .Values.service.port  }}"
+          {{- include "ms.extraSecretEnvironmentVars" .Values | nindent 10 }}
+          volumeMounts:
+          - name: microservices-efs
+            mountPath: /apps/OpsERA/logs/components/
+      volumes:
+        - name: microservices-efs
+          persistentVolumeClaim:
+            claimName: microservices-efs
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
