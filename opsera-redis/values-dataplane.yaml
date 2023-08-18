@@ -3,7 +3,7 @@ ingress:
   annotations:
     kubernetes.io/ingress.class: nginx
   hosts:
-  - host: redis.sample.opsera.io
+  - host: redis.example.opsera.io
     paths:
         - path: /
           pathType: ImplementationSpecific
