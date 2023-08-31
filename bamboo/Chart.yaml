@@ -1,0 +1,28 @@
+apiVersion: v2
+name: bamboo
+description: A chart for installing Bamboo Data Center on Kubernetes
+type: application
+version: 1.15.3
+appVersion: 9.3.2
+kubeVersion: ">=1.21.x-0"
+keywords:
+- Bamboo
+- Bamboo Server
+- Bamboo Data Center
+- Bamboo DC
+- Atlassian
+home: https://www.atlassian.com/software/bamboo
+icon: https://atlassian.github.io/data-center-helm-charts/icons/bamboo.svg
+sources:
+- https://github.com/atlassian/data-center-helm-charts
+- https://bitbucket.org/atlassian-docker/docker-bamboo-server
+deprecated: false
+annotations:
+  artifacthub.io/containsSecurityUpdates: "false"
+  artifacthub.io/changes: |-
+    - "Decouple server and jmx annotations (#654)"
+    - "Disable startup probes by default (#653)"
+dependencies:
+- name: common
+  version: 1.2.3
+  repository: file://../atlassian-common/

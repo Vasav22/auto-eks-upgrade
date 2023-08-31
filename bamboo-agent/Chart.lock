@@ -1,0 +1,6 @@
+dependencies:
+- name: common
+  repository: file://../atlassian-common
+  version: 1.2.3
+digest: sha256:fcabd260c9978604094ad3e729f41ba648e0eefb74f18df4d6d722592eb72584
+generated: "2023-08-29T18:08:55.730828008Z"
