@@ -2,3 +2,8 @@ ingress:
   hosts:
     - host: app.opsera.io
       paths: [/]
+
+autoscaling:
+  enabled: true
+  minReplicas: 4
+  maxReplicas: 4
