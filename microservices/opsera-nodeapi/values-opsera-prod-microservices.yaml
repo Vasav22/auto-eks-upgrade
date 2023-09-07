@@ -3,6 +3,12 @@ ingress:
     - host: app.opsera.io
       paths: [/]
 
+resources:
+  limits:
+    memory: 6Gi
+  requests:
+    memory: 6Gi
+
 autoscaling:
   enabled: true
   minReplicas: 4
