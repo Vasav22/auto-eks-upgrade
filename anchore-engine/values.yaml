@@ -1305,7 +1305,8 @@ anchoreEnterpriseUi:
   annotations: {}
   # Add metadata annotations to ui deployments
   deploymentAnnotations: {}
-  nodeSelector: {}
+  nodeSelector:
+    Name: tools-node
   tolerations: []
   affinity: {}
 
