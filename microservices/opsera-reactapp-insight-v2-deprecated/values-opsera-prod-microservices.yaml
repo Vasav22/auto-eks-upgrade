@@ -1,0 +1,6 @@
+ingress:
+  hosts:
+    - host: vnext.opsera-prod.opsera.io
+      paths:
+        - path: /
+          pathType: ImplementationSpecific

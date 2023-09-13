@@ -87,3 +87,8 @@ extraSecretEnvironmentVars:
   - secretName: microservices-ms-env
     envName: OPSERA_AWS_HOSTER_ZONEID
     secretKey: OPSERA_AWS_HOSTER_ZONEID
+  - secretName: microservices-ms-env
+    envName: OPSERA_AWS_S3_ACCOUNT_ID
+    secretKey: OPSERA_AWS_S3_ACCOUNT_ID
+
+serviceCategory: Cloud_Management_Services

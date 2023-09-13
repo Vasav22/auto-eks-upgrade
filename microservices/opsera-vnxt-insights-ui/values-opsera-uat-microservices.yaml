@@ -1,0 +1,8 @@
+ingress:
+  hosts:
+    - host: portal.opsera-uat.opsera.io
+      paths:
+        - path: /vnext
+          pathType: ImplementationSpecific
+
+NODE_ENV: staging

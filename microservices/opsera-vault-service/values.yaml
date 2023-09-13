@@ -65,7 +65,7 @@ autoscaling:
   minReplicas: 1
   maxReplicas: 10
   targetCPUUtilizationPercentage: 80
-  targetMemoryUtilizationPercentage: 240
+  targetMemoryUtilizationPercentage: 200
 
 tolerations: []
 
@@ -89,8 +89,4 @@ extraSecretEnvironmentVars:
     envName: OPSERA_VAULT_ENCRYPTION_KEY
     secretKey: OPSERA_VAULT_ENCRYPTION_KEY
 
-
-
-
-
-
+serviceCategory: Platform_Security_Services

@@ -1,9 +1,9 @@
-apiVersion: batch/v1beta1
+apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: cron-delete-archive
 spec:
-  schedule: "0 */6 * * *"
+  schedule: "0 0 * * *"
   successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 5
   jobTemplate:

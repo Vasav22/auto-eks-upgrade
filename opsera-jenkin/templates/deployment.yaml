@@ -58,7 +58,7 @@ spec:
           - name: JENKINS_UI_URL
             value: {{ .Values.JENKINS_UI_URL }}
           - name: JENKINS_OPTS
-            value: --prefix=/
+            value: --prefix=/ --requestHeaderSize=32768
           - name: KUBERNETES_URL
             value: {{ .Values.KUBERNETES_URL }}
           - name: KUBERNETES_NAMESPACE

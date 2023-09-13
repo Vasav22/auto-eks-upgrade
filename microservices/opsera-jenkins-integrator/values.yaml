@@ -71,12 +71,6 @@ tolerations: []
 
 affinity: {}
 
-datadog:
-  metadata:
-    tags: 
-      env: "opsera-prod-platform"
-      service: "opsera-jenkins-integrator"
-
 extraSecretEnvironmentVars:
   - secretName: microservices-ms-env
     envName: OPSERA_API_SERVICE_URL
@@ -87,3 +81,5 @@ extraSecretEnvironmentVars:
   - secretName: microservices-ms-env
     envName: OPSERA_HAZELCAST_K8_SERVICE_DNS
     secretKey: OPSERA_HAZELCAST_K8_SERVICE_DNS
+
+serviceCategory: Artifact_CI_Services

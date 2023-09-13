@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "opsera-vnxt-insights-api.fullname" . }}
+  labels:
+    {{- include "opsera-vnxt-insights-api.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "opsera-vnxt-insights-api.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        rollme: {{ randAlphaNum 5 | quote }}
+      labels:
+        {{ if .Values.serviceCategory }}
+        serviceCategory: {{ .Values.serviceCategory }}
+        {{ end }}
+        {{- include "opsera-vnxt-insights-api.selectorLabels" . | nindent 8 }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "opsera-vnxt-insights-api.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /status
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /status
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          env:          
+          - name: "DOCKER_ENV"
+            value: {{ .Values.DOCKER_ENV }}
+          - name: "NODE_ENV"
+            value: {{default "production" .Values.NODE_ENV }}
+          {{- include "ms.extraSecretEnvironmentVars" .Values | nindent 10 }}
+          volumeMounts:
+          - name: microservices-efs
+            mountPath: /apps/OpsERA/logs/components/
+      volumes:
+        - name: microservices-efs
+          persistentVolumeClaim:
+            claimName: microservices-efs
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera-pipeline/jenkins-lts
-  tag: 2.332.3-lts
+  tag: latest
   # repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/releasemanagement/jenkins-multilang
   pullPolicy: Always
 
@@ -43,7 +43,7 @@ ingress:
   enabled: true
   annotations:
     kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/rewrite-target: /*
+    #nginx.ingress.kubernetes.io/rewrite-target: /*
     # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     # kubernetes.io/ingress.global-static-ip-name: bbtest
     networking.gke.io/managed-certificates: bb-opsera-example-certificate

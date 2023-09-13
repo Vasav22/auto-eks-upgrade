@@ -14,6 +14,9 @@ spec:
       annotations:
         rollme: {{ randAlphaNum 5 | quote }}
       labels:
+        {{ if .Values.serviceCategory }}
+        serviceCategory: {{ .Values.serviceCategory }}
+        {{ end }}
         {{- include "opsera-nodeapi.selectorLabels" . | nindent 8 }}
     spec:
     {{- with .Values.imagePullSecrets }}
@@ -38,10 +41,19 @@ spec:
             httpGet:
               path: /ping
               port: http
+            failureThreshold: 5
+            periodSeconds: 15
+            successThreshold: 1
+            timeoutSeconds: 5
+            initialDelaySeconds: 15
           readinessProbe:
             httpGet:
               path: /ping
               port: http
+            failureThreshold: 3
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           env:          

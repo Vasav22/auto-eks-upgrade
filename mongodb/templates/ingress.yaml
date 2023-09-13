@@ -1,9 +1,5 @@
 {{- if .Values.ingress.enabled }}
-{{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.GitVersion -}}
-apiVersion: networking.k8s.io/v1
-{{- else -}}
-apiVersion: networking.k8s.io/v1beta1
-{{- end }}
+apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: {{ template "mongodb.fullname" . }}
@@ -26,12 +22,9 @@ spec:
     http:
       paths:
       - path: {{ default "/" .path }}
-        pathType: ImplementationSpecific
         backend:
-          service:
-            name: {{ template "mongodb.serviceName" $ }}
-            port:
-              name: mongodb
+          serviceName: {{ template "mongodb.serviceName" $ }}
+          servicePort: mongodb
   {{- end }}
   {{- if .Values.ingress.tls }}
   tls:

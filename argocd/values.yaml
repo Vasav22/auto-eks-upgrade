@@ -18,7 +18,7 @@ global:
     # -- If defined, a repository applied to all ArgoCD deployments
     repository: quay.io/argoproj/argocd
     # -- Overrides the global ArgoCD image tag whose default is the chart appVersion
-    tag: "v2.2.5"
+    tag: "v2.5.3"
     # -- If defined, a imagePullPolicy applied to all ArgoCD deployments
     imagePullPolicy: IfNotPresent
   # -- Annotations for the all deployed pods
@@ -1019,11 +1019,12 @@ server:
     # -- Enable an ingress resource for the Argo CD server
     enabled: true
     # -- Additional ingress annotations
-    annotations: {}
+    annotations:
+      kubernetes.io/ingress.class: nginx
     # -- Additional ingress labels
     labels: {}
     # -- Defines which ingress controller will implement the resource
-    ingressClassName: "nginx"
+    ingressClassName: ""
 
     # -- List of ingress hosts
     ## Argo Ingress.
@@ -1037,7 +1038,7 @@ server:
     paths:
       - /
     # -- Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific`
-    pathType: Prefix
+    pathType: ImplementationSpecific
     # -- Additional ingress paths
     extraPaths:
       []

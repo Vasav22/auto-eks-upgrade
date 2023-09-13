@@ -25,7 +25,7 @@ global:
 
 injector:
   # True if you want to enable vault agent injection.
-  enabled: true
+  enabled: false
 
   # If true, will enable a node exporter metrics endpoint at /metrics.
   metrics:
@@ -69,6 +69,12 @@ injector:
   #    matchLabels:
   #      sidecar-injector: enabled
   namespaceSelector: {}
+  objectSelector: |
+      matchExpressions:
+      - key: app.kubernetes.io/name
+        operator: NotIn
+        values:
+        - {{ template "vault.name" . }}-agent-injector
 
   certs:
     # secretName is the name of the secret that has the TLS certificate and

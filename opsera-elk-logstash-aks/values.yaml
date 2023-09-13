@@ -1,0 +1,90 @@
+# Default values for opsera-elk-new.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/logstashv2
+  tag: latest
+  # repository: gcr.io/indigo-union-270905/onprem-logstash
+  pullPolicy: Always
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+# base url for dev environment
+# opseraBaseUrl: "https://appdev01.opsera.io"
+
+# base url for test environment
+# opseraBaseUrl: "https://api-test.opsera.io"
+
+# base url for prod environment
+opseraBaseUrl: "https://app.opsera.io"
+
+KafkaServer: aebc67922dca34d76b34d1b83b951fea-626fe2b9cd27f673.elb.us-east-2.amazonaws.com:9094
+
+customerType: "env_not_needed"
+customerid: "env_not_needed"
+password: Whn8Bd"@M*
+username: elastic
+elasticSearchUrl: "https://localhost:9200"
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name:
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: NodePort
+  port: 9600
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    # nginx.ingress.kubernetes.io/rewrite-target: /kibana/*
+    # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    # kubernetes.io/ingress.global-static-ip-name: bbtest
+    # networking.gke.io/managed-certificates: bb-opsera-example-certificate
+  hosts:
+    - host: bbtest.opsera.io
+      paths: [/]
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources:
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  limits:
+    cpu: 1
+    memory: 8Gi
+  requests:
+    cpu: 1
+    memory: 4Gi
+
+nodeSelector:
+  Name: opsera-node
+
+tolerations: []
+
+affinity: {}

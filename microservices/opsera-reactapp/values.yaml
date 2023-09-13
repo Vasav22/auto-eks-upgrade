@@ -116,5 +116,4 @@ extraSecretEnvironmentVars:
     envName: OPSERA_ANALYTICS_BASE_URL
     secretKey: OPSERA_ANALYTICS_BASE_URL
 
-
-
+serviceCategory: Client_UI_Services

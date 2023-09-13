@@ -1,0 +1,6 @@
+ingress:
+  hosts:
+    - host: vnext.honeywell.opsera.io
+      paths:
+        - path: /
+          pathType: ImplementationSpecific

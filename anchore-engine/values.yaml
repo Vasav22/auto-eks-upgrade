@@ -1,27 +1,26 @@
 # Default values for anchore_engine chart.
 
-# Anchore engine has a dependency on Postgresql, configure here
+fullnameOverride: Null
+# Anchore has a dependency on Postgresql, configure here
 postgresql:
   # To use an external DB or Google CloudSQL in GKE, uncomment & set 'enabled: false'
-  # externalEndpoint, postgresqlUsername, postgresqlPassword & postgresqlDatabase are required values for external postgres
+  # externalEndpoint, postgresUser, postgresPassword, postgresDatabase, & postgresPort are required values for external postgres
   # enabled: false
-  image:
-    tag: 9.6
-  postgresqlUsername: anchoreengine
-  postgresqlPassword: anchore-postgres
-  postgresqlDatabase: anchore
-
-  # Specify an external (already existing) postgres deployment for use.
-  # Set to the host and port. eg. mypostgres.myserver.io:5432
+  # If enabled=false specify an external (already existing) postgres deployment for use.
+  # Set to the hostname eg. mypostgres.myserver.io
   externalEndpoint: Null
+  postgresUser: anchoreengine
+  postgresPassword: anchore-postgres,123
+  postgresDatabase: anchore
+  postgresPort: 5432
 
   # Configure size of the persistent volume used with helm managed chart.
   # This should be commented out if using an external endpoint.
   persistence:
-    resourcePolicy: nil
+    resourcePolicy: keep
     size: 20Gi
 
-  # If running operator on OpenShift - uncomment the image, imageTag & extraEnv values below.
+  # If running on OpenShift - uncomment the image, imageTag & extraEnv values below.
   # image: registry.access.redhat.com/rhscl/postgresql-96-rhel7
   # imageTag: latest
   # extraEnv:
@@ -42,6 +41,11 @@ postgresql:
 cloudsql:
   # To use CloudSQL in GKE set 'enable: true'
   enabled: false
+  # Inject extra arguments into the cloudsql container command, eg:
+  # extraArgs:
+  # - "-ip_address_types=PRIVATE"
+  # - "-enable_iam_login"
+  extraArgs: []
   # set CloudSQL instance: 'project:zone:instancname'
   instance: ""
   # Optional existing service account secret to use.
@@ -51,25 +55,41 @@ cloudsql:
   image:
     # set repo and image tag of gce-proxy
     repository: gcr.io/cloudsql-docker/gce-proxy
-    tag: 1.12
+    tag: 1.22.0
     pullPolicy: IfNotPresent
 
-# Create an ingress resource for all external anchore engine services (API & Enterprise UI).
+# Create an ingress resource for all external Anchore services (API & Enterprise UI).
 # By default this chart is setup to use the NGINX ingress controller which needs to be installed & configured on your cluster.
-# To utilize a GCE/ALB ingress controller comment out the nginx annotations below, change ingress.class, edit path configurions as per the comments, & set API/UI services to use NodePort.
+# To utilize a GCE/ALB ingress controller comment out the nginx annotations below, change ingress.class, edit path configurations as per the comments, & set API/UI services to use NodePort.
 ingress:
   enabled: true
   labels: {}
   # Use the following paths for GCE/ALB ingress controller
+  # feedsPath: /v1/feeds/*
   # apiPath: /v1/*
   # uiPath: /*
+  # Exposing the feeds API w/ ingress is for special cases only, uncomment feedsPath if external access to the feeds API is needed
+  # feedsPath: /v1/feeds/
+  # Exposing the report API w/ ingress enables the GraphQL interface at <anchore.url>/v1/reports/graphql
+  # reportsPath: /v1/reports/
   apiPath: /v1/
   uiPath: /
+  # uncomment `feedsPath` to add an ingress endpoint for the feeds api
+  # uncomment 'reportsPath' to add an ingress endpoint for the reports api
+
+  # Set ingressClassName if kubernetes version is >= 1.18
+  # Reference: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
+  # ingressClassName: nginx
+
   # Uncomment the following lines to bind on specific hostnames
-  apiHosts:
-    - anchore-api.example.com
-  uiHosts:
-    - anchore-ui.example.com
+  # apiHosts:
+  #   - anchore-api.example.com
+  # uiHosts:
+  #   - anchore-ui.example.com
+  # feedsHosts:
+  #   - anchore-feeds.example.com
+  # reportsHosts:
+  #   - anchore-api.example.com
   annotations:
     # kubernetes.io/ingress.class: gce
     kubernetes.io/ingress.class: nginx
@@ -82,90 +102,156 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
-# Global configuration shared by all anchore-engine services.
+# Global configuration shared by all Anchore services.
 anchoreGlobal:
-  # Image used for all anchore engine deployments (excluding enterprise components).
-  image: docker.io/anchore/anchore-engine:v0.5.1
+  # Image used for all Anchore deployments (excluding enterprise components).
+  image: docker.io/anchore/anchore-engine:v1.1.0
   imagePullPolicy: IfNotPresent
 
-  # Set this value to True to setup the chart for OpenShift deployment compatability.
-  openShiftDeployment: False
+  # Set image pull secret name if using an Anchore image from a private registry
+  imagePullSecretName:
+
+  # Specify a service account name utilized to run all Anchore pods
+  # serviceAccountName: Null
+
+  # Set this value to true to setup the chart for OpenShift deployment compatibility.
+  openShiftDeployment: false
 
   # Add additionnal labels to all kubernetes resources
   labels: {}
     # app.kubernetes.io/managed-by: Helm
     # foo: bar
 
+  # Add common annotations to set on all pods. Useful especially when inject secrets directly into pods as ENV from vault via mutation-webhook-injection method.
+  # Ref: https://banzaicloud.com/docs/bank-vaults/mutating-webhook/
+  annotations: {}
+    # vault.security.banzaicloud.io/vault-addr: "https://vault:8200"
+    # vault.security.banzaicloud.io/vault-tls-secret: "vault-tls"
+
+  # Add common metadata annotations to all pod deployments
+  deploymentAnnotations: {}
+
   # Set extra environment variables. These will be set on all containers.
   extraEnv: []
     # - name: foo
     #   value: bar
 
-  # Specifies an existing secret to be used for admin and db passwords
-  existingSecret: Null
+  # When useExistingSecrets is set to `true` the chart will not create secrets specifying the environment variables used in deployments.
+  # Instead, the chart will use secrets that have already been applied to the namespace that this chart is being deployed to.
+  useExistingSecrets: false
+
+  # Set the name of your existing secret for all Anchore components
+  existingSecretName: anchore-engine-env
+
+  # does `source {{ filePath }}` before starting services
+  doSourceAtEntry:
+    enabled: false
+    filePaths:
+      - "/vault/secrets/config"
+
+  extraVolumes: []
+  # - name: config
+  #   secret:
+  #     secretName: config
+
+  extraVolumeMounts: []
+  # - name: config
+  #   mountPath: "/vault/secrets/config"
+  #   subPath: config
+  #   readOnly: true
 
   # The scratchVolume controls the mounting of an external volume for scratch space for image analysis. Generally speaking
   # you need to provision 3x the size of the largest image (uncompressed) that you want to analyze for this space.
   scratchVolume:
+    # Some k8s Volumes do not properly respect the fsGroup permissions. These volumes will get mounted as root:root
+    # regardless of the security permissions requested. The fixGroupPermissions will create an initContainer that will
+    # fixup the permissions.
+    fixGroupPermissions: false
     mountPath: /analysis_scratch
-    details:
+    details: {}
       # Specify volume configuration here
-      emptyDir: {}
 
-  # A secret must be created in the same namespace as anchore-engine is deployed, containing the certificates & public/private keys used for SSL, SAML & custom CAs.
+  # A secret must be created in the same namespace as Anchore is deployed, containing the certificates & public/private keys used for SSL, SAML & custom CAs.
   # Certs and keys should be added using the file name the certificate is stored at. This secret will be mounted to /home/anchore/certs.
   certStoreSecretName: Null
 
+  # Specify your pod securityContext here, by default the anchore images utilize the user/group 'anchore' using uid/gid 1000
+  # To disable this securityContext comment out `runAsUser` & `runAsGroup`
+  securityContext:
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
+
+  # Specify your container securityContext here
+  containerSecurityContext: {}
+
   ###
-  # Start of General Anchore Engine Configurations (populates /config/config.yaml)
+  # Start of General Anchore Configurations (populates /config/config.yaml)
   ###
   # Set where default configs are placed at startup. This must be a writable location for the pod.
   serviceDir: /anchore_service
   logLevel: INFO
-  cleanupImages: true
 
   # Define timeout, in seconds, for image analysis
-  imageAnalyzeTimeoutSeconds: 3600
+  imageAnalyzeTimeoutSeconds: 36000
 
   # If true, when a user adds an ECR registry with username = awsauto then the system will look for an instance profile to use for auth against the registry
   allowECRUseIAMRole: false
 
+  # Twisted has a global server side timeout on all established connections which defaults to 60, anything lasting longer
+  # than this (+ a 15 min abort final timeout) will have the connection killed by twisted
+  serverRequestTimeout: 60
+
   # Enable prometheus metrics
   enableMetrics: false
 
-  # Sets the password & email address for the default anchore-engine admin user.
-  defaultAdminPassword: foobar
+  # Disable auth on prometheus metrics
+  metricsAuthDisabled: false
+
+  # Sets the password & email address for the default Anchore admin user.
+  defaultAdminPassword:
   defaultAdminEmail: example@email.com
 
   saml:
-    # Locations for keys used for signing and encryption. Only one of 'secret' or 'public_key_path'/'private_key_path' needs to be set. If all are set then the keys take precedence over the secret value
+    # Locations for keys used for signing and encryption. Only one of 'secret' or 'privateKeyName'/'publicKeyName' needs to be set. If all are set then the keys take precedence over the secret value
     # Secret is for a shared secret and if set, all components in anchore should have the exact same value in their configs.
     secret: Null
+    # If set to true, use the secret specified in anchoreGlobal.existingSecret to set the ANCHORE_SAML_SECRET env variable
+    useExistingSecret: false
     privateKeyName: Null
     publicKeyName: Null
 
   oauthEnabled: false
   oauthTokenExpirationSeconds: 3600
+  oauthRefreshTokenExpirationSeconds: 86400
+
+  # Set this to true in order to disable the SSO JIT provisioning during authentication. This provides an additional
+  # layer of security and configuration for SSO users to gain access to Anchore.  This is disabled by default.
+  ssoRequireExistingUsers: false
 
   # Set this to True to enable storing user passwords only as secure hashes in the db. This can dramatically increase CPU usage if you
   # don't also use oauth and tokens for internal communications (which requires keys/secret to be configured as well)
   # WARNING: you should not change this after a system has been initialized as it may cause a mismatch in existing passwords
   hashedPasswords: false
 
-  # Configure the database connection within anchore-engine & enterprise-ui. This may get split into 2 different configurations based on service utilized.
+  # Configure the database connection within Anchore & enterprise-ui. This may get split into 2 different configurations based on service utilized.
   dbConfig:
     timeout: 120
-    # Use ssl, but the default postgresql config in helm's stable repo does not support ssl on server side, so this should be set for external dbs only.
-    # All ssl dbConfig values are only utilized when ssl=true
+    # Use ssl, but the default postgresql config from the dependent chart does not support server side ssl, so this should only be enabled for external dbs
     ssl: false
+    # set sslMode to `require` to ignore verifying the root CA - see https://www.postgresql.org/docs/9.1/libpq-ssl.html#LIBPQ-SSL-SSLMODE-STATEMENTS
     sslMode: verify-full
-    # sslRootCertName is the name of the postgres root CA certificate stored in anchoreGlobal.certStoreSecretName
+    # Specify path to an additional root CA certificate - this is only utilized if 'ssl: true & sslMode: verify-full' are configured.
+    # sslRootCertName describes the filename that is mounted in `/home/anchore/certs` from the secret defined in anchoreGlobal.certStoreSecretName
     sslRootCertName: Null
     connectionPoolSize: 30
     connectionPoolMaxOverflow: 100
+    # Allows you to set custom db connection pool settings
+    engineArgs: {}
+      # pool_recycle: 600
 
   internalServicesSsl:
-    # Enable to force all anchore-engine services to communicate internally using SSL
+    # Enable to force all Anchore services to communicate internally using SSL
     enabled: false
     # specify whether cert is verfied against the local certifacte bundle (allow self-signed certs if set to false)
     verifyCerts: false
@@ -178,7 +264,7 @@ anchoreGlobal:
   webhooks:
     # User and password to be set (using HTTP basic auth) on all webhook calls if necessary
     webhook_user: Null
-    webhook_password: Null
+    webhook_pass: Null
     ssl_verify: true
 
     # Endpoint for general notification delivery. These events are image/tag updates etc. This is globally configured
@@ -186,6 +272,46 @@ anchoreGlobal:
     # <notification_type>/<userId> are required as documented at end of URI - only hostname:port should be configured.
     general: {}
       # url: "http://somehost:9090/<notification_type>/<userId>"
+
+  # Custom policy bundles can be specified here. This values section represents a kubernetes configmap that is volume mounted
+  # to <anchore_service_dir>/bundles and made available to all anchore services. See the docs for details on how to create policy bundles
+  # https://docs.anchore.com/current/docs/engine/general/concepts/policy/bundles/
+  policyBundles:
+#     custom_policy_bundle1.json: |
+#       {
+#         "id": "custom1",
+#         "version": "1_0",
+#         "name": "My custom bundle",
+#         "comment": "My system's custom bundle",
+#         "whitelisted_images": [],
+#         "blacklisted_images": [],
+#         "mappings": [],
+#         "whitelists": [],
+#         "policies": []
+#       }
+#     custom_policy_bundle2.json: |
+#       {
+#         ....
+#       }
+
+  # Allow configuration of Kubernetes probes
+  probes:
+    liveness:
+      initialDelaySeconds: 120
+      timeoutSeconds: 10
+      periodSeconds: 10
+      failureThreshold: 6
+      successThreshold: 1
+    readiness:
+      timeoutSeconds: 10
+      periodSeconds: 10
+      failureThreshold: 3
+      successThreshold: 1
+
+  # Using the preupgrade hook will use a job annotated with helm's pre-upgrade hook. This job utilizes a service account that will be created to call kubectl to scale down the deployment before running the upgrade job.
+  # The service account is granted deployment, deployment/scale, and pod permissions. See templates/hooks/pre-upgrade/anchore_upgrade_role.yaml for the full list.
+  # This can be useful for deployments using helm upgrade --wait or ArgoCD.
+  usePreupgradeHook: false
 
 # Configuration for the analyzer pods that perform image analysis
 # There may be many of these analyzers but best practice is to not have more than one per node since analysis
@@ -199,9 +325,12 @@ anchoreAnalyzer:
     # - name: foo
     #   value: bar
 
+  # Specify the service account name utilized to run the analyzer pods
+  # serviceAccountName: Null
+
   # The cycle timer is the interval between checks to the work queue for new jobs
   cycleTimers:
-    image_analyzer: 5
+    image_analyzer: 1
 
   # Controls the concurrency of the analyzer itself. Can be configured to process more than one task at a time, but it IO bound, so may not
   # necessarily be faster depending on hardware. Should test and balance this value vs. number of analyzers for your deployment cluster performance.
@@ -213,6 +342,17 @@ anchoreAnalyzer:
   # For more info see - https://docs.anchore.com/current/docs/engine/engine_installation/storage/layer_caching/
   # Enable image layer caching by setting a cache size > 0GB.
   layerCacheMaxGigabytes: 0
+
+  # Enable the ability to read a user-supplied 'hints' file to allow users to override and/or augment the software artifacts that are discovered by anchore during its image analysis process.
+  # Once enabled, the analyzer services will look for a file with a specific name, location and format located within the container image - /anchore_hints.json
+  # For more info see - https://docs.anchore.com/current/docs/engine/engine_installation/configuration/content_hints
+  enableHints: false
+
+  # If enabled, the Anchore Analyzer will filter packages out that are contained by others. (e.g. a python package installed by an RPM using yum or dnf).
+  # When disabled, the Anchore Analyzer will report all packages as content regardless of "containership". In the above example, this would cause the
+  # python package to be returned as it's own entry in the image's content.
+  enableOwnedPackageFiltering: true
+
   configFile:
     # Anchore analyzer config file
     #
@@ -245,23 +385,35 @@ anchoreAnalyzer:
     #   regexp_match:
     #     - "EXAMPLE_MATCH="
 
-  resources:
-   limits:
-     cpu: 100m
-     memory: 8Gi
-   requests:
-     cpu: 100m
-     memory: 3Gi
+    # Uncomment the 'malware' section to enable use of the open-source ClamAV malware scanner to detect malicious code embedded in container images.
+    # This scan occurs only at analysis time when the image content itself is available, and the scan results are available via the Engine API as well as
+    # for consumption in new policy gates to allow gating of image with malware findings.
+    # For more detailed configuration info see - https://docs.anchore.com/current/docs/engine/general/concepts/images/analysis/malware_scanning
+    #
+    # malware:
+    #   clamav:
+    #     enabled: true
+    #     db_update_enabled: true
+
+
+  # resources:
+  #  limits:
+  #    cpu: 1
+  #    memory: 4G
+  #  requests:
+  #    cpu: 1
+  #    memory: 1G
 
   labels: {}
   annotations: {}
-  nodeSelector:
-    Name: tools-node
+  # Add metadata annotations to analyzer deployments
+  deploymentAnnotations: {}
+  nodeSelector: {}
   tolerations: []
   affinity: {}
 
 
-# Pod configuration for the anchore engine api service.
+# Pod configuration for the Anchore api service.
 anchoreApi:
   replicaCount: 1
 
@@ -272,10 +424,15 @@ anchoreApi:
 
   # kubernetes service configuration for anchore external API
   service:
+    # Override the service name
+    # name: Null
     type: ClusterIP
     port: 8228
     annotations: {}
     label: {}
+
+  # Specify the service account name utilized to run the API pods
+  # serviceAccountName: Null
 
   # (Optional) Overrides for constructing API URLs.  All values are optional.
   # external:
@@ -283,18 +440,19 @@ anchoreApi:
   #   hostname: anchore-api.example.com
   #   port: 8443
 
-  resources:
-   limits:
-     cpu: 100m
-     memory: 6Gi
-   requests:
-     cpu: 100m
-     memory: 4Gi
+  # resources:
+  #  limits:
+  #    cpu: 1
+  #    memory: 4G
+  #  requests:
+  #    cpu: 100m
+  #    memory: 1G
 
   labels: {}
   annotations: {}
-  nodeSelector:
-    Name: tools-node
+  # Add metadata annotations to api deployments
+  deploymentAnnotations: {}
+  nodeSelector: {}
   tolerations: []
   affinity: {}
 
@@ -306,6 +464,9 @@ anchoreCatalog:
     # - name: foo
     #   value: bar
 
+  # Specify the service account name utilized to run the catalog pods
+  # serviceAccountName: Null
+
   # Intervals to run specific events on (seconds)
   cycleTimers:
     # Interval to check for an update to a tag
@@ -316,15 +477,25 @@ anchoreCatalog:
     vulnerability_scan: 14400
     # Interval at which the catalog looks for new work to put on the image analysis queue.
     analyzer_queue: 1
+    # Interval at which the catalog archival tasks are triggered.
+    archive_tasks: 43200
     # Interval notifications will be processed for state changes
     notifications: 30
     # Intervals service state updates are polled for the system status
     service_watcher: 15
     # Interval between checks to repo for new tags
     repo_watcher: 60
+    # Interval for when the catalog garbage collects images marked for deletion
+    image_gc: 60
+    k8s_image_watcher: 150
+    resource_metrics: 60
+    events_gc: 43200  # 12 hours
 
   # Event log configuration for webhooks
   events:
+    # Max age of events before they get automatically deleted. 0 is disabled and events will never be deleted unless by user action.
+    # This only applies if EnterpriseGlobal=true, otherwise ignored
+    max_retention_age_days: 0
     notification:
       enabled: false
       # Send notifications for events with severity level that matches items in this list
@@ -332,7 +503,55 @@ anchoreCatalog:
         - error
         # - info
 
-  archive:
+  analysis_archive:
+    compression:
+      enabled: true
+      min_size_kbytes: 100
+    storage_driver:
+      # Valid storage driver names: 'db', 's3', 'swift'
+      name: db
+      config: {}
+
+      # Example S3 Configuration:
+      # name: s3
+      # config:
+      #   # All objects are stored in a single bucket, defined here
+      #   bucket: "anchore-engine-testing"
+      #   # A prefix for keys in the bucket if desired (optional)
+      #   prefix: "internaltest"
+      #   # Create the bucket if it doesn't already exist
+      #   create_bucket: false
+          # Url only needed for non-AWS S3 implementations (e.g. minio). Otherwise, configure the region instead
+      #   #url: "https://s3.amazonaws.com"
+      #   # AWS region to connect to if 'url' not specified, if both are set, then 'url' has precedent
+      #   region: us-west-2
+      #   # For Auth can provide access/secret keys or use 'iamauto' which will use an instance profile or any credentials found in normal aws search paths/metadata service
+      #   access_key: XXXX
+      #   secret_key: YYYY
+      #   iamauto: false
+
+      # Example Minio configuration (basically same as s3 example):
+      # name: s3
+      # config:
+      #   url: http://<minio url>:9000
+      #   bucket: mybucket
+      #   access_key: xxxxxx
+      #   secret_key: yyyyyy
+      #   create_bucket: true
+
+      # Example Swift Configuration:
+      # name: swift
+      # config:
+      #     # Config for swift has a few options, just add the keys and names as used to configure a swift client here. All are passed directly to the client impl.
+      #     user: "test:tester"
+      #     key: "testing"
+      #     auth: "http://swift_ephemeral:8080/auth/v1.0"
+      #     # The swift container where data will be stored
+      #     container: "local_test_anchore"
+      #     # Create the container if it is not already present
+      #     create_container: false
+
+  object_store:
     compression:
       enabled: true
       min_size_kbytes: 100
@@ -380,29 +599,45 @@ anchoreCatalog:
       #     # Create the container if it is not already present
       #     create_container: false
 
+  # **NOTE: all runtime inventory configurations only apply to Anchore Enterprise deployments
+
+  runtimeInventory:
+    # This setting tells Anchore how long an image can be missing from an inventory report before it is removed from
+    # The working set. Note: The image will still have a historical record in the reports service, subject to data history
+    # constraints as part of that service.
+    # Note: if a runtime inventory image's digest is also in anchore for regular image analysis, it won't be removed.
+    imageTTLDays: 1
+
+  # checks image status and detects that an 'analyzing' state image is being processed by an analyzer that is no
+  # longer in the 'up' state and will revert the state of the image back to 'not_analyzed' to allow fast re-queueing.
+  downAnalyzerTaskRequeue: true
+
   # kubernetes service configuration for anchore catalog api
   service:
+    # Override the service name
+    # name: Null
     type: ClusterIP
     port: 8082
     annotations: {}
     labels: {}
 
-  resources:
-   limits:
-     cpu: 100m
-     memory: 8Gi
-   requests:
-     cpu: 100m
-     memory: 3Gi
+  # resources:
+  #  limits:
+  #    cpu: 1
+  #    memory: 2G
+  #  requests:
+  #    cpu: 100m
+  #    memory: 500M
 
   labels: {}
   annotations: {}
-  nodeSelector:
-    Name: tools-node
+  # Add metadata annotations to catalog deployments
+  deploymentAnnotations: {}
+  nodeSelector: {}
   tolerations: []
   affinity: {}
 
-# Pod configuration for the anchore engine policy service.
+# Pod configuration for the Anchore policy service.
 anchorePolicyEngine:
   replicaCount: 1
 
@@ -411,36 +646,53 @@ anchorePolicyEngine:
     # - name: foo
     #   value: bar
 
+  # Specify the service account name utilized to run the policy engine pods
+  # serviceAccountName: Null
+
   # Intervals to run specific events on (seconds)
   cycleTimers:
     # Interval to run a feed sync to get latest cve data
     feed_sync: 14400
     # Interval between checks to see if there needs to be a task queued
     feed_sync_checker: 3600
+    # 1 minute between checks to verify local grype-db is up to date
+    grypedb_sync: 60
+
+  # Controls the load of the Image Package DB Entries and disables the packages.verify gate.
+  # Reduces significant DB load as a result.
+  enablePackageDbLoad: true
+
+  # Reduces load by not requiring a re-scan of every sbom for vulnerabilities after each feed sync
+  enableImagesByVulnerabilityAPI: true
+
+  cacheTTL: 3600  # 1 hour
 
   # kubernetes service configuration for anchore policy engine api
   service:
+    # Override the service name
+    # name: Null
     type: ClusterIP
     port: 8087
     annotations: {}
     labels: {}
 
-  resources:
-   limits:
-     cpu: 100m
-     memory: 8Gi
-   requests:
-     cpu: 100m
-     memory: 3Gi
+  # resources:
+  #  limits:
+  #    cpu: 1
+  #    memory: 4G
+  #  requests:
+  #    cpu: 100m
+  #    memory: 1G
 
   labels: {}
   annotations: {}
-  nodeSelector:
-    Name: tools-node
+  # Add metadata annotations to policy engine deployments
+  deploymentAnnotations: {}
+  nodeSelector: {}
   tolerations: []
   affinity: {}
 
-# Pod configuration for the anchore engine simplequeue service.
+# Pod configuration for the Anchore simplequeue service.
 anchoreSimpleQueue:
   replicaCount: 1
 
@@ -449,64 +701,87 @@ anchoreSimpleQueue:
     # - name: foo
     #   value: bar
 
+  # Specify the service account name utilized to run the simple queue pods
+  # serviceAccountName: Null
+
   # kubernetes service configuration for anchore simplequeue api
   service:
+    # Override the service name
+    # name: Null
     type: ClusterIP
     port: 8083
     annotations: {}
     labels: {}
 
-  resources:
-   limits:
-     cpu: 100m
-     memory: 3Gi
-   requests:
-     cpu: 100m
-     memory: 2Gi
+  # resources:
+  #  limits:
+  #    cpu: 1
+  #    memory: 1G
+  #  requests:
+  #    cpu: 100m
+  #    memory: 256M
 
   labels: {}
   annotations: {}
-  nodeSelector:
-    Name: tools-node
+  # Add metadata annotations to simplequeue deployments
+  deploymentAnnotations: {}
+  nodeSelector: {}
   tolerations: []
   affinity: {}
+
+# Pod configuration for the helm post-install-hook engine upgrade Job
+anchoreEngineUpgradeJob:
+  enabled: true
+
+  # resources:
+  #  limits:
+  #    cpu: 1
+  #    memory: 1G
+  #  requests:
+  #    cpu: 100m
+  #    memory: 256M
+
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  annotations: {}
+  labels: {}
 
 # This section is used for configuring anchore enterprise.
 anchoreEnterpriseGlobal:
   enabled: false
   # Name of kubernetes secret containing your license.yaml file.
-  # Create this secret with the following command - kubectl create secret generic anchore-license --from-file=license.yaml=<PATH TO LICENSE.YAML>
+  # Create this secret with the following command - kubectl create secret generic anchore-enterprise-license --from-file=license.yaml=<PATH TO LICENSE.YAML>
   licenseSecretName: anchore-enterprise-license
 
-  image: docker.io/anchore/enterprise:v0.5.0
+  image: docker.io/anchore/enterprise:v4.8.0
+
   imagePullPolicy: IfNotPresent
   # Name of the kubernetes secret containing your dockerhub creds with access to the anchore enterprise images.
-  # Create this secret with the following command - kubectl create secret docker-registry anchore-dockerhub-creds --docker-server=docker.io --docker-username=<USERNAME> --docker-password=<PASSWORD> --docker-email=<EMAIL_ADDRESS>
+  # Create this secret with the following command - kubectl create secret docker-registry anchore-enterprise-pullcreds --docker-server=docker.io --docker-username=<USERNAME> --docker-password=<PASSWORD> --docker-email=<EMAIL_ADDRESS>
   imagePullSecretName: anchore-enterprise-pullcreds
 
 # Configure the second postgres database instance for the enterprise feeds service.
 # Only utilized if anchoreEnterpriseGlobal.enabled: true
 anchore-feeds-db:
   # To use an external DB or Google CloudSQL, uncomment & set 'enabled: false'
-  # externalEndpoint, postgresqlUsername, postgresqlPassword & postgresqlDatabase are required values for external postgres
+  # externalEndpoint, postgresUser, postgresPassword, postgresDatabase, & postgresPort are required values for external postgres
   # enabled: false
-  image:
-    tag: 9.6
-  postgresqlUsername: anchoreengine
-  postgresqlPassword: anchore-postgres,123
-  postgresqlDatabase: anchore-feeds
-
-  # Specify an external (already existing) postgres deployment for use.
-  # Set to the host and port. eg. mypostgres.myserver.io:5432
+  # if enabled=false specify an external (already existing) postgres deployment for use.
+  # Set to the hostname eg. mypostgres.myserver.io
   externalEndpoint: Null
+  postgresUser: anchoreengine
+  postgresPassword: anchore-postgres,123
+  postgresDatabase: anchore-feeds
+  postgresPort: 5432
 
-  # Configure size of the persitant volume used with helm managed chart.
+  # Configure size of the persistent volume used with helm managed chart.
   # This should be commented out if using an external endpoint.
   persistence:
-    resourcePolicy: nil
+    resourcePolicy: keep
     size: 20Gi
 
-  # If running operator on OpenShift - uncomment the image, imageTag & extraEnv values below.
+  # If running on OpenShift - uncomment the image, imageTag & extraEnv values below.
   # image: registry.access.redhat.com/rhscl/postgresql-96-rhel7
   # imageTag: latest
   # extraEnv:
@@ -523,55 +798,170 @@ anchore-feeds-db:
   # - name: PATH
   #   value: /opt/rh/rh-postgresql96/root/usr/bin:/opt/app-root/src/bin:/opt/app-root/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
+# Configure a third postgres database deployment for the enterprise feeds service Ruby Gems DB
+# This is only utilized if anchoreEnterpriseFeeds.gemDriverEnabled=true
+# Database is used for temporarily loading the Ruby gem vulnerability data by the Enterprise Feeds service.
+anchore-feeds-gem-db:
+  # To use an external DB uncomment & set 'enabled: false'
+  # externalEndpoint, postgresUser, postgresPassword, postgresDatabase, & postgresPort are required values for external postgres
+  # enabled: false
+  # If enabled=false specify an external (already existing) postgres deployment for use.
+  # Set to the hostname eg. mypostgres.myserver.io
+  externalEndpoint: Null
+  postgresUser: postgres
+  postgresPassword: anchore-postgres,123
+  postgresDatabase: gems
+  postgresPort: 5432
+  persistence:
+    enabled: false
+
 # Configure & enable the Anchore Enterprise on-prem feeds service.
 anchoreEnterpriseFeeds:
-  # If enabled is set to false, set anchore-feeds-db.enabled to false to ensure that helm doesn't stand up a unneccessary postgres instance.
+  # If enabled is set to false, set anchore-feeds-db.enabled to false to ensure that helm doesn't stand up a unnecessary postgres instance.
   enabled: true
+
+  # Set custom feeds URL. Useful when using a feeds service endpoint that is external from the cluster.
+  # i.e. https://<feeds-hostname>:<feeds-port>
+  url: ""
+
+  # Enable vulnerability drivers for npm data
+  npmDriverEnabled: false
+
+  # Enable vulnerability drivers for gem data
+  gemDriverEnabled: false
+
+  # Enable github advisory feeds
+  githubDriverEnabled: false
+  # GitHub advisory feeds require a github developer personal access token with no permission scopes selected.
+  githubDriverToken: null
+
+  # The NVD API allows for an API key to reduce rate limiting.  Request one from https://nvd.nist.gov/developers/request-an-api-key
+  useNvdDriverApiKey: false
+  nvdDriverApiKey: null
+
+  # Enable microsoft feeds
+  msrcDriverEnabled: false
+  # Uncomment to add MSRC product IDs for generating their feed data, this extends the pre-defined list of product IDs
+  # msrcWhitelist:
+  # - 12345
+
+  # Additional Ubuntu feed groups
+  ubuntuExtraReleases: {}
+  #   kinetic: '22.10'
+
+  # Additional Debian feeds groups
+  debianExtraReleases: {}
+  #   trixie: '13'
+
+  # The number of concurrent threads used when downloading RHEL feeds
+  rhelDriverConcurrency: 5
+
+  # Git Repository settings for the Ubuntu feed driver
+  ubuntuDriverGitUrl: "https://git.launchpad.net/ubuntu-cve-tracker"
+  # Switch to the git protocol endpoint for significantly improved reliability in fetches as this endpoint is not
+  # throttled heavily like the https one; however, the git protocol is not validated or encrypted and runs on a different
+  # port from https
+  # ubuntuDriverGitUrl: "git://git.launchpad.net/ubuntu-cve-tracker"
+  ubuntuDriverGitBranch: "master"
 
   # Set extra environment variables. These will be set on all feeds containers.
   extraEnv: []
     # - name: foo
     #   value: bar
 
+  # Specify the service account name utilized to run the feeds pods
+  # serviceAccountName: Null
+
   # Time delay in seconds between consecutive driver runs for processing data
   cycleTimers:
     driver_sync: 7200
 
-  # Configure the database connection within anchore-engine & enterprise-ui. This may get split into 2 different configurations based on service utilized.
+  # Set the name of your existing secret for Anchore Enterprise Feeds
+  existingSecretName: anchore-enterprise-feeds-env
+
+  # Configure the database connection within Anchore & enterprise-ui. This may get split into 2 different configurations based on service utilized.
   dbConfig:
     timeout: 120
-    # Use ssl, but the default postgresql config in helm's stable repo does not support ssl on server side, so this should be set for external dbs
+    # Use ssl, but the default postgresql config from the dependent chart does not support server side ssl, so this should only be enabled for external dbs
     ssl: false
+    # set sslMode to `require` to ignore verifying the root CA - see https://www.postgresql.org/docs/9.1/libpq-ssl.html#LIBPQ-SSL-SSLMODE-STATEMENTS
     sslMode: verify-full
-    # Specify path to an additional root CA certificate - this is only utilized if 'ssl: true' is configured.
+    # Specify path to an additional root CA certificate - this is only utilized if 'ssl: true & sslMode: verify-full' are configured.
+    # sslRootCertName describes the filename that is mounted in `/home/anchore/certs` from the secret defined in anchoreGlobal.certStoreSecretName
     sslRootCertName: Null
     connectionPoolSize: 30
     connectionPoolMaxOverflow: 100
+    # Allows you to set custom db connection pool settings
+    engineArgs: {}
+      # pool_recycle: 600
+
+  # persistence controls the mounting of an external volume for feed driver download workspace.
+  persistence:
+    enabled: true
+    resourcePolicy: keep  # set resource-policy Helm annotation on PVC. Can be nil or "keep"
+
+    ## A manually managed Persistent Volume and Claim
+    ## Requires anchoreEnterpriseFeeds.persistence.enabled: true
+    ## If defined, PVC must be created manually before volume will be bound
+    # existingClaim:
+
+    ## Persistent Volume Storage Class
+    ## If defined, storageClassName: <storageClass>
+    ## If set to "-", storageClassName: "", which disables dynamic provisioning
+    ## If undefined (the default) or set to null, no storageClassName spec is
+    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+    ##   GKE, AWS & OpenStack)
+    # storageClass: "-"
+    accessMode: ReadWriteOnce
+    size: 40Gi
+    subPath: "postgresql-db"
+    mountPath: /workspace
 
   # kubernetes service configuration for anchore feeds service api
   service:
+    # Override the service name
+    # name: Null
     type: ClusterIP
     port: 8448
     annotations: {}
     labels: {}
 
-  resources:
-   limits:
-     cpu: 100m
-     memory: 8Gi
-   requests:
-     cpu: 100m
-     memory: 3Gi
+  # resources:
+  #  limits:
+  #    cpu: 1
+  #    memory: 4G
+  #  requests:
+  #    cpu: 1
+  #    memory: 2G
 
   labels: {}
   annotations: {}
-  nodeSelector:
-    Name: tools-node
+  # Add metadata annotations to feeds deployments
+  deploymentAnnotations: {}
+  nodeSelector: {}
   tolerations: []
   affinity: {}
 
+# Pod configuration for the helm post-install-hook feeds upgrade Job
+anchoreEnterpriseFeedsUpgradeJob:
+  enabled: true
+
+  # resources:
+  #  limits:
+  #    cpu: 1
+  #    memory: 1G
+  #  requests:
+  #    cpu: 100m
+  #    memory: 256M
+
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  annotations: {}
+  labels: {}
+
 # Configure the Anchore Enterprise role based access control component.
-# This component consists of 2 containers that run as side-cars in the anchore engine api pod.
+# This component consists of 2 containers that run as side-cars in the Anchore api pod.
 anchoreEnterpriseRbac:
   enabled: true
 
@@ -583,24 +973,32 @@ anchoreEnterpriseRbac:
   # Kubernetes service config - annotations & serviceType configs must be set in anchoreApi
   # Due to RBAC sharing a service with the general API.
   service:
-    apiPort: 8229
+    # Override the service name
+    # name: Null
+    managerPort: 8229
     authPort: 8089
+    type: ClusterIP
+    annotations: {}
+    labels: {}
 
   # authResources:
   #  limits:
-  #    cpu: 100m
-  #    memory: 8Gi
+  #    cpu: 1
+  #    memory: 1G
   #  requests:
   #    cpu: 100m
-  #    memory: 3Gi
+  #    memory: 256M
 
   # managerResources:
   #  limits:
-  #    cpu: 100m
-  #    memory: 8Gi
+  #    cpu: 1
+  #    memory: 1G
   #  requests:
   #    cpu: 100m
-  #    memory: 3Gi
+  #    memory: 256M
+
+  # Add metadata annotations to rbac deployments
+  deploymentAnnotations: {}
 
 # Configure the Anchore Enterprise reporting component.
 anchoreEnterpriseReports:
@@ -611,11 +1009,28 @@ anchoreEnterpriseReports:
     # - name: foo
     #   value: bar
 
+  # Specify the service account name utilized to run the reports pods
+  # serviceAccountName: Null
+
   # GraphiQL is a GUI for editing and testing GraphQL queries and mutations.
-  # Set enable_graphiql to true and open http://<host>:<port>/v1/reports/graphql in a browser for reports API
-  enableGraphql: true
-  # Set enable_data_ingress to true for periodically syncing data from anchore engine into the reports service
+  # Set enableGraphiql to true and open http://<host>:<port>/v1/reports/graphql in a browser for reports API
+  enableGraphiql: true
+
+  # Set enableDataIngress to true for periodically syncing data from Anchore into the reports service
   enableDataIngress: true
+
+  # Set enableDataEgress to true to periodically remove reporting data that has been removed in other parts of system
+  enableDataEgress: false
+
+  # dataEgressWindow defines a number of days to keep reporting data following its deletion in the rest of system.
+  # Default value of 0 will remove it on next task run
+  dataEgressWindow: 0
+
+  # dataRefreshMaxWorkers is the maximum number of concurrent threads to refresh existing results (etl vulnerabilities and evaluations) in reports service. Set non-negative values greater than 0, otherwise defaults to 10
+  dataRefreshMaxWorkers: 10
+
+  # dataLoadMaxWorkers is the maximum number of concurrent threads to load new results (etl vulnerabilities and evaluations) to reports service. Set non-negative values greater than 0, otherwise defaults to 10
+  dataLoadMaxWorkers: 10
 
   cycleTimers:
     # images and tags synced every 10 minutes
@@ -624,32 +1039,80 @@ anchoreEnterpriseReports:
     reports_data_refresh: 7200
     # metrics generated every hour
     reports_metrics: 3600
+    reports_data_egress: 600
 
-  # Kubernetes service config - annotations & serviceType configs must be set in anchoreApi
-  # Due to Reports sharing a service with the general API.
   service:
-    port: 8558
+    # Override the service name
+    # name: Null
+    type: ClusterIP
+    apiPort: 8558
+    workerPort: 8778
+    annotations: {}
+    labels: {}
 
-  resources:
-   limits:
-     cpu: 100m
-     memory: 8Gi
-   requests:
-     cpu: 100m
-     memory: 3Gi
+  # resources:
+  #  limits:
+  #    cpu: 1
+  #    memory: 1G
+  #  requests:
+  #    cpu: 100m
+  #    memory: 256M
 
   labels: {}
   annotations: {}
-  nodeSelector:
-    Name: tools-node
+  # Add metadata annotations to reports deployments
+  deploymentAnnotations: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+# Configure the Anchore Enterprise notifications component.
+anchoreEnterpriseNotifications:
+  enabled: true
+
+  # Set extra environment variables. These will be set on all rbac containers.
+  extraEnv: []
+    # - name: foo
+    #   value: bar
+
+  # Specify the service account name utilized to run the notification pods
+  # serviceAccountName: Null
+
+  cycleTimers:
+    notifications: 30
+
+  # Set the UI URL that is included in the notification
+  # uiUrl: "http://<ui_url>"
+
+  service:
+    # Override the service name
+    # name: Null
+    type: ClusterIP
+    port: 8668
+    annotations: {}
+    labels: {}
+
+  # resources:
+  #  limits:
+  #    cpu: 1
+  #    memory: 1G
+  #  requests:
+  #    cpu: 100m
+  #    memory: 256M
+
+  labels: {}
+  annotations: {}
+  # Add metadata annotations to notifications deployments
+  deploymentAnnotations: {}
+  nodeSelector: {}
   tolerations: []
   affinity: {}
 
 # Configure the Anchore Enterprise UI.
 anchoreEnterpriseUi:
-  # If enabled is set to false, set anchore-ui-redis.enabled to false to ensure that helm doesn't stand up a unneccessary redis instance.
+  # If enabled is set to false, set ui-redis.enabled to false to ensure that helm doesn't stand up a unneccessary redis instance.
   enabled: true
-  image: docker.io/anchore/enterprise-ui:v0.5.0
+  image: docker.io/anchore/enterprise-ui:v4.8.0
   imagePullPolicy: IfNotPresent
 
   # Set extra environment variables. These will be set on all UI containers.
@@ -657,13 +1120,68 @@ anchoreEnterpriseUi:
     # - name: foo
     #   value: bar
 
+  # Specify the service account name utilized to run the UI pods
+  # serviceAccountName: Null
+
+  # Set the name of your existing secret for the Anchore Enterprise UI
+  existingSecretName: anchore-enterprise-ui-env
+
+  # Specify configurations for database connection user
+  # This should specifically allow overriding and separation of the ui database user
+  # dbUser: anchoreengineui
+  # dbPass: anchore-postgres,123ui
+
+  # The (optional) `appdbConfig` key specifies the connection options
+  # for the application SQL database.
+  #
+  # The `native` setting allows you to toggle the postgreSQL drivers used to connect
+  # to the database between the native and the NodeJS drivers.
+  #
+  # The `pool` setting defines connection pool options:
+  #   - `max` (default 10) represents the maximum number of simultaneous
+  #     connections allowed in the connection pool.
+  #   - `min` (default 0) is the minimum number of connections.
+  #   - `acquire` (default 30000) is the timeout in milliseconds used when acquiring
+  #     a new connection
+  #   - `idle` (default 10000) is the maximum time that a connection can be idle
+  #     before being released
+  appDBConfig:
+    native: true
+    pool:
+      max: 10
+      min: 0
+      acquire: 30000
+      idle: 10000
+
   # If using LDAPS with a custom CA certificate, add the certificate to the secret specified at anchoreGlobal.certStoreSecretName and specify the name of the cert here
   ldapsRootCaCertName: Null
 
+  # The (optional) `logLevel` key allows you to set the descriptive detail of the
+  # application log output. The key value must be a string selected from the
+  # following priority-ordered list:
+  #
+  #  - error
+  #  - warn
+  #  - info
+  #  - http
+  #  - debug
+  #
+  # Once set, each level will automatically include the output for any levels
+  # above it—for example, `info` will include the log output for details at the
+  # `warn` and `error` details, whereas `error` will only show error output.
+  #
+  # This value can be overridden by using the `ANCHORE_LOG_LEVEL` environment
+  # variable. When no level is set, either within this configuration file or by the
+  # environment variable, a default level of `http` is used.
+  #
+  logLevel: http
+
   # Specifies whether to trust a reverse proxy when setting secure cookies (via the `X-Forwarded-Proto` header).
   enableProxy: false
+
   # Specifies if SSL is enabled in the web app container.
   enableSsl: false
+
   # Specifies if a single set of user credentials can be used to start multiple Anchore Enterprise UI sessions; for
   # example, by multiple users across different systems, or by a single user on a single system across multiple browsers.
   #
@@ -671,57 +1189,162 @@ anchoreEnterpriseUi:
   # sessions that are using the same set of credentials. Note that setting this property to `false` does not prevent a
   # single session from being viewed within multiple *tabs* inside the same browser.
   enableSharedLogin: true
+
   # The redisFlushdb` key specifies if the Redis datastore containing
   # user session keys and data is emptied on application startup. If the datastore
   # is flushed, any users with active sessions will be required to re-authenticate.
   redisFlushdb: true
-  # The (optional) `policy_hub_uri` key specifies the address of a Policy Hub
-  # service. The value must be a string containing a properly-formed 'http' or
-  # 'https' URI, and can be overridden by using the `ANCHORE_POLICY_HUB_URI`
+
+  # The (optional) `force_websocket` key specifies if the WebSocket protocol must
+  # be used for socket message communications. By default, long-polling is
+  # initially used to establish the handshake between client and web service,
+  # followed by a switch to WS if the WebSocket protocol is supported.
+  #
+  # If this value is unset, or is set to anything other than a Boolean, the web
+  # service will default to `False`.
+  #
+  # This value can be overridden by using the `ANCHORE_FORCE_WEBSOCKET`
   # environment variable.
   #
-  # When this value is set, the Policy Hub component is enabled within the
-  # Policy Manager view (`/policy`). Note that the availability and integrity of
-  # Policy Hub data is determined by this component at run-time when this
-  # component is accessed.
+  forceWebsocket: false
+
+  # The (optional) `authentication_lock` keys specify if a user should be
+  # temporarily prevented from logging in to an account after one or more failed
+  # authentication attempts. For this feature to be enabled, both values must be
+  # whole numbers greater than `0`. They can be overridden by using the
+  # `ANCHORE_AUTHENTICATION_LOCK_COUNT` and `ANCHORE_AUTHENTICATION_LOCK_EXPIRES`
+  # environment variables.
   #
-  policyHubUri: 'http://hub.anchore.io'
+  # The `count` value represents the number of failed authentication attempts
+  # allowed to take place before a temporary lock is applied to the username. The
+  # `expires` value represents, in seconds, how long the lock will be applied for.
+  #
+  # Note that, for security reasons, when this feature is enabled it will be
+  # applied to *any* submitted username, regardless of whether the user exists.
+  #
+  authenticationLock:
+    count: 5
+    expires: 300
+
+  # The (optional) `custom_links` key allows a list of up to 10 external links to
+  # be provided (additional items will be excluded). The top-level `title` key
+  # provided the label for the menu (if present, otherwise the string "Custom
+  # External Links" will be used instead).
+  #
+  #  Each link entry must have a title of greater than 0-length and a valid URI.
+  #  If either item is invalid, the entry will be excluded.
+  #
+  # Uncomment customLinks and specify your custom config as per the example below
+  # customLinks:
+  #   title: Custom External Links
+  #   links:
+  #   - title: Example Link 1
+  #     uri: https://example.com
+  #   - title: Example Link 2
+  #     uri: https://example.com
+  #   - title: Example Link 3
+  #     uri: https://example.com
+  #   - title: Example Link 4
+  #     uri: https://example.com
+  #   - title: Example Link 5
+  #     uri: https://example.com
+  #   - title: Example Link 6
+  #     uri: https://example.com
+  #   - title: Example Link 7
+  #     uri: https://example.com
+  #   - title: Example Link 8
+  #     uri: https://example.com
+  #   - title: Example Link 9
+  #     uri: https://example.com
+  #   - title: Example Link 10
+  #     uri: https://example.com
+
+  # The (optional) `enable_add_repositories` key specifies if repositories can be
+  # added via the application interface by either administrative users or standard
+  # users. In the absence of this key, the default is `True`.
+  #
+  # In the absence of one or all of the properties, the default is also `True`.
+  # Thus, this key and a child key corresponding to an account type must be
+  # explicitly set to `False` for the feature to be disabled for that account.
+  #
+  # Uncomment enableAddRepositories and set the config as per the example below
+  # enableAddRepositories:
+  #   admin: True
+  #   standard: True
 
   # kubernetes service configuration for anchore UI
   service:
+    # Override the service name
+    # name: Null
     type: ClusterIP
     port: 80
     annotations: {}
     labels: {}
     sessionAffinity: ClientIP
 
-  resources:
-   limits:
-     cpu: 100m
-     memory: 8Gi
-   requests:
-     cpu: 100m
-     memory: 3Gi
+  # The (optional) `enrich_inventory_view` key allows you to set whether the
+  # Kubernetes tab should aggregate and include compliance and vulnerability data
+  # from the reports service.
+  #
+  # Setting this key to be `False` can increase performance on high-scale systems.
+  #
+  # This value can be overridden by using the `ANCHORE_ENRICH_INVENTORY_VIEW`
+  # environment variable. When no flag is set, either within this configuration
+  # file or by the environment variable, a default setting of `True` is used.
+  enrichInventoryView: true
+
+  # resources:
+  #  limits:
+  #    cpu: 1
+  #    memory: 1G
+  #  requests:
+  #    cpu: 100m
+  #    memory: 256M
 
   labels: {}
   annotations: {}
+  # Add metadata annotations to ui deployments
+  deploymentAnnotations: {}
   nodeSelector:
     Name: tools-node
   tolerations: []
   affinity: {}
 
-# Anchore Engine Enterprise UI is dependent on redis for storing sessions
+# Anchore Enterprise UI is dependent on redis for storing sessions
 # Only utilized if 'anchoreEnterpriseUi.enabled: true'
-anchore-ui-redis:
-  password: anchore-redis,123
-  cluster:
-    enabled: false
-  persistence:
-    enabled: false
+ui-redis:
+  auth:
+    password: anchore-redis,123
+  architecture: standalone
+  master:
+    persistence:
+      enabled: false
 
   # To use an external redis endpoint, uncomment to set 'enabled: false'
   # enabled: false
 
   # If 'enabled: false', specify an external redis endpoint -
-  # eg redis://:<password>@hostname:6379
+  # eg redis://nouser:<password>@hostname:6379
   externalEndpoint: Null
+
+# Pod configuration for the helm post-install-hook enterprise engine upgrade Job
+anchoreEnterpriseEngineUpgradeJob:
+  enabled: true
+
+  # resources:
+  #  limits:
+  #    cpu: 1
+  #    memory: 1G
+  #  requests:
+  #    cpu: 100m
+  #    memory: 256M
+
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  annotations: {}
+  labels: {}
+
+# To inject secrets ( credentails data ) via env, rather k8s secrets please set this flag to true.
+# This feature will be useful, especially to inject secrets directly into k8s pods from hashicorp vault
+# inject_secrets_via_env: false

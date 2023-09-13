@@ -1,0 +1,21 @@
+resources:
+  requests:
+    cpu: 250m
+    memory: 512Mi
+  limits:
+    cpu: 500m
+    memory: 1Gi
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 120
+  targetMemoryUtilizationPercentage: 120
+
+ingress:
+  hosts:
+    - host: vnext-insights-api.opsera-test.opsera.io
+      paths: [/]
+
+NODE_ENV: testing

@@ -33,10 +33,15 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["redis-server"]
+          args: ["--requirepass", {{ .Values.REDIS_PASSWORD }} ]
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
+          env:
+            - name: "REDIS_PASSWORD"
+              value: {{ .Values.REDIS_PASSWORD }}
           # livenessProbe:
           #   httpGet:
           #     path: /

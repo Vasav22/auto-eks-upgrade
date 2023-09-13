@@ -197,3 +197,5 @@ extraSecretEnvironmentVars:
   - secretName: microservices-ms-env
     envName: OPSERA_NODE_TOOLS_MANAGEMENT_SERVICE_INTERNAL_URL
     secretKey: OPSERA_NODE_TOOLS_MANAGEMENT_SERVICE_INTERNAL_URL
+
+serviceCategory: Platform_Services
