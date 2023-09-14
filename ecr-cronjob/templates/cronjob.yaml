@@ -1,0 +1,44 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "ecr-cronjob.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  schedule: {{ quote .Values.cron.schedule }}
+  successfulJobsHistoryLimit: {{ .Values.cron.successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ .Values.cron.failedJobsHistoryLimit }}
+  jobTemplate:
+    spec:
+      backoffLimit: {{ .Values.cron.backoffLimit }}
+      template:
+        spec:
+          serviceAccountName: {{ include "ecr-cronjob.serviceAccountName" . }}
+          terminationGracePeriodSeconds: 0
+          restartPolicy: Never
+          containers:
+          - name: kubectl
+            imagePullPolicy: IfNotPresent
+            image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+            envFrom:
+            - secretRef:
+                name: {{ .Values.aws.secretName }}
+            command:
+            - "/bin/sh"
+            - "-c"
+            - |
+              set -x
+              DOCKER_REGISTRY_SERVER=https://${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com
+              DOCKER_USER=AWS
+              DOCKER_PASSWORD=$(aws ecr get-login-password --region ${AWS_REGION})
+
+              for ns in $(kubectl get ns --no-headers -o custom-columns=":metadata.name"); do
+                  kubectl delete secret aws-registry -n $ns || true
+                  kubectl create secret docker-registry aws-registry -n $ns \
+                  --docker-server=$DOCKER_REGISTRY_SERVER \
+                  --docker-username=$DOCKER_USER \
+                  --docker-password=$DOCKER_PASSWORD \
+                  --docker-email=no@email.local
+                  for sa in $(kubectl get sa -n $ns --no-headers -o custom-columns=":metadata.name"); do
+                      kubectl patch serviceaccount $sa -n $ns -p '{"imagePullSecrets":[{"name":"aws-registry"}]}'
+                  done
+              done

@@ -1,0 +1,20 @@
+image:
+  repository: us-central1-docker.pkg.dev/platform-dev-392813/opsera-platform-docker/aws-kubectl
+  tag: 1.26-2.13.12
+
+cron:
+  schedule: "* */8 * * *"
+  successfulJobsHistoryLimit: 2
+  failedJobsHistoryLimit: 2
+  backoffLimit: 4
+
+serviceAccount:
+  create: true
+
+aws:
+  region: us-east-2
+  ecrAccountId: 440953937617
+  secretName: aws-secret
+# values for below keys will be passed from terraform integrator
+#  accessKeyId: 
+#  secretAccessKey: 
