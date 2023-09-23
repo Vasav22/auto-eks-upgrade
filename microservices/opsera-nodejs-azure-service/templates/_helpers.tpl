@@ -52,17 +52,6 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 
 {{/*
-Datadog Service Check Annotations
-*/}}
-{{- define "opsera-nodejs-azure-service.annotations" -}}
-ad.datadoghq.com/service.check_names: '["http_check"]'
-ad.datadoghq.com/service.init_configs: '[{}]'
-ad.datadoghq.com/service.instances: "[\n  {\n    \"name\": \"opsera-nodejs-azure-service\",\n
-  \   \"url\": \"http://%%host%%:%%port%%/status\",\n    \"timeout\": 1,\n  \"http_response_status_code\": 200\n  }\n] \n"
-{{- end -}}
-
-
-{{/*
 Create the name of the service account to use
 */}}
 {{- define "opsera-nodejs-azure-service.serviceAccountName" -}}
@@ -71,6 +60,16 @@ Create the name of the service account to use
 {{- else -}}
     {{ default "default" .Values.serviceAccount.name }}
 {{- end -}}
+{{- end -}}
+
+{{/*
+Datadog Service Check Annotations
+*/}}
+{{- define "opsera-nodejs-azure-service.annotations" -}}
+ad.datadoghq.com/service.check_names: '["http_check"]'
+ad.datadoghq.com/service.init_configs: '[{}]'
+ad.datadoghq.com/service.instances: "[\n  {\n    \"name\": \"opsera-nodejs-azure-service\",\n
+  \   \"url\": \"http://%%host%%:%%port%%/status\",\n    \"timeout\": 1,\n     \"http_response_status_code\": 200\n  }\n] \n"
 {{- end -}}
 
 {{/*

@@ -2,3 +2,4 @@ helm upgrade opsera-nodejs-azure-service . \
     -n microservices --install --set DOCKER_ENV=kube-test \
     --set NODE_ENV=kube-test --set image.tag=git-633a6c8b9372cc70262b15e29a41e3bea939d3d0 \
     -f values-opsera-test-microservices.yaml
+    

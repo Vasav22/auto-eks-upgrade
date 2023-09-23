@@ -1,2 +1,0 @@
-helm -n microservices install  opsera-nodejs-azure-service .
-helm -n microservices upgrade opsera-nodejs-azure-service .
