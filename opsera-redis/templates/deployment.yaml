@@ -33,15 +33,19 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if eq .Values.Platform "dataplane" }}
           command: ["redis-server"]
           args: ["--requirepass", {{ .Values.REDIS_PASSWORD }} ]
+          {{- end }}
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
+          {{- if eq .Values.Platform "dataplane" }}
           env:
             - name: "REDIS_PASSWORD"
               value: {{ .Values.REDIS_PASSWORD }}
+          {{- end }}
           # livenessProbe:
           #   httpGet:
           #     path: /
