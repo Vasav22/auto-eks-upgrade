@@ -44,12 +44,21 @@ spec:
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /status
+              path: /livez
               port: http
+            failureThreshold: 5
+            periodSeconds: 15
+            successThreshold: 1
+            timeoutSeconds: 5
+            initialDelaySeconds: 15
           readinessProbe:
             httpGet:
-              path: /status
+              path: /readyz
               port: http
+            failureThreshold: 3
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           env:
