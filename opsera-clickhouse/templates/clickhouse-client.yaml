@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: clickhouse-client
+spec:
+  containers:
+  - name: clickhouse
+    image: clickhouse/clickhouse-server:23.4.2.11-alpine
+    command: ["/bin/sh", "-c"]
+    args:
+      - echo starting;
+        cat /tmp/ch-installation.sql/ch-initdb.sql;
+        apk add curl;
+        curl --retry 30 --retry-delay 10 "http://clickhouse-opsera:8123";
+        echo "starting init DB";
+        clickhouse client --multiline --multiquery -h clickhouse-opsera --password '{{ .Values.OPSERA_PASSWORD }}' -u 'opsera' < /tmp/ch-installation.sql/ch-initdb.sql;
+        echo "Finished init DB";
+        sleep infinity;
+    # command:
+    # - cat /tmp/ch-installation.sql/ch-initdb.sql
+    # - clickhouse client --multiline --multiquery -h clickhouse-opsera --password {{ .Values.OPSERA_PASSWORD }} -u 'opsera' < /tmp/ch-installation.sql/ch-initdb.sql
+    # - sleep
+    # - infinity     
+    ports:
+      - containerPort: 3306
+    volumeMounts:
+      - name: ch-initdb
+        mountPath: /tmp/ch-installation.sql
+  volumes:
+    - name: ch-initdb
+      configMap:
+        name: ch-initdb-config
