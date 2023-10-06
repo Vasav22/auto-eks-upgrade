@@ -1,0 +1,57 @@
+apiVersion: "clickhouse.altinity.com/v1"
+kind: "ClickHouseInstallation"
+metadata:
+  name: "opsera"
+spec:
+  defaults:
+    templates:
+      serviceTemplate: clickhouse-opsera
+  configuration:
+    users:
+      opsera/networks/ip: "::/0"
+      opsera/password: {{ .Values.OPSERA_PASSWORD }}
+      opsera/profile: default
+    clusters:
+      - name: "prod"
+        layout:
+          shardsCount: 1
+          replicasCount: 1
+        templates:
+          podTemplate: clickhouse-stable
+          volumeClaimTemplate: opsera-clickhouse
+  templates:
+    podTemplates:
+      - name: clickhouse-stable
+        spec:
+          containers:
+          - name: clickhouse
+            image: altinity/clickhouse-server:22.3.10.24.altinitystable
+            resources:
+              limits:
+                cpu: 3500m
+                memory: 14Gi
+              requests:
+                cpu: 3500m
+                memory: 14Gi
+    volumeClaimTemplates:
+      - name: opsera-clickhouse
+        spec:
+          storageClassName: gp2
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 200Gi
+    serviceTemplates:
+      - name: clickhouse-opsera
+        generateName: clickhouse-opsera
+        metadata:
+          labels:
+            custom.label: "custom.opsera"
+        spec:
+          ports:
+            - name: http
+              port: 8123
+            - name: tcp
+              port: 9000
+          type: ClusterIP

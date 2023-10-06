@@ -23,7 +23,7 @@ spec:
         env:
         - name: VAULT_ADDR
           value: http://vault-active:8200
-        image: vault
+        image: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera/vault
         name: vault-agent
         ports:
         - containerPort: 8200
