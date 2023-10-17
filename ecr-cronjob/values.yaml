@@ -13,7 +13,7 @@ serviceAccount:
 
 aws:
   region: us-east-2
-  ecrAccountId: 440953937617
+  ecrAccountId: "440953937617"
   secretName: aws-secret
 # values for below keys will be passed from terraform integrator
 #  accessKeyId: 

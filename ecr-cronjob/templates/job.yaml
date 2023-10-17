@@ -24,7 +24,7 @@ spec:
         - |
           set -x
           kubectl create secret generic {{ .Values.aws.secretName }} \
-            --from-literal=AWS_ACCOUNT={{ .Values.aws.ecrAccountId}} \
+            --from-literal=AWS_ACCOUNT={{ .Values.aws.ecrAccountId }} \
             --from-literal=AWS_ACCESS_KEY_ID={{ .Values.aws.accessKeyId }} \
             --from-literal=AWS_SECRET_ACCESS_KEY={{ .Values.aws.secretAccessKey }} \
             --from-literal=AWS_DEFAULT_REGION={{ .Values.aws.region }} \
