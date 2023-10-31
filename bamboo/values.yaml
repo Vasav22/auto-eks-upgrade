@@ -237,9 +237,9 @@ volumes:
     # https://kubernetes.io/docs/concepts/storage/persistent-volumes/#static
     # https://atlassian.github.io/data-center-helm-charts/examples/storage/aws/SHARED_STORAGE/
     #
-    customVolume: {}
-    # persistentVolumeClaim:
-    #   claimName: "<pvc>"
+    customVolume:
+      persistentVolumeClaim:
+        claimName: "bamboo-shared-home"
 
     # -- Specifies the path in the Bamboo container to which the shared-home volume will be
     # mounted.
