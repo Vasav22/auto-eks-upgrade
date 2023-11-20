@@ -199,5 +199,8 @@ extraSecretEnvironmentVars:
   - secretName: microservices-ms-env
     envName: OPSERA_ANALYTICS_PULL_INTAKE_SERVICE_URL
     secretKey: OPSERA_ANALYTICS_PULL_INTAKE_SERVICE_URL
+  - secretName: microservices-ms-env
+    envName: OPSERA_VNXT_INSIGHTS_API_URL
+    secretKey: OPSERA_VNXT_INSIGHTS_API_URL
 
 serviceCategory: Platform_Services
