@@ -8,4 +8,4 @@ ingress:
     - path: /
       pathType: ImplementationSpecific
 Platform: dataplane
-REDIS_PASSWORD: opsera
+REDIS_PASSWORD: # configure the redis password
