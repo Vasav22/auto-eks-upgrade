@@ -9,7 +9,3 @@ ingress:
       pathType: ImplementationSpecific
 Platform: dataplane
 REDIS_PASSWORD: opsera
-  #persistence:
-  #enabled: true
-  #accessMode: ReadWriteOnce
-  #size: 1Gi
