@@ -114,3 +114,6 @@ extraSecretEnvironmentVars:
     secretKey: OPSERA_API_GATEWAY_SERVICE_PASS
 
 serviceCategory: Platform_Services
+
+pdb:
+  minAvailable: 1

@@ -77,3 +77,6 @@ REDIS_DB: 0
 REST_PORT: 80
 
 serviceCategory: Platform_Services
+
+pdb:
+  minAvailable: 1
