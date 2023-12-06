@@ -1,2 +1,2 @@
 autoscaling:
-  minReplicas: 2
+  minReplicas: 3
