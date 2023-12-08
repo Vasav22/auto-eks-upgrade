@@ -25,7 +25,7 @@ spec:
         spec:
           containers:
           - name: clickhouse
-            image: altinity/clickhouse-server:22.3.10.24.altinitystable
+            image: clickhouse/clickhouse-server:23.1.7.30-alpine
             resources:
               limits:
                 cpu: 3500m
