@@ -60,6 +60,7 @@ ingress:
     nginx.ingress.kubernetes.io/session-cookie-name: "INGRESSCOOKIENODE"
     nginx.ingress.kubernetes.io/session-cookie-expires: "172800"
     nginx.ingress.kubernetes.io/session-cookie-max-age: "172800"
+    nginx.ingress.kubernetes.io/session-cookie-secure: "true"
     # kubernetes.io/tls-acme: "true"
   hosts:
     - host: chart-example.local
