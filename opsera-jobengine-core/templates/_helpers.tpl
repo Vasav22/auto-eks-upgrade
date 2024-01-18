@@ -71,3 +71,19 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Get EFS Volume ID created at the time of cluster provisioning
+*/}}
+{{- define "opsera-jobengine-core.efsVolumeId" -}}
+{{- $pvName := .Values.k8sIntegratorVolumeName }}
+{{- if (lookup "v1" "PersistentVolume" "" $pvName) }}
+{{- (lookup "v1" "PersistentVolume" "" $pvName ).spec.csi.volumeHandle }}
+{{- else }}
+{{- if (lookup "v1" "PersistentVolume" "" "opsera-shared-workspace") }}
+{{- (lookup "v1" "PersistentVolume" "" "opsera-shared-workspace").spec.csi.volumeHandle }}
+{{- else }}
+{{- "" }}
+{{- end }}
+{{- end }}
+{{- end }}

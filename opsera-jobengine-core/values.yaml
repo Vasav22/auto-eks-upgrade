@@ -80,3 +80,7 @@ serviceCategory: Platform_Services
 
 pdb:
   minAvailable: 1
+
+jobEngineNamespace: opsera-job-engine
+jobEngineEfsVolumeClaim: opsera-shared-workspace
+k8sIntegratorVolumeName: efs-aws-efs-volume-k8s-integrator
