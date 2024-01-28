@@ -1,0 +1,12 @@
+resources:
+  limits:
+    cpu: 3500m
+    memory: 5Gi
+  requests:
+    cpu: 1500m
+    memory: 5Gi
+
+ingress:
+  hosts:
+    - host: api.freetrial.opsera.io
+      paths: [/]

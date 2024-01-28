@@ -1,0 +1,23 @@
+DOCKER_ENV: staging
+NODE_ENV: staging
+autoscaling:
+  enabled: true
+  maxReplicas: 5
+  minReplicas: 2
+  targetCPUUtilizationPercentage: 60
+  targetMemoryUtilizationPercentage: 60
+image:
+  tag: b3ce1b0ddf70ce379e55702d70bbeb6f79ea62b2
+ingress:
+  hosts:
+  - host: api.opsera-uat.opsera.io
+    paths:
+    - /
+resources:
+  limits:
+    cpu: 2
+    memory: 4Gi
+  requests:
+    cpu: 1
+    memory: 2Gi
+
