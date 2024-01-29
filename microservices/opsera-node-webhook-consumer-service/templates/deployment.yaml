@@ -61,6 +61,8 @@ spec:
             value: {{ .Values.DOCKER_ENV }}
           - name: "NODE_ENV"
             value: {{default "production" .Values.NODE_ENV }}
+          - name: "PORT"
+            value: "{{ .Values.service.port }}"
           {{- include "ms.extraSecretEnvironmentVars" .Values | nindent 10 }}
           volumeMounts:
           - name: microservices-efs
