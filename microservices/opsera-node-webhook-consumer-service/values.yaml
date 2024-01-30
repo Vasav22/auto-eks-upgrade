@@ -51,7 +51,7 @@ ingress:
   hosts:
     - host: chart-example.local
       paths: 
-      - path: /hooks(/|$)(.*)
+      - path: /hooks/(.*)
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
