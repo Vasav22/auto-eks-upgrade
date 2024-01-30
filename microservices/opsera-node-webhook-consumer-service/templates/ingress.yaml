@@ -32,7 +32,7 @@ spec:
       http:
         paths:
         {{- range .paths }}
-          - path: /hooks
+          - path: /hooks(/|$)(.*)
             pathType: ImplementationSpecific
             backend:
               service:
