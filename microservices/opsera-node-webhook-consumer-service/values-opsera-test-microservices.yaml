@@ -12,7 +12,7 @@ autoscaling:
 
 ingress:
   hosts:
-    - host: api.opsera-test.opsera..io
+    - host: api.opsera-test.opsera.io
       paths: 
       - path: /hooks(/|$)(.*)
 
