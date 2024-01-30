@@ -1,21 +1,19 @@
 resources:
-  limits:
-    cpu: 2
-    memory: 4Gi
   requests:
-    cpu: 1
-    memory: 4Gi
+    cpu: 250m
+    memory: 768Mi
 
 autoscaling:
   enabled: true
-  minReplicas: 2
-  maxReplicas: 3
+  minReplicas: 1
+  maxReplicas: 2
   targetCPUUtilizationPercentage: 70
   targetMemoryUtilizationPercentage: 70
 
 ingress:
   hosts:
     - host: api.opsera-test.opsera.io
-      paths: [/]
+      paths: 
+      - path: /hooks(/|$)(.*)
 
 NODE_ENV: testing
