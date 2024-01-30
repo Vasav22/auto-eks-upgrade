@@ -18,5 +18,5 @@ helm upgrade opsera-node-webhook-consumer-service . --install \
 
 helm upgrade opsera-node-webhook-consumer-service . \
         -n microservices --install \
-        --set image.tag=dev_3 \
+        --set image.tag=dev_7 \
         -f values-opsera-dev-microservices.yaml

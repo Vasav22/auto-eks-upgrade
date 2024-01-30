@@ -31,7 +31,6 @@ spec:
     - host: {{ .host | quote }}
       http:
         paths:
-        {{- range .paths }}
           - path: /hooks(/|$)(.*)
             pathType: ImplementationSpecific
             backend:
@@ -39,6 +38,5 @@ spec:
                 name: {{ $fullName }}
                 port: 
                   number: {{ $svcPort }}
-        {{- end }}
   {{- end }}
 {{- end }}
