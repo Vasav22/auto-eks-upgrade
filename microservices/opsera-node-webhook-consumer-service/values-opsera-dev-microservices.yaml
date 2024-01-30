@@ -13,7 +13,5 @@ autoscaling:
 ingress:
   hosts:
     - host: api.opsera-dev.opsera.io
-      paths: 
-      - path: /hooks(/|$)(.*)
 
 NODE_ENV: testing

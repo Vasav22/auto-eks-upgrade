@@ -1,5 +1,3 @@
 ingress:
   hosts:
     - host: app.opsera.io
-      paths: 
-      - path: /hooks(/|$)(.*)
