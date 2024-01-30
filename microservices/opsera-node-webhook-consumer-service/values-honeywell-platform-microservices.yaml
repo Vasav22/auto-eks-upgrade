@@ -2,16 +2,3 @@ ingress:
   hosts:
     - host: api.honeywell.opsera.io
       paths: [/]
-
-resources:
-  limits:
-    cpu: 3300m
-    memory: 14080Mi
-  requests:
-    cpu: 3300m
-    memory: 14080Mi
-
-autoscaling:
-  enabled: true
-  minReplicas: 4
-  maxReplicas: 4
