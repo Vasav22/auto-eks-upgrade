@@ -4,21 +4,6 @@
 
 replicaCount: 1
 
-redis:
-  image:
-    repository: redis
-    pullPolicy: Always
-    tag: 6.0-rc3-alpine
-    
-  port: 6379
-  resources:
-    limits:
-      cpu: 500m
-      memory: 2Gi
-    requests:
-      cpu: 100m
-      memory: 1Gi
-
 image:
   repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera-node-webhook-consumer-service
   pullPolicy: Always
