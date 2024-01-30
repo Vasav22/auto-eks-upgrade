@@ -1,6 +1,7 @@
 ingress:
   hosts:
     - host: api.opsera-uat.opsera.io
-      paths: [/]
+      paths: 
+      - path: /hooks(/|$)(.*)
 
 NODE_ENV: staging

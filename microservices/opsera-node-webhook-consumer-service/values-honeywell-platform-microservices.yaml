@@ -1,4 +1,5 @@
 ingress:
   hosts:
-    - host: api.honeywell.opsera.io
-      paths: [/]
+    - host: api.honeywell.opsera..io
+      paths: 
+      - path: /hooks(/|$)(.*)

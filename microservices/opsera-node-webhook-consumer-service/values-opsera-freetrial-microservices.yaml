@@ -1,4 +1,5 @@
 ingress:
   hosts:
-    - host: api.freetrial.opsera.io
-      paths: [/]
+    - host: api.freetrial.opsera..io
+      paths: 
+      - path: /hooks(/|$)(.*)
