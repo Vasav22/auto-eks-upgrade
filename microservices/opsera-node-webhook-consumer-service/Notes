@@ -15,3 +15,8 @@ helm upgrade opsera-node-webhook-consumer-service . --install \
         -n microservices --set DOCKER_ENV=kubernetes \
         --set image.tag=638d33bf46bac00aa06aa55ac9618255601a3dfe \
         -f values-honeywell-platform-microservices.yaml
+
+helm upgrade opsera-node-webhook-consumer-service . \
+        -n microservices --install \
+        --set image.tag=dev_3 \
+        -f values-opsera-dev-microservices.yaml

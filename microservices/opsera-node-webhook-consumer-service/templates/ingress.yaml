@@ -32,8 +32,8 @@ spec:
       http:
         paths:
         {{- range .paths }}
-          - path: {{ . }}
-            pathType: Prefix
+          - path: /hooks
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ $fullName }}
