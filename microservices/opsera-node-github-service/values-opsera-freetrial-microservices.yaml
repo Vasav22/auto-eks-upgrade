@@ -1,0 +1,3 @@
+ingress:
+  hosts:
+    - host: api.freetrial.opsera.io

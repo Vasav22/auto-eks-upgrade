@@ -1,0 +1,9 @@
+autoscaling:
+  minReplicas: 1
+
+ingress:
+  hosts:
+    - host: api.opsera-uat.opsera.io
+
+#NODE_ENV: staging
+APP_ENV: staging
