@@ -46,12 +46,12 @@ ingress:
     nginx.ingress.kubernetes.io/session-cookie-expires: "172800"
     nginx.ingress.kubernetes.io/session-cookie-max-age: "172800"
     nginx.ingress.kubernetes.io/session-cookie-secure: "true"
-    #nginx.ingress.kubernetes.io/rewrite-target: /$2 
+    # nginx.ingress.kubernetes.io/rewrite-target: /$2 
     # kubernetes.io/tls-acme: "true"
   hosts:
     - host: chart-example.local
       paths: 
-      - path: /hooks/(.*)
+      - path: /hooks/.*
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
