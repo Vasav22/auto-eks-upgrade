@@ -32,7 +32,8 @@ spec:
       http:
         paths:
         {{- range .paths }}
-          - path: /(?!hooks).*
+#          - path: /(?!hooks).*
+          - path: {{ . }}
             pathType: Prefix
             backend:
               service:
