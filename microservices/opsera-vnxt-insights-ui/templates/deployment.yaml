@@ -76,7 +76,7 @@ spec:
                             n=${n#*REACT_ENV_}
                             v=${v%/}
                             echo $n
-                            find /usr/local/apache2/htdocs -type f | xargs sed -i  "s|ENV_${n}|${v}|g"
+                            find /usr/local/apache2/htdocs -type f -name *.js | xargs sed -i  "s|ENV_${n}|${v}|g"
                         fi
                     done < <(env -0)
                 # command: [ '/bin/sh', 'ls; while IFS="=" read -r -d "" n v; do find /usr/local/apache2/htdocs -type f | xargs sed -i  "s|ENV_${n}|${v}|g";done < <(env -0)']
