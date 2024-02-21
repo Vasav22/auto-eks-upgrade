@@ -4,5 +4,7 @@ ingress:
       paths:
         - path: /vnext
           pathType: ImplementationSpecific
+        - path: /nx
+          pathType: ImplementationSpecific
 
 NODE_ENV: staging
