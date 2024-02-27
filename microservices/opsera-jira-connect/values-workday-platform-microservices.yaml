@@ -1,0 +1,6 @@
+ingress:
+  hosts:
+    - host: jira-connect.workday-platform.opsera.io
+      paths:
+        - path: /
+          pathType: ImplementationSpecific

@@ -1,0 +1,4 @@
+ingress:
+  hosts:
+    - host: app.workday.opsera.io
+      paths: [/data-migration-file/]

@@ -1,0 +1,6 @@
+ingress:
+  hosts:
+    - host: node-scheduler.workday-platform-private.opsera.io
+      paths:
+        - path: /
+          pathType: ImplementationSpecific

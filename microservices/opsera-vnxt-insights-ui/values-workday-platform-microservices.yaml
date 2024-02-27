@@ -1,8 +1,8 @@
 ingress:
   hosts:
-    - host: portal.workday.opsera.io
+    - host: vnext-insights-api.workday-platform.opsera.io
       paths:
         - path: /vnext
           pathType: ImplementationSpecific
         - path: /nx
-          pathType: ImplementationSpecific          
+          pathType: ImplementationSpecific
