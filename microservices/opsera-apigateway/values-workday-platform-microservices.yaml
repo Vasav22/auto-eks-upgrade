@@ -1,0 +1,15 @@
+resources:
+  limits:
+    cpu: 1000m
+  requests:
+    cpu: 250m
+
+autoscaling:
+  targetCPUUtilizationPercentage: 240
+
+ingress:
+  hosts:
+    - host: apigateway.workday-platform-private.opsera.io
+      paths:
+        - path: /
+          pathType: ImplementationSpecific

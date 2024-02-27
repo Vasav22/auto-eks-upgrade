@@ -1,0 +1,4 @@
+ingress:
+  hosts:
+    - host: vnext-insights-api.workday-platform.opsera.io
+      paths: [/]
