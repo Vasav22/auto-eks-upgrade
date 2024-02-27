@@ -1,6 +1,6 @@
 ingress:
   hosts:
-    - host: portal.workday.opsera.io
+    - host: portal.honeywell.opsera.io
       paths:
         - path: /vnext
           pathType: ImplementationSpecific
