@@ -5,13 +5,13 @@ ingress:
 
 resources:
   limits:
-    cpu: 3300m
-    memory: 14080Mi
+    cpu: 1500m
+    memory: 7Gi
   requests:
-    cpu: 3300m
-    memory: 14080Mi
+    cpu: 1000m
+    memory: 7Gi
 
 autoscaling:
   enabled: true
-  minReplicas: 4
-  maxReplicas: 4
+  minReplicas: 3
+  maxReplicas: 3
