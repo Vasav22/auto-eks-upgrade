@@ -9,8 +9,8 @@ helm upgrade opsera-${service_name} . \
         -f ${values_file_path} 
 
 
-kubectl -n microservices get po -l app.kubernetes.io/name=opsera-node-github-service
+kubectl -n microservices get po -l app.kubernetes.io/name=opsera-node-github-actions-service
 
-helm upgrade opsera-node-github-service . \
+helm upgrade opsera-node-github-actions-service . \
         -n microservices --install --set image.tag=dev_9 \
         -f values-opsera-dev-microservices.yaml

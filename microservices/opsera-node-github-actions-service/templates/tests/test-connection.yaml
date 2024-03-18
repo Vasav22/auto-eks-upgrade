@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "opsera-node-github-actions-service.fullname" . }}-test-connection"
+  labels:
+    {{- include "opsera-node-github-actions-service.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['{{ include "opsera-node-github-actions-service.fullname" . }}:{{ .Values.service.port }}']
+  restartPolicy: Never
