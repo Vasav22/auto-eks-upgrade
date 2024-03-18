@@ -32,7 +32,7 @@ spec:
       http:
         paths:
           - path: /hooks/.*
-            pathType: Prefix
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ $fullName }}
