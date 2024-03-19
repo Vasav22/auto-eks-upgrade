@@ -53,6 +53,11 @@ spec:
             value: {{default "production" .Values.APP_ENV }}
           - name: "PORT"
             value: "{{ .Values.service.port }}"
+          - name: "OPSERA_KAFKA_CLIENT_ID"
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.labels['app.kubernetes.io/name']
           {{- include "ms.extraSecretEnvironmentVars" .Values | nindent 10 }}
           volumeMounts:
           - name: microservices-efs
