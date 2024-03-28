@@ -32,7 +32,7 @@ spec:
       http:
         paths:
         {{- range .paths }}
-          - path: /(?!hooks|ghahooks).*
+          - path: /
             pathType: ImplementationSpecific
             backend:
               service:

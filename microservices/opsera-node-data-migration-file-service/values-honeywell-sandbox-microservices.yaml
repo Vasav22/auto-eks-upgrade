@@ -1,4 +1,3 @@
 ingress:
   hosts:
     - host: api.honeywell-sandbox.opsera.io
-      paths: [/data-migration-file/]

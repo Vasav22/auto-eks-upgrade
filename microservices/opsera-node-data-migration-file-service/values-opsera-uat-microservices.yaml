@@ -5,6 +5,5 @@ autoscaling:
 ingress:
   hosts:
     - host: api.opsera-uat.opsera.io
-      paths: [/data-migration-file/]
 
 NODE_ENV: staging

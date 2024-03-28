@@ -41,15 +41,16 @@ ingress:
   enabled: true
   annotations:
     kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/proxy-body-size: 10m
-    # nginx.ingress.kubernetes.io/affinity: "cookie"
-    # nginx.ingress.kubernetes.io/session-cookie-name: "INGRESSCOOKIENODE"
-    # nginx.ingress.kubernetes.io/session-cookie-expires: "172800"
-    # nginx.ingress.kubernetes.io/session-cookie-max-age: "172800"
-    # kubernetes.io/tls-acme: "true"
+    nginx.ingress.kubernetes.io/affinity: "cookie"
+    nginx.ingress.kubernetes.io/session-cookie-name: "INGRESSNODEAPP"
+    nginx.ingress.kubernetes.io/session-cookie-expires: "172800"
+    nginx.ingress.kubernetes.io/session-cookie-max-age: "172800"
+    nginx.ingress.kubernetes.io/session-cookie-secure: "true"
+    nginx.ingress.kubernetes.io/use-regex: "false"
   hosts:
     - host: chart-example.local
-      paths: [/]
+      paths: 
+      - path: /data-migration-file
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
