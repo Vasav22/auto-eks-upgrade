@@ -96,5 +96,8 @@ extraSecretEnvironmentVars:
   - secretName: microservices-ms-env
     envName: OPSERA_PLATFORM_DOMAIN
     secretKey: OPSERA_PLATFORM_DOMAIN
+  - secretName: microservices-ms-env
+    envName: OPSERA_ENV
+    secretKey: OPSERA_ENV
 
 serviceCategory: Platform_Services
