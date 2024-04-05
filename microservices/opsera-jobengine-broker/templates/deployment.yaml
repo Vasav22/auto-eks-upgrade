@@ -56,6 +56,8 @@ spec:
           - name: "REST_PORT"
             value: "{{ .Values.service.port  }}"
           {{- include "ms.extraSecretEnvironmentVars" .Values | nindent 10 }}
+          - name: "GIT_SHA"
+            value: {{ .Values.image.tag }}
           volumeMounts:
           - name: microservices-efs
             mountPath: /apps/OpsERA/logs/components/
