@@ -19,7 +19,7 @@ spec:
         - |
             /bin/sh <<'EOF'
             ### Install curl
-            apk update && apk add --no-cache curl jq
+            apk update && apk add --no-cache curl jq kubectl
 
             ### Wait for Data Plane Vault to be available
             while [ true ]
@@ -37,8 +37,8 @@ spec:
                 fi
             done
 
-            ### Get the service account token from pod filesystem
-            KUBE_TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token | base64 -w 0)
+            ### Get the service account token from secret
+            KUBE_TOKEN=$(kubectl get secret -n {{ .Values.k8sIntegratorNamespace }} {{ include "k8s-integrator-volume.fullname" . }} -o jsonpath='{.data.token}')
 
             ### Write to platform vault
             # .Values.microservice_url comes from
