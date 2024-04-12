@@ -9,3 +9,5 @@ clusterName: opsera-test-platform
 
 datadogApm:
   enabled: false
+
+CONTROL_PLANE_ENV: test

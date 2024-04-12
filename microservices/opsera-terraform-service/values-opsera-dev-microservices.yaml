@@ -14,3 +14,4 @@ autoscaling:
   targetMemoryUtilizationPercentage: 160
 
 HELM_GIT_BRANCH: master-dev
+CONTROL_PLANE_ENV: dev

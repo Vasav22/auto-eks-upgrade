@@ -4,3 +4,5 @@ autoscaling:
   maxReplicas: 5
 
 HELM_GIT_BRANCH: master-v1.22
+
+CONTROL_PLANE_ENV: uat
