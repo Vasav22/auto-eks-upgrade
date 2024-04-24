@@ -9,4 +9,4 @@ resources:
 autoscaling:
   enabled: true
   targetMemoryUtilizationPercentage: 180
-  minReplicas: 3
+  minReplicas: 6
