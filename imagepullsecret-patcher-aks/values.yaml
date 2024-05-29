@@ -2,12 +2,12 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-dockerconfigjson: ""
+.dockerconfigjson: "eyAiYXV0aHMiOiB7ICI0NDA5NTM5Mzc2MTcuZGtyLmVjci51cy1lYXN0LTIuYW1hem9uYXdzLmNvbSI6IHsgImF1dGgiOiAiIiwgInBhc3N3b3JkIjogIiIsICJ1c2VybmFtZSI6ICJ0ZXN0IiB9IH0gfQ=="
 
 replicaCount: 1
 
 image:
-  repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/imagepullsecret-patcher
+  repository: public.ecr.aws/e7u7c9l1/imagepullsecret-patcher
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: "v0.14"
