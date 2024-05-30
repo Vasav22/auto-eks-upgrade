@@ -8,7 +8,7 @@ image:
   repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera-jobengine-core
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  tag: "a50ff906364a54ddc3e1f6428a0221ff8cb5e599"
 
 imagePullSecrets: []
 nameOverride: ""
