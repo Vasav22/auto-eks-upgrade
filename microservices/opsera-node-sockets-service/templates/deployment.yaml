@@ -63,6 +63,8 @@ spec:
             value: {{default "production" .Values.NODE_ENV }}
           - name: "PORT"
             value: "{{ .Values.service.port }}"
+          - name: "GIT_SHA"
+            value: {{ .Values.image.tag }}
           {{- include "ms.extraSecretEnvironmentVars" .Values | nindent 10 }}
           volumeMounts:
           - name: microservices-efs
