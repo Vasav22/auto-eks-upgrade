@@ -22,13 +22,28 @@ spec:
         - /bin/sh
         - -c
         - |
-          set -x
+          kubectl delete secret {{ .Values.aws.secretName }}
           kubectl create secret generic {{ .Values.aws.secretName }} \
             --from-literal=AWS_ACCOUNT={{ .Values.aws.ecrAccountId }} \
             --from-literal=AWS_ACCESS_KEY_ID={{ .Values.aws.accessKeyId }} \
             --from-literal=AWS_SECRET_ACCESS_KEY={{ .Values.aws.secretAccessKey }} \
             --from-literal=AWS_DEFAULT_REGION={{ .Values.aws.region }} \
             --from-literal=AWS_REGION={{ .Values.aws.region }}
+
+          export AWS_ACCESS_KEY_ID={{ .Values.aws.accessKeyId }}
+          export AWS_SECRET_ACCESS_KEY={{ .Values.aws.secretAccessKey }}
+          export AWS_REGION={{ .Values.aws.region }}
+
+          DOCKER_REGISTRY_SERVER=https://{{ .Values.aws.ecrAccountId }}.dkr.ecr.{{ .Values.aws.region }}.amazonaws.com
+          DOCKER_USER=AWS
+          DOCKER_PASSWORD=$(aws ecr get-login-password --region {{ .Values.aws.region }})
+
+          kubectl delete secret imagepullsecret-patcher -n {{ .Release.Namespace }} || true
+          kubectl create secret docker-registry imagepullsecret-patcher -n {{ .Release.Namespace }} \
+              --docker-server=$DOCKER_REGISTRY_SERVER \
+              --docker-username=$DOCKER_USER \
+              --docker-password=$DOCKER_PASSWORD \
+              --docker-email=no@email.local
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
         name: create-aws-keys
       serviceAccount: {{ include "ecr-cronjob.serviceAccountName" . }}
