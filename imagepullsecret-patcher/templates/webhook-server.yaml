@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webhook-server
+  namespace: imagepullsecret-patcher
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webhook-server
+  template:
+    metadata:
+      labels:
+        app: webhook-server
+    spec:
+      containers:
+        - name: webhook-server
+          image: public.ecr.aws/e7u7c9l1/imagepullsecret-mutating-webhook:latest
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: webhook-server-tls
+              mountPath: /etc/webhook/tls
+              readOnly: true
+      volumes:
+        - name: webhook-server-tls
+          secret:
+            secretName: webhook-server-tls
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webhook-server
+  namespace: imagepullsecret-patcher
+spec:
+  ports:
+    - port: 443
+      targetPort: 8080
+  selector:
+    app: webhook-server
