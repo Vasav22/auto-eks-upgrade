@@ -3,9 +3,6 @@ kind: ServiceAccount
 metadata:
   name: webhook-cert-sa
   namespace: imagepullsecret-patcher
-  annotations:
-    "helm.sh/hook": pre-install,pre-upgrade
-    "helm.sh/hook-delete-policy": before-hook-creation
   labels:
     app: webhook-cert-sa
 ---
@@ -13,9 +10,6 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: webhook-cert-sa-cluster-role
-  annotations:
-    "helm.sh/hook": pre-install,pre-upgrade
-    "helm.sh/hook-delete-policy": before-hook-creation
 rules:
   - apiGroups: [ "admissionregistration.k8s.io" ]
     resources: [ "mutatingwebhookconfigurations" ]
@@ -28,9 +22,6 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: webhook-cert-sa-role-binding
-  annotations:
-    "helm.sh/hook": pre-install,pre-upgrade
-    "helm.sh/hook-delete-policy": before-hook-creation
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -43,10 +34,10 @@ subjects:
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: webhook-cert-setup
+  name: webhook-cert-setup-{{ randAlphaNum 5 | lower }}
   namespace: imagepullsecret-patcher
   annotations:
-    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook": post-install,post-upgrade
     "helm.sh/hook-delete-policy": before-hook-creation
 spec:
   template:
@@ -103,16 +94,22 @@ spec:
               -extensions v3_ext -extfile csr.conf -sha256
 
             echo "delete webhook-server-tls if exist"
-            kubectl delete secret tls webhook-server-tls -n imagepullsecret-patcher || echo "true"
+            kubectl delete secret webhook-server-tls -n imagepullsecret-patcher || echo "true"
             echo "create webhook-server-tls"
             kubectl create secret tls webhook-server-tls --cert=server.crt --key=server.key -n imagepullsecret-patcher
+            echo "restart webhook-server"
+            kubectl delete pod -n imagepullsecret-patcher $(kubectl get pod -n imagepullsecret-patcher | grep webhook-server | awk '{print $1}')
             mutatingPatchString='['
-            mutatingPatchString=$mutatingPatchString'{"op": "replace", "path": "/webhooks/0/clientConfig/caBundle", "value":"{{CA_BUNDLE}}"}, '
+            mutatingPatchString=$mutatingPatchString'{"op": "replace", "path": "/webhooks/0/clientConfig/caBundle", "value":"__CA_BUNDLE__"}, '
             mutatingPatchString=${mutatingPatchString%, }']'
-            mutatingPatchString=$(echo ${mutatingPatchString} | sed "s|{{CA_BUNDLE}}|${caBundle}|g")
+
+            caBundle=$(cat ca.crt | openssl enc -a -A)
+            mutatingPatchString=$(echo ${mutatingPatchString} | sed "s|__CA_BUNDLE__|${caBundle}|g")
+            echo "patch string is..."
+            echo $mutatingPatchString
 
             echo "patching ca bundle for mutating webhook configuration..."
-            kubectl patch mutatingwebhookconfiguration webhook-server.imagepullsecret-patcher.svc --type='json' -p="${mutatingPatchString}"
+            kubectl patch mutatingwebhookconfiguration add-imagepullsecret --type='json' -p="${mutatingPatchString}"
 
           imagePullPolicy: IfNotPresent
       restartPolicy: Never
