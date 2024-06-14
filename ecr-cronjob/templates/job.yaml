@@ -44,6 +44,9 @@ spec:
               --docker-username=$DOCKER_USER \
               --docker-password=$DOCKER_PASSWORD \
               --docker-email=no@email.local
+
+          echo "sleeping for 30 seconds"
+          sleep 30
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
         name: create-aws-keys
       serviceAccount: {{ include "ecr-cronjob.serviceAccountName" . }}
