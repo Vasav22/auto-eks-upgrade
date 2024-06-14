@@ -1,0 +1,69 @@
+# templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: redis-config
+data:
+  redis.conf: |-
+    # Redis configuration file example
+
+    # Specify the listening port
+    port 6379
+
+    # Bind to specific network interfaces (default is localhost)
+    # bind 127.0.0.1
+
+    # Log level can be one of: debug, verbose, notice, warning
+    loglevel notice
+
+    # Specify the log file location
+    # logfile "/var/log/redis/redis.log"
+
+    # Set the working directory for the dump files and AOF
+    dir "/data/"
+
+    # Enable Append-Only File (AOF) persistence
+    appendonly yes
+
+    # Specify the fsync policy for AOF:
+    # appendfsync always  : Fsync every write operation (slow, safest)
+    # appendfsync everysec: Fsync every second (default, good compromise)
+    # appendfsync no      : Let the OS manage (fastest, less safe)
+    appendfsync everysec
+
+    appendfilename "appendonly.aof"
+    # Automatic AOF rewrite configuration:
+    # Rewrite the AOF file if it grows by this percentage
+    auto-aof-rewrite-percentage 100
+
+    # Minimum size of the AOF file to trigger a rewrite
+    auto-aof-rewrite-min-size 64mb
+
+    # RDB persistence is also enabled by default, for snapshots:
+    # Save the DB if both the given number of seconds and write operations against the DB occurred.
+    save 900 1
+    save 300 10
+    save 60 10000
+
+    # Specify the RDB filename
+    dbfilename dump.rdb
+
+    # Disable protected mode if you want to allow connections from non-local IPs
+    # protected-mode no
+
+    # Security: Set a password to require clients to authenticate with AUTH
+    # requirepass yourpassword
+
+    # Maximum memory usage (commented out by default)
+    maxmemory 1gb
+    maxmemory-policy noeviction
+
+    # Maximum number of connected clients (default is 10000)
+    maxclients 10000
+
+    # Background saving script
+    # unixsocket /tmp/redis.sock
+    # unixsocketperm 700
+
+    # Include additional configuration files
+    # include /path/to/other.conf

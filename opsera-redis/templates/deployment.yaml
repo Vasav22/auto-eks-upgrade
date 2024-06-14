@@ -35,8 +35,8 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           {{- if eq .Values.Platform "dataplane" }}
           command: ["redis-server"]
-            #args: ["--requirepass", {{ .Values.REDIS_PASSWORD }} ]
           args:
+            - "/usr/local/etc/redis/redis.conf"
             - "--requirepass"
             - {{ .Values.REDIS_PASSWORD }}
             - "--save"
@@ -44,8 +44,11 @@ spec:
             - "--appendonly"
             - "yes"
           volumeMounts:
-          - name: redis-data  
-            mountPath: /data
+            - name: redis-data  
+              mountPath: /data
+            - name: redis-config
+              mountPath: /usr/local/etc/redis/redis.conf
+              subPath: redis.conf
           {{- end }}
           ports:
             - name: http
@@ -56,20 +59,15 @@ spec:
             - name: "REDIS_PASSWORD"
               value: {{ .Values.REDIS_PASSWORD }}
           {{- end }}
-          # livenessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
-          # readinessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
         - name: redis-data
           persistentVolumeClaim:
             claimName: redis-data
+        - name: redis-config
+          configMap:
+            name: redis-config
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
