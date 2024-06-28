@@ -1,0 +1,10 @@
+resources:
+  limits:
+    cpu: "2"
+    memory: 4Gi
+    
+autoscaling:
+  enabled: true
+  targetCPUUtilizationPercentage: 400
+  targetMemoryUtilizationPercentage: 200
+  minReplicas: 3

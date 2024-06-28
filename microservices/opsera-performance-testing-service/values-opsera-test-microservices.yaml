@@ -1,0 +1,14 @@
+resources:
+  limits:
+    cpu: 1000m
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 300
+
+clusterName: opsera-test-platform
+
+datadogApm:
+  enabled: false

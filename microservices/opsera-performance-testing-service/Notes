@@ -1,0 +1,5 @@
+helm -n microservices install opsera-terrascan-service .
+
+helm -n microservices uninstall opsera-terrascan-service
+
+helm -n microservices upgrade opsera-terrascan-service .
