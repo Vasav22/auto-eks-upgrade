@@ -1,7 +1,3 @@
-resources:
-  limits:
-    cpu: "2"
-    memory: 4Gi
     
 autoscaling:
   enabled: true

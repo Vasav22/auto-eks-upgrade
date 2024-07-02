@@ -1,6 +1,3 @@
-resources:
-  limits:
-    memory: 3Gi
 
 autoscaling:
   enabled: true

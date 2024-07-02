@@ -51,11 +51,11 @@ ingress:
 
 resources:
   limits:
-    cpu: 1250m
-    memory: 2Gi
-  requests:
     cpu: 250m
     memory: 1Gi
+  requests:
+    cpu: 100m
+    memory: 512MB
 
 nodeSelector:
   Name: microservice-node
@@ -82,4 +82,4 @@ extraSecretEnvironmentVars:
     envName: OPSERA_HAZELCAST_K8_SERVICE_DNS
     secretKey: OPSERA_HAZELCAST_K8_SERVICE_DNS
 
-serviceCategory: Artifact_CI_Services
+serviceCategory: Testing_Services
