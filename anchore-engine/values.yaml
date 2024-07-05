@@ -428,7 +428,8 @@ anchoreApi:
     # name: Null
     type: ClusterIP
     port: 8228
-    annotations: {}
+    annotations:
+      service.kubernetes.io/topology-mode: auto
     label: {}
 
   # Specify the service account name utilized to run the API pods
@@ -618,7 +619,8 @@ anchoreCatalog:
     # name: Null
     type: ClusterIP
     port: 8082
-    annotations: {}
+    annotations:
+      service.kubernetes.io/topology-mode: auto
     labels: {}
 
   # resources:
@@ -673,7 +675,8 @@ anchorePolicyEngine:
     # name: Null
     type: ClusterIP
     port: 8087
-    annotations: {}
+    annotations:
+      service.kubernetes.io/topology-mode: auto
     labels: {}
 
   # resources:
@@ -710,7 +713,8 @@ anchoreSimpleQueue:
     # name: Null
     type: ClusterIP
     port: 8083
-    annotations: {}
+    annotations:
+      service.kubernetes.io/topology-mode: auto
     labels: {}
 
   # resources:
@@ -923,7 +927,8 @@ anchoreEnterpriseFeeds:
     # name: Null
     type: ClusterIP
     port: 8448
-    annotations: {}
+    annotations:
+      service.kubernetes.io/topology-mode: auto
     labels: {}
 
   # resources:
@@ -1278,7 +1283,8 @@ anchoreEnterpriseUi:
     # name: Null
     type: ClusterIP
     port: 80
-    annotations: {}
+    annotations:
+      service.kubernetes.io/topology-mode: auto
     labels: {}
     sessionAffinity: ClientIP
 
