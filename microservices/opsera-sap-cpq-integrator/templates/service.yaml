@@ -5,6 +5,7 @@ metadata:
   labels:
     {{- include "opsera-sap-cpq-integrator.labels" . | nindent 4 }}
   annotations:
+    service.kubernetes.io/topology-mode: auto
     {{- include "opsera-sap-cpq-integrator.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}

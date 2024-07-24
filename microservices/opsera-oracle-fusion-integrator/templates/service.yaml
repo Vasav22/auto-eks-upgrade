@@ -5,6 +5,7 @@ metadata:
   labels:
     {{- include "opsera-oracle-fusion-integrator.labels" . | nindent 4 }}
   annotations:
+    service.kubernetes.io/topology-mode: auto
     {{- include "opsera-oracle-fusion-integrator.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}

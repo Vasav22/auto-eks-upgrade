@@ -5,6 +5,7 @@ metadata:
   labels:
     {{- include "opsera-slack-endpoint.labels" . | nindent 4 }}
   annotations:
+    service.kubernetes.io/topology-mode: auto
     {{- include "opsera-slack-endpoint.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}

@@ -725,7 +725,8 @@ service:
   externalTrafficPolicy: Cluster
   ## @param service.annotations Additional custom annotations for Kafka service
   ##
-  annotations: {}
+  annotations:
+    service.kubernetes.io/topology-mode: auto
   ## Headless service properties
   ##
   headless:
@@ -741,6 +742,7 @@ service:
   ## @param service.extraPorts Extra ports to expose in the Kafka service (normally used with the `sidecar` value)
   ##
   extraPorts: []
+
 ## External Access to Kafka brokers configuration
 ##
 externalAccess:

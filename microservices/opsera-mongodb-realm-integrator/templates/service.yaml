@@ -5,6 +5,7 @@ metadata:
   labels:
     {{- include "opsera-mongodb-realm-integrator.labels" . | nindent 4 }}
   annotations:
+    service.kubernetes.io/topology-mode: auto
     {{- include "opsera-mongodb-realm-integrator.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}

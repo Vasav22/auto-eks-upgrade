@@ -5,6 +5,7 @@ metadata:
   labels:
     {{- include "opsera-node-analytics-api.labels" . | nindent 4 }}
   annotations:
+    service.kubernetes.io/topology-mode: auto
     {{- include "opsera-node-analytics-api.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}

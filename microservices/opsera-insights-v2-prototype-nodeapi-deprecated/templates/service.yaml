@@ -5,6 +5,7 @@ metadata:
   labels:
     {{- include "opsera-insights-v2-prototype-nodeapi.labels" . | nindent 4 }}
   annotations:
+    service.kubernetes.io/topology-mode: auto
     {{- include "opsera-insights-v2-prototype-nodeapi.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}

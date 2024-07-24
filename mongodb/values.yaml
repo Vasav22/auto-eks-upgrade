@@ -123,7 +123,8 @@ service:
   # name: svc-mongo
   ## Provide any additional annotations which may be required.
   ## The value is evaluated as a template, so, for example, the value can depend on .Release or .Chart
-  annotations: {}
+  annotations:
+    service.kubernetes.io/topology-mode: auto
   type: ClusterIP
   # clusterIP: None
   port: 27017
