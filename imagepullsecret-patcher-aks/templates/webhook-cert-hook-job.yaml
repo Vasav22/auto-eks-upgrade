@@ -1,0 +1,85 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: webhook-cert-setup-{{ randAlphaNum 5 | lower }}
+  namespace: imagepullsecret-patcher
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  template:
+    spec:
+      serviceAccountName: webhook-server-sa
+      containers:
+        - name: webhook-cert-setup
+          image: public.ecr.aws/e7u7c9l1/aws-kubectl:1.29.5
+          command:
+          - /bin/bash
+          - -c
+          - |
+            cd /tmp
+            echo "current working directory $(pwd)"
+            openssl genrsa -out ca.key 2048
+            openssl req -x509 -new -nodes -key ca.key -subj "/CN=webhook-server.imagepullsecret-patcher.svc" -days 10000 -out ca.crt
+            openssl genrsa -out server.key 2048
+            cat  >csr.conf << EOF
+            [ req ]
+            default_bits = 2048
+            prompt = no
+            default_md = sha256
+            req_extensions = req_ext
+            distinguished_name = dn
+
+            [ dn ]
+            C = US
+            ST = CA
+            L = LA
+            O = opsera
+            OU = opseraplatform
+            CN = webhook-server.imagepullsecret-patcher.svc
+
+            [ req_ext ]
+            subjectAltName = @alt_names
+
+            [ alt_names ]
+            DNS.1 = webhook-server
+            DNS.2 = webhook-server.imagepullsecret-patcher
+            DNS.3 = webhook-server.imagepullsecret-patcher.svc
+            DNS.4 = webhook-server.imagepullsecret-patcher.svc.cluster
+            DNS.5 = webhook-server.imagepullsecret-patcher.svc.cluster.local
+
+            [ v3_ext ]
+            authorityKeyIdentifier=keyid,issuer:always
+            basicConstraints=CA:FALSE
+            keyUsage=keyEncipherment,dataEncipherment
+            extendedKeyUsage=serverAuth,clientAuth
+            subjectAltName=@alt_names
+            EOF
+            openssl req -new -key server.key -out server.csr -config csr.conf
+            openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key \
+              -CAcreateserial -out server.crt -days 10000 \
+              -extensions v3_ext -extfile csr.conf -sha256
+
+            echo "delete webhook-server-tls if exist"
+            kubectl delete secret webhook-server-tls -n imagepullsecret-patcher || echo "true"
+            echo "create webhook-server-tls"
+            kubectl create secret tls webhook-server-tls --cert=server.crt --key=server.key -n imagepullsecret-patcher
+            echo "restart webhook-server"
+            kubectl delete pod -n imagepullsecret-patcher $(kubectl get pod -n imagepullsecret-patcher | grep webhook-server | awk '{print $1}')
+            mutatingPatchString='['
+            mutatingPatchString=$mutatingPatchString'{"op": "replace", "path": "/webhooks/0/clientConfig/caBundle", "value":"__CA_BUNDLE__"}, '
+            mutatingPatchString=${mutatingPatchString%, }']'
+
+            caBundle=$(cat ca.crt | openssl enc -a -A)
+            mutatingPatchString=$(echo ${mutatingPatchString} | sed "s|__CA_BUNDLE__|${caBundle}|g")
+            echo "patch string is..."
+            echo $mutatingPatchString
+
+            echo "patching ca bundle for mutating webhook configuration..."
+            kubectl patch mutatingwebhookconfiguration add-imagepullsecret --type='json' -p="${mutatingPatchString}"
+            echo "sleeping for 10 seconds"
+            sleep 10
+
+          imagePullPolicy: IfNotPresent
+      restartPolicy: Never
+  backoffLimit: 0

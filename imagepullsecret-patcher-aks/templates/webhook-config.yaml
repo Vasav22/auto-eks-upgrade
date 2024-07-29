@@ -1,0 +1,21 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: add-imagepullsecret
+webhooks:
+  - name: webhook-server.imagepullsecret-patcher.svc
+    clientConfig:
+      service:
+        name: webhook-server
+        namespace: imagepullsecret-patcher
+        path: "/mutate"
+        port: 443
+      caBundle: VGhpcyB3aWxsIGJlIHJlcGxhY2VkIGJ5IGhlbG0gaG9vayBqb2IK
+    rules:
+      - operations: ["CREATE"]
+        apiGroups: [""]
+        apiVersions: ["v1"]
+        resources: ["serviceaccounts"]
+    admissionReviewVersions: ["v1"]
+    sideEffects: None
+    timeoutSeconds: 5
