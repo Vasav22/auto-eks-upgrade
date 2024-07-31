@@ -1,0 +1,17 @@
+##########################################
+# Kubernetes Integrator Volume
+##########################################
+
+k8sIntegratorName: efs-k8s-integrator-volume
+
+k8sIntegratorVolumeName: opsera-shared-workspace
+
+k8sIntegratorNamespace: opsera-k8-ns
+
+volumeSize: 1024Gi
+
+storageClass: azurefile-csi
+
+accessModes: [ReadWriteMany]
+
+sharedWorkspaceBrowserName: shared-workspace-browser
