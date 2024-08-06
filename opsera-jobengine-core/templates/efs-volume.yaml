@@ -1,3 +1,4 @@
+{{- if eq .Values.CLOUD_PROVIDER "AWS" }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -37,3 +38,4 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: efs-sc
   volumeMode: Filesystem
+{{- end }}

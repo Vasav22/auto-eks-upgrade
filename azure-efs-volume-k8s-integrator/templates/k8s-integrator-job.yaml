@@ -1,0 +1,67 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "k8s-integrator-volume.fullname" . }}-update-platform-vault
+  namespace: {{ .Values.k8sIntegratorNamespace }}
+  labels:
+    {{- include "k8s-integrator-volume.labels" . | nindent 4 }}
+spec:
+  template:
+    spec:
+      serviceAccount: {{ include "k8s-integrator-volume.fullname" . }}
+      serviceAccountName: {{ include "k8s-integrator-volume.fullname" . }}
+      containers:
+      - name: update-platform-vault
+        image: alpine
+        command:
+        - sh
+        - "-c"
+        - |
+            /bin/sh <<'EOF'
+            ### Install curl
+            apk update && apk add --no-cache curl jq kubectl
+
+            ### Wait for Data Plane Vault to be available
+            while [ true ]
+            do
+                initialized=$(curl --location http://vault.opsera.svc.cluster.local:8200/v1/sys/health -s | jq .initialized)
+                sealed=$(curl --location http://vault.opsera.svc.cluster.local:8200/v1/sys/health -s | jq .sealed)
+                if [[ $initialized == "true" && $sealed == "false" ]]; then
+                    echo "Vault is initialized and not Sealed, updating Kubernetes URL and Kubernetes Token into Vault"
+                    echo "Sleeping for 2 minutes before breaking"
+                    sleep 120
+                    break
+                else
+                    echo "Vault is not initialized or Sealed, waiting for 5 seconds before retrying..."
+                    sleep 5
+                fi
+            done
+
+            ### Get the service account token from secret
+            KUBE_TOKEN=$(kubectl get secret -n {{ .Values.k8sIntegratorNamespace }} {{ include "k8s-integrator-volume.fullname" . }} -o jsonpath='{.data.token}')
+
+            ### Write to platform vault
+            # .Values.microservice_url comes from
+            # AWS Secrets --> Kubernetes Secret --> Terraform Service environment variable
+            # --> Terraform apply variables --> Terraform Helm chart resource --> Helm values.
+            # Terraform service adds /write to the url path
+
+            K8S_HOST=$(echo -n {{ .Values.K8S_HOST }} | base64 -w 0)
+            echo "Customer ID: {{ .Values.customer_id }}"
+            echo "Kubernetes Host: ${K8S_HOST}"
+            echo "Kubernetes Service Account Token: ${KUBE_TOKEN}"
+            echo "Connecting to {{ .Values.APIGATEWAY_URL }} to write Kubernetes Cluster URL and Service Account Token into Platform Vault"
+
+            curl --location --request POST '{{ .Values.APIGATEWAY_URL }}' \
+                --header 'accept: application/json' \
+                --header 'Content-Type: application/json' \
+                --data-raw '{
+                    "customerId": "{{ .Values.customer_id }}",
+                    "data": {
+                        "kubernetes-cluster-url": "'$K8S_HOST'",
+                        "kubernetes-cluster-service-token": "'$KUBE_TOKEN'"
+                    }
+                }' -k -s
+            EOF
+      restartPolicy: Never
+  backoffLimit: 4
