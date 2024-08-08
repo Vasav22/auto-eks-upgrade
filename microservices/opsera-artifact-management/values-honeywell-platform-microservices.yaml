@@ -3,7 +3,7 @@
   annotations:
     kubernetes.io/ingress.class: nginx
   hosts:
-    - host: artifact-management.honeywell-sandbox-private.opsera.io
+    - host: artifact-management.honeywell-private.opsera.io
       paths:
         - path: /
           pathType: ImplementationSpecific
