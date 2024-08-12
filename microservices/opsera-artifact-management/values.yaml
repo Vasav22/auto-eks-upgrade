@@ -99,6 +99,7 @@ extraSecretEnvironmentVars:
     secretKey: OPSERA_ENV
 
 serviceCategory: Platform_Services
+OPSERA_ARTIFACT_SQS: NOTCONFIGURED
 
 pdb:
   minAvailable: 1

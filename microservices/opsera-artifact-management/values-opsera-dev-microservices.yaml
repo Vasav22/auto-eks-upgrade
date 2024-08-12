@@ -12,3 +12,5 @@ ingress:
       paths:
         - path: /
           pathType: ImplementationSpecific
+
+OPSERA_ARTIFACT_SQS: opsera-dev-artifact-sqs

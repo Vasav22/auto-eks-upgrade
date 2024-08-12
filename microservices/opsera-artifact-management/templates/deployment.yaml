@@ -64,8 +64,8 @@ spec:
           env:
           - name: "REST_PORT"
             value: "{{ .Values.service.port  }}"
-          - name: "GIT_SHA"
-            value: {{ .Values.image.tag }}
+          - name: "OPSERA_ARTIFACT_SQS"
+            value: {{default "NOTCONFIGURED" .Values.OPSERA_ARTIFACT_SQS }}
           {{- include "ms.extraSecretEnvironmentVars" .Values | nindent 10 }}
           - name: "GIT_SHA"
             value: {{ .Values.image.tag }}

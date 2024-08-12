@@ -7,3 +7,5 @@
       paths:
         - path: /
           pathType: ImplementationSpecific
+
+OPSERA_ARTIFACT_SQS: honeywell-platform-artifact-sqs
