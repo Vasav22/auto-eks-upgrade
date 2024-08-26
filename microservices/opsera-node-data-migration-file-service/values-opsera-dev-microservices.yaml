@@ -9,6 +9,8 @@ autoscaling:
   targetMemoryUtilizationPercentage: 240
 
 ingress:
+  annotations:    
+    nginx.ingress.kubernetes.io/proxy-body-size: 10m
   hosts:
     - host: api.opsera-dev.opsera.io
 
