@@ -5,6 +5,7 @@ metadata:
   labels:
     {{- include "azure-terraform-integrator.labels" . | nindent 4 }}
   annotations:
+    service.kubernetes.io/topology-mode: auto
     {{- include "azure-terraform-integrator.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}

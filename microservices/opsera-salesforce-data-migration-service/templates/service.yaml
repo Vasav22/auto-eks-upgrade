@@ -5,6 +5,7 @@ metadata:
   labels:
     {{- include "opsera-salesforce-data-migration-service.labels" . | nindent 4 }}
   annotations:
+    service.kubernetes.io/topology-mode: auto
     {{- include "opsera-salesforce-data-migration-service.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}

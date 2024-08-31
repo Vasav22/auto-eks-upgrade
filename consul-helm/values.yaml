@@ -548,7 +548,8 @@ server:
     # ```
     #
     # @type: string
-    annotations: null
+    annotations:
+      service.kubernetes.io/topology-mode: auto
 
   # A list of extra environment variables to set within the stateful set.
   # These could be used to include proxy settings required for cloud auto-join

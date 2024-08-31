@@ -5,6 +5,7 @@ metadata:
   labels:
     {{- include "opsera-gitscraper-analytics.labels" . | nindent 4 }}
   annotations:
+    service.kubernetes.io/topology-mode: auto
     {{- include "opsera-gitscraper-analytics.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
