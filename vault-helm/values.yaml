@@ -134,7 +134,7 @@ server:
 
   image:
     repository: "440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera/vault"
-    tag: "1.15.5"
+    tag: "1.17.2"
     # Overrides the default Image Pull Policy
     pullPolicy: Always
 
