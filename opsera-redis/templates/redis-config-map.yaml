@@ -55,7 +55,7 @@ data:
     # requirepass yourpassword
 
     # Maximum memory usage (commented out by default)
-    maxmemory 1gb
+    maxmemory 1600mb
     maxmemory-policy noeviction
 
     # Maximum number of connected clients (default is 10000)
