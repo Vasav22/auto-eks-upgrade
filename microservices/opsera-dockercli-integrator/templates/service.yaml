@@ -5,6 +5,7 @@ metadata:
   labels:
     {{- include "opsera-dockercli-integrator.labels" . | nindent 4 }}
   annotations:
+    service.kubernetes.io/topology-mode: auto
     {{- include "opsera-dockercli-integrator.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}

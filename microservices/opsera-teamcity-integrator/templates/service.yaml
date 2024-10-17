@@ -5,6 +5,7 @@ metadata:
   labels:
     {{- include "opsera-teamcity-integrator.labels" . | nindent 4 }}
   annotations:
+    service.kubernetes.io/topology-mode: auto
     {{- include "opsera-teamcity-integrator.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}

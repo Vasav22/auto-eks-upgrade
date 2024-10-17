@@ -5,6 +5,7 @@ metadata:
   labels:
     {{- include "opsera-mail-service.labels" . | nindent 4 }}
   annotations:
+    service.kubernetes.io/topology-mode: auto
     {{- include "opsera-mail-service.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}

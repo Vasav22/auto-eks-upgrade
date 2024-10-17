@@ -36,4 +36,3 @@ spec:
                   --docker-username=$DOCKER_USER \
                   --docker-password=$DOCKER_PASSWORD \
                   --docker-email=no@email.local
-              done

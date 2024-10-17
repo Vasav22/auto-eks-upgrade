@@ -5,6 +5,7 @@ metadata:
   labels:
     {{- include "opsera-git-gateway-service.labels" . | nindent 4 }}
   annotations:
+    service.kubernetes.io/topology-mode: auto
     {{- include "opsera-git-gateway-service.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}

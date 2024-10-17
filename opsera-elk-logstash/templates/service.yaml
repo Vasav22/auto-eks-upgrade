@@ -4,6 +4,8 @@ metadata:
   name: {{ include "opsera-elk-logstash.fullname" . }}
   labels:
     {{- include "opsera-elk-logstash.labels" . | nindent 4 }}
+  annotations:
+    service.kubernetes.io/topology-mode: auto
 spec:
   type: {{ .Values.service.type }}
   ports:

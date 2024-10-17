@@ -5,6 +5,7 @@ metadata:
   labels:
     {{- include "opsera-pipeline-config.labels" . | nindent 4 }}
   annotations:
+    service.kubernetes.io/topology-mode: auto
     {{- include "opsera-pipeline-config.annotations" . | nindent 4 }}  
 spec:
   type: {{ .Values.service.type }}

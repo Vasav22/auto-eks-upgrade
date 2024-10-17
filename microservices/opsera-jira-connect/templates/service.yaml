@@ -5,6 +5,7 @@ metadata:
   labels:
     {{- include "opsera-jira-connect.labels" . | nindent 4 }}
   annotations:
+    service.kubernetes.io/topology-mode: auto
     {{- include "opsera-jira-connect.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}

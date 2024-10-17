@@ -5,6 +5,7 @@ metadata:
   labels:
     {{- include "opsera-snaplogic-integrator.labels" . | nindent 4 }}
   annotations:
+    service.kubernetes.io/topology-mode: auto
     {{- include "opsera-snaplogic-integrator.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}

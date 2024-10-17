@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "opsera-react-insights.fullname" . }}
+  labels:
+    {{- include "opsera-react-insights.labels" . | nindent 4 }}
+  annotations:
+    {{- include "opsera-react-insights.annotations" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "opsera-react-insights.selectorLabels" . | nindent 4 }}

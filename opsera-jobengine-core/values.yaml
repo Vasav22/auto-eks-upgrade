@@ -84,3 +84,4 @@ pdb:
 jobEngineNamespace: opsera-job-engine
 jobEngineEfsVolumeClaim: opsera-shared-workspace
 k8sIntegratorVolumeName: efs-aws-efs-volume-k8s-integrator
+CLOUD_PROVIDER: AWS

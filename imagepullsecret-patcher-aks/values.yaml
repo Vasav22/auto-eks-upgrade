@@ -2,7 +2,7 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-.dockerconfigjson: "eyAiYXV0aHMiOiB7ICI0NDA5NTM5Mzc2MTcuZGtyLmVjci51cy1lYXN0LTIuYW1hem9uYXdzLmNvbSI6IHsgImF1dGgiOiAiIiwgInBhc3N3b3JkIjogIiIsICJ1c2VybmFtZSI6ICJ0ZXN0IiB9IH0gfQ=="
+dockerconfigjson: "eyAiYXV0aHMiOiB7ICI0NDA5NTM5Mzc2MTcuZGtyLmVjci51cy1lYXN0LTIuYW1hem9uYXdzLmNvbSI6IHsgImF1dGgiOiAiIiwgInBhc3N3b3JkIjogIiIsICJ1c2VybmFtZSI6ICJ0ZXN0IiB9IH0gfQ=="
 
 replicaCount: 1
 

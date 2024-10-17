@@ -202,7 +202,8 @@ controller:
   ## Controller service configuration
   service:
     # -- Application controller service annotations
-    annotations: {}
+    annotations:
+      service.kubernetes.io/topology-mode: auto
     # -- Application controller service labels
     labels: {}
     # -- Application controller service port
@@ -1562,7 +1563,8 @@ repoServer:
   ## Repo server service configuration
   service:
     # -- Repo server service annotations
-    annotations: {}
+    annotations:
+      service.kubernetes.io/topology-mode: auto
     # -- Repo server service labels
     labels: {}
     # -- Repo server service port

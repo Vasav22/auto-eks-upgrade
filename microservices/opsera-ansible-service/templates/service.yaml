@@ -5,6 +5,7 @@ metadata:
   labels:
     {{- include "opsera-ansible-service.labels" . | nindent 4 }}
   annotations:
+    service.kubernetes.io/topology-mode: auto
     {{- include "opsera-ansible-service.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
