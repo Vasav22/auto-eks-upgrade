@@ -8,3 +8,6 @@ clusterName: opsera-test-platform
 
 datadogApm:
   enabled: false
+
+pdb:
+  minAvailable: 1

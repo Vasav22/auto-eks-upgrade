@@ -83,3 +83,6 @@ extraSecretEnvironmentVars:
     secretKey: OPSERA_HAZELCAST_K8_SERVICE_DNS
 
 serviceCategory: Threat_Vulnerability_Scanning_Services
+
+pdb:
+  minAvailable: 2
