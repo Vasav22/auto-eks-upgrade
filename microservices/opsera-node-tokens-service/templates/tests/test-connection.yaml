@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "opsera-node-tokens-service.fullname" . }}-test-connection"
+  labels:
+    {{- include "opsera-node-tokens-service.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['{{ include "opsera-node-tokens-service.fullname" . }}:{{ .Values.service.port }}']
+  restartPolicy: Never
