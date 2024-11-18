@@ -1,0 +1,359 @@
+from argparse import Namespace
+import os
+import requests
+import json
+from requests.adapters import HTTPAdapter, Retry
+from datetime import datetime
+from kubernetes import client, config
+from kubernetes.client.rest import ApiException
+
+
+class LogRetry(Retry):
+  """
+     Adding extra logs before making a retry request
+  """
+  def __init__(self, *args, **kwargs):
+    print('Calling url...')
+    super().__init__(*args, **kwargs)
+
+def get_metric_name():
+    return os.environ.get('nrMetricName')
+
+def get_all_ingress():
+    api_instance = client.NetworkingV1Api()
+
+    try:
+        api_response = api_instance.list_ingress_for_all_namespaces()
+        all_ingresses = []
+        for ingress in api_response.items:
+            if not (ingress.metadata.namespace == 'NULL'):
+              all_ingresses.append(ingress.spec.rules[0].host)
+        print(all_ingresses)
+        return all_ingresses
+    except ApiException as e:
+        print("Exception when calling NetworkingV1Api->list_ingress_for_all_namespaces: %s\n" % e)
+        
+
+def check_microservice_exists(namespace, label_selector):
+      api_instance2 = client.CoreV1Api()
+      try:
+        # List Services in the namespace with the specified label selector
+        service_list = api_instance2.list_namespaced_service(namespace, label_selector='name=opsera-jobengine-core')
+        if service_list.items:
+            print(f"Microservice with label selector '{label_selector}' exists in namespace '{namespace}'.")
+            return True
+        else:
+            print(f"No microservice with label selector '{label_selector}' found in namespace '{namespace}'.")
+            return False
+      except client.exceptions.ApiException as e:
+        print("Exception when calling CoreV1Api->list_namespaced_service: %s\n" % e)
+        return False
+      
+
+
+
+
+
+def get_url(host):
+    clus_type = "control-plane"
+    url = 'https://' + host
+    if ("jenkins" in host):
+        url = url + '/login'
+    if ("teamcity" in host):
+        url = url + '/login.html'
+    if ("anchore" in host):
+        url = url + '/v1/'
+    if (("8083-nexus" in host) or ("8082-nexus" in host)):
+        url = url + '/v2/'
+    if ("elasticsearch" in host):
+        url= url + '/_cluster/health'
+    if (clus_type == "control-plane"):
+        if not (host.startswith('api.') or host.startswith('app.') or host.startswith('portal.') or host.startswith('archive-ubuntu') or host.startswith('mirror-centos')):
+            url = url + '/status'
+        if ("mirror-centos" in host):
+            url = url + '/repos/'
+    return url
+
+def get_auth(host):
+    auth = {}
+    auth['enabled'] = False
+    if ("archive-ubuntu.opsera-prod" in host):
+        auth['enabled'] = True
+        auth['creds'] = ('ubuntu-cUCJD3Vu', 'faFfDDXr9Ga4fNf8i4dN3JUruXcAKqQtHVHeIHxLcmZi')
+    if ("mirror-centos.opsera-prod" in host):
+        auth['enabled'] = True
+        auth['creds'] = ('centos-cUCJD3Vu', 'faFfDDXr9Ga4fNf8i4dN3JUruXcAKqQtHVHeIHxLcmZi')
+    return auth
+
+def get_status(res):
+    # Default backend
+    if ("default backend - 404" in str(res.text)):
+        print(res.text)
+        return 10
+
+    # Infra tools
+    if ("<title>Kubernetes Dashboard</title>" in str(res.text)):
+        return 1
+    if ("<title>Prometheus Time Series Collection and Processing Server</title>" in str(res.text)):
+        return 1
+    if ("<title>Alertmanager</title>" in str(res.text)):
+        return 1
+
+    # Data plane services
+    if ("ok" == str(res.text)):
+        return 1
+
+    # Customer spinned up tools
+    if ("Welcome to Jenkins" in str(res.text)):
+        print("Found 'Welcome to Jenkins'")
+        return 1
+    if ("<title>Argo CD</title>" in str(res.text)):
+        print("Found '<title>Argo CD</title>'")
+        return 1
+    if ("<title>SonarQube</title>" in str(res.text)):
+        print("Found '<title>SonarQube</title>'")
+        return 1
+    if ("<title>Nexus Repository Manager</title>" in str(res.text)):
+        print("Found '<title>Nexus Repository Manager</title>'")
+        return 1
+    if ("access to the requested resource is not authorized" in str(res.text)):
+        print("Found 'access to the requested resource is not authorized'")
+        return 1
+
+    if (res.status_code == 200):
+        return 1
+
+    return 0
+
+def hit_url(url, ingress, auth):
+    status = 0
+    timeout = "false"
+    default_backend = "false"
+    status_code = 0
+
+    print('Calling ' + url)
+    try:
+        s = requests.Session()
+        retries = LogRetry(total=5,
+            backoff_factor=0.5,
+            status_forcelist=[ 500, 502, 503, 504 ])
+        s.mount('http://', HTTPAdapter(max_retries=retries))
+        s.mount('https://', HTTPAdapter(max_retries=retries))
+        if not auth['enabled']:
+            r = s.get(url, verify=False, timeout=2)
+        else:
+            r = s.get(url, auth=auth['creds'], timeout=2)
+        status = get_status(r)
+        if (status == 10):
+            status = 0
+        default_backend = "true"
+        status_code = r.status_code
+    except requests.exceptions.Timeout:
+        status = 0
+        timeout = "true"
+    except Exception as e:
+        print(e)
+    return [ingress, status, status_code, timeout, default_backend]
+
+
+def get_tools_status(ingresses,check_service):
+    tools_status = []
+    for ingress in ingresses:
+        if ingress is None:
+           continue
+        if 'k8dashboard' in ingress:
+          continue
+        if 'prometheus' in ingress:
+          continue
+        if 'alertmanager' in ingress:
+          continue
+        if 'grafana' in ingress:
+          continue
+
+        tool_status = {}
+
+        url = get_url(ingress)
+        # Skip Nexus Docker URLs
+        if '8082-nexus' in url:
+            continue
+        if '8083-nexus' in url:
+            continue
+
+        auth = get_auth(ingress)
+        t_sts = hit_url(url, ingress, auth)
+        #tool_status['name'] = "test_metric"
+        tool_status['type'] = "gauge"
+        tool_status['timestamp'] = int(datetime.now().timestamp())
+        tool_status['value']= t_sts[1]
+        temp1= {}
+        temp1['host'] = t_sts[0]
+        temp1['status'] = t_sts[1]
+        temp1['status_code'] = t_sts[2]
+        temp1['timeout'] = t_sts[3]
+        temp1['default_backend'] = t_sts[4]
+        tools_status.append(tool_status)
+        tool_status['attributes'] = temp1
+
+        tools_status.append(tool_status)
+
+        print(tool_status)
+        print('-'*30)
+
+    clus_type = 'control-plane'
+    if check_service == True:
+        print('executing......line no 204 ')
+        if clus_type == 'data-plane':
+         services = ['http://opsera-jobengine-core.opsera.svc.cluster.local/status']
+         for svc in services:
+            tool_status = {}
+            auth = get_auth(svc)
+            t_sts = hit_url(svc, svc, auth)
+
+            #tool_status['name'] = "test_metric"
+            tool_status['type'] = "gauge"
+            tool_status['timestamp'] =int(datetime.now().timestamp())
+            print(t_sts[1])
+            tool_status['value']= t_sts[1]
+            temp1= {}
+            temp1['host'] = t_sts[0]
+            temp1['status'] = t_sts[1]
+            temp1['status_code'] = t_sts[2]
+            temp1['timeout'] = t_sts[3]
+            temp1['default_backend'] = t_sts[4]
+            tools_status.append(tool_status)
+            tool_status['attributes'] = temp1
+
+            tools_status.append(tool_status)
+            print(tool_status)
+            print('-'*30)
+
+        if clus_type == 'control-plane':
+         services = ['http://opsera-jobengine-broker.microservices.svc.cluster.local/status']
+         for svc in services:
+                tool_status = {}
+
+                auth = get_auth(svc)
+                t_sts = hit_url(svc, svc, auth)
+
+                #tool_status['name'] = "test_metric"
+                tool_status['type'] = "gauge"
+                tool_status['timestamp'] = int(datetime.now().timestamp())
+                tool_status['value']= t_sts[1]
+                temp1= {}
+                temp1['host'] = t_sts[0]
+                temp1['status'] = t_sts[1]
+                temp1['status_code'] = t_sts[2]
+                temp1['timeout'] = t_sts[3]
+                temp1['default_backend'] = t_sts[4]
+                #tools_status.append(tool_status)
+                tool_status['attributes'] = temp1
+                print(t_sts[1])
+                print(type(t_sts[1]))
+
+                tools_status.append(tool_status)
+
+                print(tool_status)
+                print('-'*30)
+
+    return tools_status
+
+
+
+
+# def submit_metric(metric_name, tools_status):
+#     cluster_name = os.environ.get('CLUSTER_NAME')
+#     cluster_type = os.environ.get('CLUSTER_TYPE')
+#     for tool_status in tools_status:
+#         body = MetricPayload(
+#             series=[
+#                 MetricSeries(
+#                     metric=metric_name,
+#                    type=MetricIntakeType(0),
+#                    points=[
+#                        MetricPoint(
+#                            timestamp=int(datetime.now().timestamp()),
+#                            value=tool_status['status'],
+#                        ),
+#                    ],
+#                    tags=[
+#                        "cluster_name:" + cluster_name,
+#                        "status_code:" + str(tool_status['status_code']),
+#                        "tool_hostname:" + tool_status['host'],
+#                        "timeout:" + tool_status['timeout'],
+#                        "default_backend:" + tool_status['default_backend'],
+#                        "type:" + cluster_type
+#                     ],
+#                 ),
+#            ],
+#         )
+
+#        configuration = Configuration()
+#        with ApiClient(configuration) as api_client:
+#         api_instance = MetricsApi(api_client)
+#            response = api_instance.submit_metrics(body=body)
+
+#            print(response)
+
+
+def send_to_newrelic(tool_status,dd_metric_name):
+    api_key = os.environ.get('NR_API_KEY')
+   # account_id = os.environ.get('NR_ACCOUNT_ID')
+    #api_key = '    '
+    cluster_name = os.environ.get('CLUSTER_NAME')
+
+    #event_type = "CustomMetric"
+
+    url = "https://metric-api.newrelic.com/metric/v1"
+    headers = {
+        'Content-Type': 'application/json',
+        'Api-Key': api_key,
+    }
+
+    #print(tool_status)
+    orginal_payload = [tool_status]
+    #print(orginal_payload)
+    new_payload = [
+    {
+        "metrics": [
+            {
+                "name": dd_metric_name,
+                "type": item["type"],
+                "value": item["value"],
+                "timestamp": item["timestamp"],
+                "attributes": {"cluster_name": cluster_name ,**item.get("attributes", {})
+                               }
+            }
+            for item in sublist
+        ]
+    }
+    for sublist in orginal_payload
+                    ]
+
+    print(new_payload)
+    try:
+        response = requests.post(url, json=new_payload, headers=headers)
+        response.raise_for_status()
+        print("Response Status Code:", response.status_code)
+        print("Response Headers:", response.headers)
+        print("Response Text:", response.text)
+    except requests.exceptions.RequestException as e:
+        print("Error sending data to New Relic: {e}")
+
+
+
+
+def main():
+    config.load_incluster_config()
+    nrMetricName = 'test_metric'
+    all_ingresses = get_all_ingress()
+    namespace='opsera'
+    label_selector='name=opsera-jobengine-core'
+    check_service=check_microservice_exists(namespace,label_selector)
+    tools_status = get_tools_status(all_ingresses,check_service)
+    print(tools_status)
+    
+    #send_to_newrelic(tools_status,nrMetricName)
+    #submit_metric(dd_metric_name, tools_status)
+
+if __name__ == '__main__':
+    main()

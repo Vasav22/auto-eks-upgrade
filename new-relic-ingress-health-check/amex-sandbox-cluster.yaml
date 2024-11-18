@@ -1,0 +1,3 @@
+clusterName: amex-sandbox-cluster
+clusterType: control-plane
+nodeSelector: microservice-node

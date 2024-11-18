@@ -1,0 +1,45 @@
+apiVersion: {{ template "cronjob.apiVersion" . }}
+kind: CronJob
+metadata:
+  name: {{ include "newrelic-tools-health-check.fullname" . }}
+  namespace: newrelic-tools-health-check
+  labels:
+    {{- include "newrelic-tools-health-check.labels" . | nindent 4 }}
+spec:
+  schedule: "{{ .Values.cron }}"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          nodeSelector:
+            Name: {{ .Values.nodeSelector }}
+          serviceAccountName: {{ include "newrelic-tools-health-check.fullname" . }}
+          containers:
+          - name: {{ .Chart.Name }}
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+            resources:
+              requests:
+                memory: "128Mi"
+                cpu: "100m"
+              limits:
+                memory: "128Mi"
+                cpu: "100m"
+            imagePullPolicy: IfNotPresent
+            env:
+            - name: nrMetricName
+              value: {{ .Values.nrMetricName }}
+            - name: NR_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "newrelic-tools-health-check.fullname" . }}
+                  key: NR_API_KEY
+          #  - name: DD_APP_KEY
+          #   valueFrom:
+          #     secretKeyRef:
+          #         name: {{ include "newrelic-tools-health-check.fullname" . }}
+          #         key: DD_APP_KEY
+            - name: CLUSTER_NAME
+              value: {{ .Values.clusterName }}
+            - name: CLUSTER_TYPE
+              value: {{ .Values.clusterType }}
+          restartPolicy: OnFailure
