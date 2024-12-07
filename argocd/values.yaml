@@ -16,9 +16,9 @@ installCRDs: true
 global:
   image:
     # -- If defined, a repository applied to all ArgoCD deployments
-    repository: quay.io/argoproj/argocd
+    repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera-tools/argocd
     # -- Overrides the global ArgoCD image tag whose default is the chart appVersion
-    tag: "v2.9.9"
+    tag: "v2.11.3"
     # -- If defined, a imagePullPolicy applied to all ArgoCD deployments
     imagePullPolicy: IfNotPresent
   # -- Annotations for the all deployed pods
@@ -397,7 +397,7 @@ dex:
 
   image:
     # -- Dex image repository
-    repository: ghcr.io/dexidp/dex
+    repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/argocd/dex-server
     # -- Dex image tag
     tag: v2.30.0
     # -- Dex imagePullPolicy
@@ -577,7 +577,7 @@ redis:
 
   image:
     # -- Redis repository
-    repository: redis
+    repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera-argocd/redis
     # -- Redis tag
     tag: 6.2.6-alpine
     # -- Redis imagePullPolicy
