@@ -58,8 +58,8 @@ spec:
           env:          
           - name: "DOCKER_ENV"
             value: {{ .Values.DOCKER_ENV }}
-          - name: "APP_ENV"
-            value: {{default "production" .Values.APP_ENV }}
+          - name: "NODE_ENV"
+            value: {{default "production" .Values.NODE_ENV }}
           - name: "PORT"
             value: "{{ .Values.service.port }}"
           - name: "OPSERA_KAFKA_CLIENT_ID"

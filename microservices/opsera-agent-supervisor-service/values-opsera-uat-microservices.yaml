@@ -5,5 +5,4 @@ ingress:
   hosts:
     - host: agent.opsera-uat.opsera.io
 
-#NODE_ENV: staging
-APP_ENV: staging
+NODE_ENV: staging

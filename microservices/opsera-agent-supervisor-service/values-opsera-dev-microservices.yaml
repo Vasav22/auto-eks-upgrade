@@ -12,5 +12,5 @@ ingress:
   enabled: true
   hosts:
     - host: agent.opsera-dev.opsera.io
-#NODE_ENV: testing
-APP_ENV: testing
+
+NODE_ENV: testing

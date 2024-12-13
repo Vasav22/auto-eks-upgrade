@@ -6,5 +6,5 @@ autoscaling:
 ingress:
   hosts:
     - host: agent.opsera-test.opsera.io
-#NODE_ENV: testing
-APP_ENV: testing
+
+NODE_ENV: testing
