@@ -53,6 +53,13 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           env:
+          {{- if .Values.nats.enabled }}
+          - name: "NATS_URL"
+            value: {{ .Values.nats.url }}
+          # NATS_CREDENTIALS_PROVIDER, this is to instruct broker where to look for NATS credentials, vault, file or none
+          # - name: "NATS_CREDENTIALS_PROVIDER"
+          #  value: 
+          {{ end }}
           - name: "REST_PORT"
             value: "{{ .Values.service.port  }}"
           {{- include "ms.extraSecretEnvironmentVars" .Values | nindent 10 }}

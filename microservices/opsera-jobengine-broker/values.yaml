@@ -117,3 +117,9 @@ serviceCategory: Platform_Services
 
 pdb:
   minAvailable: 1
+
+nats:
+  enabled: true
+  url: "nats://nats-svc.nats-hub.svc:4222"
+  stream: "HUB_STREAM"
+  nodeName: "hub"
