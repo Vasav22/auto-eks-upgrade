@@ -64,6 +64,9 @@ spec:
             value: "{{ .Values.REDIS_DB }}"
           - name: "GIT_SHA"
             value: {{ .Values.image.tag }}
+          volumeMounts:
+          - name: config
+            mountPath: /etc/jobengine/config
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -76,3 +79,7 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      volumes:
+      - name: config
+        configMap:
+          name: {{ include "opsera-jobengine-core.fullname" . }}-configmap

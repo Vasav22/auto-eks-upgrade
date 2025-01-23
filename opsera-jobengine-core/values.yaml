@@ -85,3 +85,35 @@ jobEngineNamespace: opsera-job-engine
 jobEngineEfsVolumeClaim: opsera-shared-workspace
 k8sIntegratorVolumeName: efs-aws-efs-volume-k8s-integrator
 CLOUD_PROVIDER: AWS
+
+resourceProfiles:
+  micro:
+    cpuRequest: "0.5"
+    cpuLimit: "0.5"
+    memRequest: "300Mi"
+    memLimit: "300Mi"
+  small:
+    cpuRequest: "250m"
+    cpuLimit: "250m"
+    memRequest: "1G"
+    memLimit: "1G"
+  medium:
+    cpuRequest: "500m"
+    cpuLimit: "500m"
+    memRequest: "2G"
+    memLimit: "2G"
+  large:
+    cpuRequest: "1"
+    cpuLimit: "1"
+    memRequest: "3.5G"
+    memLimit: "3.5G"
+  xlarge:
+    cpuRequest: "2"
+    cpuLimit: "2"
+    memRequest: "7G"
+    memLimit: "7G"
+  twoxlarge:
+    cpuRequest: "3.5"
+    cpuLimit: "3.5"
+    memRequest: "14G"
+    memLimit: "14G"
