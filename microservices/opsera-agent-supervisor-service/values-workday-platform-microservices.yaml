@@ -1,3 +1,0 @@
-ingress:
-  hosts:
-    - host: agent.workday.opsera.io
