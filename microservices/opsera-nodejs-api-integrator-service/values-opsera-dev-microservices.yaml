@@ -3,4 +3,13 @@ autoscaling:
   minReplicas: 1
   maxReplicas: 5
 
+#enable ingress for DEV work only, this should not be done for TEST or other platform tiers
+ingress:
+  enabled: true
+  hosts:
+    - host: nodejs-api-integrator-service.opsera-dev-private.opsera.io
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+
 NODE_ENV: staging

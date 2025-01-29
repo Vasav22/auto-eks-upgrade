@@ -6,6 +6,15 @@ resources:
     cpu: 100m
     memory: 1Gi
 
+#enable ingress for DEV work only, this should not be done for TEST or other platform tiers
+ingress:
+  enabled: true
+  hosts:
+    - host: pipeline-settings-operations-service.opsera-dev-private.opsera.io
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+
 autoscaling:
   enabled: true
   minReplicas: 1

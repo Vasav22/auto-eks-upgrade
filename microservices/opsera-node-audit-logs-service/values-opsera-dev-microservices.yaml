@@ -13,4 +13,13 @@ autoscaling:
   targetCPUUtilizationPercentage: 300
   targetMemoryUtilizationPercentage: 120
 
+#enable ingress for DEV work only, this should not be done for TEST or other platform tiers
+ingress:
+  enabled: true
+  hosts:
+    - host: node-audit-logs-service.opsera-dev-private.opsera.io
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+
 NODE_ENV: testing
