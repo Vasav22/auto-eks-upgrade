@@ -10,8 +10,9 @@ autoscaling:
 
 ingress:
   enabled: true
-    - host: agent-supervisor-service.opsera-dev-private.opsera.io
-      paths: 
-      - path: /
+  hosts:
+  - host: agent-supervisor-service.opsera-dev-private.opsera.io
+    paths: 
+    - path: /
 
 NODE_ENV: testing
