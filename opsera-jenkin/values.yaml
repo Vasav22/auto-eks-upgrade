@@ -75,3 +75,5 @@ nodeSelector:
 tolerations: []
 
 affinity: {}
+
+JENKINS_CRONJOB_URL: http://opsera-jenkins:8080

@@ -18,5 +18,5 @@ spec:
             args:
             - admin
             - {{  .Values.password }}
-            - {{ .Values.JENKINS_UI_URL }}
+            - {{ .Values.JENKINS_CRONJOB_URL }}
           restartPolicy: Never
