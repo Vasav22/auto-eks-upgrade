@@ -1,0 +1,118 @@
+# Default values for opsera-user-management-service.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera-user-management-service
+  pullPolicy: Always
+  tag: test
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name:
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/use-regex: "false"
+  hosts:
+    - host: chart-example.local
+      paths: 
+      - path: /
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources:
+  limits:
+    cpu: 1000m
+    memory: 2Gi
+  requests:
+    cpu: 500m
+    memory: 1024Mi
+
+nodeSelector:
+  Name: microservice-node
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 240
+  targetMemoryUtilizationPercentage: 120
+
+tolerations: []
+
+affinity: {}
+
+extraSecretEnvironmentVars:
+  - secretName: microservices-ms-env
+    envName: OPSERA_KAFKA_BROKERS
+    secretKey: OPSERA_KAFKA_BORKERS
+  - secretName: microservices-ms-env
+    envName: OPSERA_ENV
+    secretKey: OPSERA_ENV
+  - secretName: microservices-ms-env
+    envName: OPSERA_API_GATEWAY_SERVICE_URL
+    secretKey: OPSERA_API_GATEWAY_SERVICE_URL
+  - secretName: microservices-ms-env
+    envName: OPSERA_API_GATEWAY_SERVICE_URL
+    secretKey: OPSERA_API_GATEWAY_SERVICE_URL
+  - secretName: microservices-ms-env
+    envName: OPSERA_API_GATEWAY_SERVICE_URL
+    secretKey: OPSERA_API_GATEWAY_SERVICE_URL
+  - secretName: microservices-ms-env
+    envName: OPSERA_REDIS_HOST
+    secretKey: OPSERA_REDIS_HOST
+  - secretName: microservices-ms-env
+    envName: OPSERA_LDAP_URL
+    secretKey: OPSERA_LDAP_URL
+  - secretName: microservices-ms-env
+    envName: OPSERA_LDAP_SERVICE_ACC_PASS
+    secretKey: OPSERA_LDAP_SERVICE_ACC_PASS
+  - secretName: microservices-ms-env
+    envName: LDAP_DIR_ACC_PASS
+    secretKey: LDAP_DIR_ACC_PASS
+  - secretName: microservices-ms-env
+    envName: OPSERA_DB_HOST
+    secretKey: OPSERA_DB_HOST
+  - secretName: microservices-ms-env
+    envName: OPSERA_DB_NAME
+    secretKey: OPSERA_DB_NAME
+  - secretName: microservices-ms-env
+    envName: OPSERA_DB_USER
+    secretKey: OPSERA_DB_USER
+#  - secretName: microservices-ms-env
+#    envName: OPSERA_DB_PASSWORD
+#    secretKey: OPSERA_DB_PASSWORD
+
+
+serviceCategory: Client_API_Services
