@@ -36,6 +36,7 @@ securityContext: {}
 service:
   type: ClusterIP
   port: 80
+  appPort: 5019
 
 ingress:
   enabled: true
