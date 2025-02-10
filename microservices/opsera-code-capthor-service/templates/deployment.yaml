@@ -61,6 +61,10 @@ spec:
           {{- include "datadogApm.environmentVars" . | nindent 10 }}
           - name: "DOCKER_ENV"
             value: {{ .Values.DOCKER_ENV }}
+          {{ if .Values.natsHubUrl }}
+          - name: "OPSERA_NATS_SERVICE_URL"
+            value: {{ .Values.natsHubUrl }}
+          {{ end }}
           {{- include "ms.extraSecretEnvironmentVars" .Values | nindent 10 }}
           volumeMounts:
           {{- include "datadogApm.volumeMounts" . | nindent 10 }}

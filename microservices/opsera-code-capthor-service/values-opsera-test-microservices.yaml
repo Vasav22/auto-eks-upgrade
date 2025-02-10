@@ -7,3 +7,5 @@ clusterName: opsera-test-platform
 
 datadogApm:
   enabled: false
+
+natsHubUrl: nats://nats-svc.nats-hub:4222/
