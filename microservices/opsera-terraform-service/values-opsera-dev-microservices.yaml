@@ -15,3 +15,4 @@ autoscaling:
 
 HELM_GIT_BRANCH: master-dev
 CONTROL_PLANE_ENV: dev
+CONTROL_PLANE_ENV_SQS: opsera-dev

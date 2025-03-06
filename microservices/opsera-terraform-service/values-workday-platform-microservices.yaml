@@ -17,3 +17,4 @@ autoscaling:
   maxReplicas: 6
 
 CONTROL_PLANE_ENV: workdayprod
+CONTROL_PLANE_ENV_SQS: workday-platform

@@ -12,3 +12,4 @@ autoscaling:
   targetMemoryUtilizationPercentage: 120
 
 CONTROL_PLANE_ENV: honsandbox
+CONTROL_PLANE_ENV_SQS: honeywell-sandbox

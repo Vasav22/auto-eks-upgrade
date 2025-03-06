@@ -11,3 +11,4 @@ datadogApm:
   enabled: false
 
 CONTROL_PLANE_ENV: test
+CONTROL_PLANE_ENV_SQS: opsera-test

@@ -63,6 +63,8 @@ spec:
             value: {{ .Values.DOCKER_ENV }}
           - name: "TF_VAR_control_plane_env"
             value: {{ .Values.CONTROL_PLANE_ENV }}
+          - name: "TF_VAR_control_plane_env_sqs"
+            value: {{ .Values.CONTROL_PLANE_ENV_SQS }}
           {{- include "ms.extraSecretEnvironmentVars" .Values | nindent 10 }}
           volumeMounts:
           {{- include "datadogApm.volumeMounts" . | nindent 10 }}

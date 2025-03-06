@@ -4,3 +4,4 @@ autoscaling:
   maxReplicas: 10
 
 CONTROL_PLANE_ENV: prod
+CONTROL_PLANE_ENV_SQS: opsera-prod
