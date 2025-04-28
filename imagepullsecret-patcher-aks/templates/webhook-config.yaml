@@ -10,6 +10,7 @@ webhooks:
         namespace: imagepullsecret-patcher
         path: "/mutate"
         port: 443
+      caBundle: ""
     rules:
       - operations: ["CREATE"]
         apiGroups: [""]
