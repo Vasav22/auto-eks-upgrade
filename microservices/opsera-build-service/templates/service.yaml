@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "opsera-build-service.fullname" . }}
+  labels:
+    {{- include "opsera-build-service.labels" . | nindent 4 }}
+  annotations:
+    service.kubernetes.io/topology-mode: auto
+    {{- include "opsera-build-service.annotations" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "opsera-build-service.selectorLabels" . | nindent 4 }}
