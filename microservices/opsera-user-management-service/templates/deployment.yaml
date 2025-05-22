@@ -69,7 +69,8 @@ spec:
             valueFrom:
               fieldRef:
                 apiVersion: v1
-                fieldPath: metadata.labels['app.kubernetes.io/name']          {{- include "ms.extraSecretEnvironmentVars" .Values | nindent 10 }}
+                fieldPath: metadata.labels['app.kubernetes.io/name']
+          {{- include "ms.extraSecretEnvironmentVars" .Values | nindent 10 }}
           - name: "GIT_SHA"
             value: {{ .Values.image.tag }}
           volumeMounts:
