@@ -63,6 +63,8 @@ spec:
             value: {{default "production" .Values.NODE_ENV }}
           - name: "PORT"
             value: "{{ .Values.service.port }}"
+          - name: "OPSERA_KAFKA_ENABLE_FLAG"
+            value: "{{ .Values.KAFKA_ENABLE_FLAG }}"
           - name: "OPSERA_KAFKA_CLIENT_ID"
             valueFrom:
               fieldRef:
