@@ -4,3 +4,5 @@ ingress:
       paths:
         - path: /
           pathType: ImplementationSpecific
+
+enableNewRelicRum: false

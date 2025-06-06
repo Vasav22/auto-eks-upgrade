@@ -6,3 +6,5 @@ ingress:
           pathType: ImplementationSpecific
 
 NODE_ENV: staging
+
+enableNewRelicRum: false

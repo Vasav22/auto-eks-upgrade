@@ -52,6 +52,8 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           env: 
+          - name: "REACT_ENV_OPSERA_NEW_RELIC_ENABLED"
+            value: {{ default "false" .Values.enableNewRelicRum }}
           - name: "NODE_ENV"
             value: {{default "production" .Values.NODE_ENV }}
           {{- include "ms.extraSecretEnvironmentVars" .Values | nindent 10 }}

@@ -114,5 +114,20 @@ extraSecretEnvironmentVars:
   - secretName: microservices-ms-env
     envName: OPSERA_VNXT_INSIGHTS_API_URL
     secretKey: OPSERA_VNXT_INSIGHTS_API_URL
+  - secretName: microservices-ms-env
+    envName: OPSERA_NR_LICENSE_KEY
+    secretKey: OPSERA_NR_LICENSE_KEY
+  - secretName: microservices-ms-env
+    envName: OPSERA_NR_ACCOUNT_ID
+    secretKey: OPSERA_NR_ACCOUNT_ID
+  - secretName: microservices-ms-env
+    envName: OPSERA_NR_TRUST_KEY
+    secretKey: OPSERA_NR_TRUST_KEY
+  - secretName: microservices-ms-env
+    envName: OPSERA_NR_APP_ID
+    secretKey: OPSERA_NR_APP_ID
+  - secretName: microservices-ms-env
+    envName: OPSERA_NR_AGENT_ID
+    secretKey: OPSERA_NR_AGENT_ID
 
 serviceCategory: Client_UI_Services

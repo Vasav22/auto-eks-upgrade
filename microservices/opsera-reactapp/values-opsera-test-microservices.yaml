@@ -21,3 +21,5 @@ ingress:
           pathType: ImplementationSpecific
 
 NODE_ENV: testing
+
+enableNewRelicRum: true
