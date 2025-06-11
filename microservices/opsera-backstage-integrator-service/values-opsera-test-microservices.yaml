@@ -1,0 +1,13 @@
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 1
+
+ingress:
+  enabled: true
+  hosts:
+  - host: opsera-backstage-integrator-service.opsera-test-private.opsera.io
+    paths: 
+    - path: /
+
+NODE_ENV: testing

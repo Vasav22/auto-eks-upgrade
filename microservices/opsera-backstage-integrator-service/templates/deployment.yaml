@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "opsera-agent-authentication-gateway.fullname" . }}
+  name: {{ include "opsera-backstage-integrator-service.fullname" . }}
   labels:
-    {{- include "opsera-agent-authentication-gateway.labels" . | nindent 4 }}
+    {{- include "opsera-backstage-integrator-service.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "opsera-agent-authentication-gateway.selectorLabels" . | nindent 6 }}
+      {{- include "opsera-backstage-integrator-service.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
@@ -17,14 +17,13 @@ spec:
         {{ if .Values.serviceCategory }}
         serviceCategory: {{ .Values.serviceCategory }}
         {{ end }}
-        {{- include "opsera-agent-authentication-gateway.selectorLabels" . | nindent 8 }}
+        {{- include "opsera-backstage-integrator-service.selectorLabels" . | nindent 8 }}
     spec:
-      enableServiceLinks: false
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      serviceAccountName: {{ include "opsera-agent-authentication-gateway.serviceAccountName" . }}
+      serviceAccountName: {{ include "opsera-backstage-integrator-service.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
