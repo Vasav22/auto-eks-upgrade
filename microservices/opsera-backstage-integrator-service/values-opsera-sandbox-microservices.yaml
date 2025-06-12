@@ -1,14 +1,14 @@
 autoscaling:
   enabled: true
   minReplicas: 1
-  maxReplicas: 2
+  maxReplicas: 1
 
 ingress:
   enabled: true
   hosts:
-  - host: opsera-backstage-integrator-service.honeywell-private.opsera.io
+  - host: opsera-backstage-integrator-service.honeywell-sandbox-private.opsera.io
     paths: 
     - path: /protected/idp
-  - host: api.honeywell.opsera.io
+  - host: api.honeywell-sandbox.opsera.io
     paths: 
     - path: /public/idp

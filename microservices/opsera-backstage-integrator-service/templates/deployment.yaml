@@ -19,6 +19,7 @@ spec:
         {{ end }}
         {{- include "opsera-backstage-integrator-service.selectorLabels" . | nindent 8 }}
     spec:
+      enableServiceLinks: false
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}

@@ -1,4 +1,14 @@
 autoscaling:
   minReplicas: 1
 
+ingress:
+  enabled: true
+  hosts:
+  - host: opsera-backstage-integrator-service.opsera-uat-private.opsera.io
+    paths: 
+    - path: /protected/idp
+  - host: api.opsera-uat.opsera.io
+    paths: 
+    - path: /public/idp
+
 NODE_ENV: staging

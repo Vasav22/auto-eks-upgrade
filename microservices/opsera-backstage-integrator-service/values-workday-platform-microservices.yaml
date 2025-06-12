@@ -1,0 +1,9 @@
+ingress:
+  enabled: true
+  hosts:
+  - host: opsera-backstage-integrator-service.workday-private.opsera.io
+    paths: 
+    - path: /protected/idp
+  - host: app.workday.opsera.io
+    paths: 
+    - path: /public/idp

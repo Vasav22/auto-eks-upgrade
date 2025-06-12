@@ -35,7 +35,7 @@ securityContext: {}
 
 service:
   type: ClusterIP
-  port: 80
+  port: 8108
 
 ingress:
   enabled: false
@@ -53,11 +53,11 @@ ingress:
 
 resources:
   limits:
-    cpu: 1000m
+    cpu: 500m
     memory: 2Gi
   requests:
     cpu: 500m
-    memory: 1024Mi
+    memory: 2Gi
 
 nodeSelector:
   Name: microservice-node
@@ -92,7 +92,5 @@ extraSecretEnvironmentVars:
   - secretName: microservices-ms-env
     envName: OPSERA_REDIS_HOST
     secretKey: OPSERA_REDIS_HOST
-
-
 
 serviceCategory: Platform_Services

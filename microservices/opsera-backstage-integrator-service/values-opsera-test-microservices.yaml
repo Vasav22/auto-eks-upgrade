@@ -8,6 +8,9 @@ ingress:
   hosts:
   - host: opsera-backstage-integrator-service.opsera-test-private.opsera.io
     paths: 
-    - path: /
+    - path: /protected/idp
+  - host: api.opsera-test.opsera.io
+    paths: 
+    - path: /public/idp
 
 NODE_ENV: testing
