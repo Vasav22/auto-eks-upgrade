@@ -6,9 +6,9 @@ autoscaling:
 ingress:
   enabled: true
   hosts:
-  - host: opsera-backstage-integrator-service.honeywell-sandbox-private.opsera.io
+  - host: opsera-backstage-integrator-service.sandbox-private.opsera.io
     paths: 
     - path: /protected/idp
-  - host: api.honeywell-sandbox.opsera.io
+  - host: api.sandbox.opsera.io
     paths: 
     - path: /public/idp
