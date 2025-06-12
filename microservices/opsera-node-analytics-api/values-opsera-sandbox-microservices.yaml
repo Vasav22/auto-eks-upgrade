@@ -1,0 +1,6 @@
+ingress:
+  hosts:
+    - host: analytics-api.sandbox.opsera.io
+      paths: [/]
+
+NODE_ENV: production

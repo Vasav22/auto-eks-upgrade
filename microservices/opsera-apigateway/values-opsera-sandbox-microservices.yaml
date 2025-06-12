@@ -1,0 +1,6 @@
+ingress:
+  hosts:
+    - host: apigateway.sandbox-private.opsera.io
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
