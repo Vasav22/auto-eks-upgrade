@@ -1,0 +1,97 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "opsera-infra-service.fullname" . }}
+  labels:
+    {{- include "opsera-infra-service.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "opsera-infra-service.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        rollme: {{ randAlphaNum 5 | quote }}
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{ if .Values.serviceCategory }}
+        serviceCategory: {{ .Values.serviceCategory }}
+        {{ end }}
+        {{- include "opsera-infra-service.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "opsera-infra-service.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /status
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /status
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          env:
+            - name: OPSERA_DB_HOST
+              value: "mongodb.opsera.svc.cluster.local"
+            - name: OPSERA_DB_PORT
+              value: "27017"
+            - name: OPSERA_DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: microservices-ms-env
+                  key: OPSERA_DB_USER
+            - name: OPSERA_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: microservices-ms-env
+                  key: OPSERA_DB_PASSWORD
+            - name: OPSERA_INFRA_SERVICE_AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: microservices-ms-env
+                  key: OPSERA_INFRA_SERVICE_AWS_ACCESS_KEY_ID
+            - name: OPSERA_INFRA_SERVICE_AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: microservices-ms-env
+                  key: OPSERA_INFRA_SERVICE_AWS_SECRET_ACCESS_KEY
+            - name: ASSUME_ROLE_ARN_CUSTOMER
+              valueFrom:
+                secretKeyRef:
+                  name: microservices-ms-env
+                  key: ASSUME_ROLE_ARN_CUSTOMER
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+

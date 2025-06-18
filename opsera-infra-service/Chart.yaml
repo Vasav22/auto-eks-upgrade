@@ -1,0 +1,6 @@
+apiVersion: v2
+name: opsera-infra-service
+description: A Helm chart for Kubernetes Service of cidr-check and resource-check
+type: application
+version: 0.1.0
+appVersion: "1.0"
