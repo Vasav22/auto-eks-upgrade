@@ -1,5 +1,5 @@
 autoscaling:
   enabled: true
-  minReplicas: 2
+  minReplicas: 4
 
 natsHubUrl: nats://nats-svc.nats-hub:4222
