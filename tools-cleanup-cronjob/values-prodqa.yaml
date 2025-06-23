@@ -1,0 +1,8 @@
+excluded_tool_names: |
+  qasonar20newversion
+  qa-prod22febupgrade
+  qa-prod15feb
+  jenkinsprod9-21
+  newjen0304
+  qa-prod22febupgrade
+  testazure

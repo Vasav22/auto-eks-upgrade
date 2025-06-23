@@ -1,0 +1,7 @@
+excluded_tool_names: |
+    qa-jenkspin4-14
+    qakt2804
+    testing
+    qa-nexus-new
+    qa-june23-sonar
+    amexcase-argo1

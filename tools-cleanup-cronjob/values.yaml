@@ -3,7 +3,7 @@ image:
   tag: 1.29.5
 
 cron:
-  schedule: "0 0 * * *"
+  schedule: "0 0 * * 0"
   successfulJobsHistoryLimit: 2
   failedJobsHistoryLimit: 2
   backoffLimit: 4

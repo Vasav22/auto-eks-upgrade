@@ -15,14 +15,27 @@ spec:
           serviceAccountName: {{ include "tools-cleanup-cronjob.serviceAccountName" . }}
           terminationGracePeriodSeconds: 0
           restartPolicy: Never
+          volumes:
+          - name: config-volume
+            configMap:
+              name: {{ template "tools-cleanup-cronjob.fullname" . }}
           containers:
           - name: kubectl
             imagePullPolicy: IfNotPresent
             image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+            volumeMounts:
+            - name: config-volume
+              mountPath: /etc/config
+              readOnly: true
             command:
             - "/bin/bash"
             - "-c"
             - |
+              declare -A excluded_tools
+              for excluded_tool in $(cat /etc/config/excluded_tool_names.conf); do
+                excluded_tools["$excluded_tool"]=1
+              done
+
               shutdown_tool() {
                 namespaces=$1
 
@@ -30,7 +43,7 @@ spec:
                   for tool_type in "deploy" "sts"; do
                     for resource in $(kubectl get $tool_type -n $namespace | tail -n+2 | awk '{print $1}'); do
                       echo "Shutting down ${resource} of type ${tool_type} in namespace ${namespace}"
-                      # kubectl scale $tool_type -n $namespace $resource --replicas 0
+                      kubectl scale $tool_type -n $namespace $resource --replicas 0
                     done
                     echo "----------------------------------------"
                   done
@@ -48,10 +61,14 @@ spec:
 
               filter_tools() {
                 tools=$1
+                excluded_tools=$2
+
                 tools_filtered=()
                 for tool in ${tools[@]}; do
-                  if [[ ! $tool == qa* && ! $tool == FUTURE_CONDITION* ]]; then
+                  if [[ -z "${excluded_tools[$tool]}" ]]; then
                     tools_filtered+=("$tool")
+                  else
+                    echo "${tool} is part of exclude list, not considering for deletion" >&2
                   fi
                 done
 
@@ -68,6 +85,7 @@ spec:
 
               for tool_name in "${!TOOL_CONFIGS[@]}"; do
                 tools_list=$(get_tools_list "${TOOL_CONFIGS[$tool_name]}")
+
                 tools_list_filtered=$(filter_tools "${tools_list[@]}")
                 shutdown_tool "${tools_list_filtered[@]}"
               done
