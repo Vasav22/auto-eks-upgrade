@@ -60,6 +60,8 @@ spec:
           {{- include "datadogApm.environmentVars" . | nindent 10 }}
           - name: "DOCKER_ENV"
             value: {{ .Values.DOCKER_ENV }}
+          - name: "JAVA_OPTS"
+            value: "-XX:MaxRAMPercentage=60.0"
           {{- include "ms.extraSecretEnvironmentVars" .Values | nindent 10 }}
           volumeMounts:
           {{- include "datadogApm.volumeMounts" . | nindent 10 }}
