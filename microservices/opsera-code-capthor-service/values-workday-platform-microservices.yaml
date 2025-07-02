@@ -9,4 +9,3 @@ resources:
     cpu: 750m
     memory: 2Gi
 
-natsHubUrl: nats://nats-svc.nats-hub:4222/
