@@ -13,6 +13,6 @@ autoscaling:
   targetCPUUtilizationPercentage: 400
   targetMemoryUtilizationPercentage: 160
 
-HELM_GIT_BRANCH: master-dev
+HELM_GIT_BRANCH: master-test
 CONTROL_PLANE_ENV: dev
 CONTROL_PLANE_ENV_SQS: opsera-dev
