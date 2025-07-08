@@ -1,0 +1,8 @@
+ingress:
+  hosts:
+    - host: design-system-demo.opsera-uat-private.opsera.io
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+
+NODE_ENV: staging

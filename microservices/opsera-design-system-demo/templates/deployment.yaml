@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "opsera-design-system-demo.fullname" . }}
+  labels:
+    {{- include "opsera-design-system-demo.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "opsera-design-system-demo.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        rollme: {{ randAlphaNum 5 | quote }}
+      labels:
+        {{ if .Values.serviceCategory }}
+        serviceCategory: {{ .Values.serviceCategory }}
+        {{ end }}
+        {{- include "opsera-design-system-demo.selectorLabels" . | nindent 8 }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "opsera-design-system-demo.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      volumes:
+        - name: configmap-volume
+          configMap:
+            defaultMode: 0777
+            name: odsd-post-script-configmap
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          env: 
+          - name: "NODE_ENV"
+            value: {{default "production" .Values.NODE_ENV }}
+          {{- include "ms.extraSecretEnvironmentVars" .Values | nindent 10 }}
+          - name: "GIT_SHA"
+            value: {{ .Values.image.tag }}
+          volumeMounts:
+            - name: configmap-volume
+              mountPath: /tmp/entrypoint.sh
+              subPath: entrypoint.sh
+          lifecycle:
+            postStart:
+              exec:
+                command: ["/bin/sh", "/tmp/entrypoint.sh"]
+                # command: [ '/bin/sh', 'ls; while IFS="=" read -r -d "" n v; do find /usr/local/apache2/htdocs -type f | xargs sed -i  "s|ENV_${n}|${v}|g";done < <(env -0)']
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
