@@ -9,5 +9,5 @@ autoscaling:
   targetMemoryUtilizationPercentage: 120
 
 
-accountid: 440953937617
 nodeGroupIAM: opsera-dev-eks-node-group
+accountid: "440953937617"

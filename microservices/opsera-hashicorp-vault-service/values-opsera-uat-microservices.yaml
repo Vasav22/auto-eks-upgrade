@@ -9,5 +9,5 @@ datadogApm:
   enabled: false
 
 
-accountid: 440953937617
 nodeGroupIAM: opsera-uat-eks-node-group
+accountid: "440953937617"
