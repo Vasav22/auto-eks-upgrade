@@ -1,2 +1,8 @@
 autoscaling:
   minReplicas: 3
+
+
+
+
+accountid: 440953937617
+nodeGroupIAM: honeywell-platform-eks-node-group

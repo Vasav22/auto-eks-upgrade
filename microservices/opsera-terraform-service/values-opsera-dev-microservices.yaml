@@ -16,3 +16,6 @@ autoscaling:
 HELM_GIT_BRANCH: master-test
 CONTROL_PLANE_ENV: dev
 CONTROL_PLANE_ENV_SQS: opsera-dev
+
+accountid: 440953937617
+nodeGroupIAM: opsera-dev-eks-node-group

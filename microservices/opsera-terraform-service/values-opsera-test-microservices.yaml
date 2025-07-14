@@ -12,3 +12,6 @@ datadogApm:
 
 CONTROL_PLANE_ENV: test
 CONTROL_PLANE_ENV_SQS: opsera-test
+
+accountid: 440953937617
+nodeGroupIAM: opsera-test-eks-node-group

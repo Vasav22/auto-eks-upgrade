@@ -13,3 +13,6 @@ autoscaling:
 
 CONTROL_PLANE_ENV: honsandbox
 CONTROL_PLANE_ENV_SQS: honeywell-sandbox
+
+accountid: 440953937617
+nodeGroupIAM: honeywell-sandbox-eks-node-group

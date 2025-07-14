@@ -9,3 +9,6 @@ ingress:
           pathType: ImplementationSpecific
 
 OPSERA_ARTIFACT_SQS: honeywell-sandbox-artifact-sqs
+
+accountid: 440953937617
+nodeGroupIAM: honeywell-sandbox-eks-node-group
