@@ -61,6 +61,11 @@ spec:
           {{- include "datadogApm.environmentVars" . | nindent 10 }}
           - name: "DOCKER_ENV"
             value: {{ .Values.DOCKER_ENV }}
+          - name: "TF_VAR_newrelic_license_key"
+            valueFrom: 
+              secretKeyRef:
+                key: NEWRELIC_LICENSE_KEY
+                name: microservices-ms-env
           - name: "TF_VAR_control_plane_env"
             value: {{ .Values.CONTROL_PLANE_ENV }}
           - name: "TF_VAR_control_plane_env_sqs"

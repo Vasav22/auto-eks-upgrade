@@ -1,0 +1,34 @@
+global:
+  # Replace with your New Relic license key
+  licenseKey: ""
+  cluster: "prod-controlplane"
+  lowDataMode: true
+
+newrelic-infrastructure:
+  enabled: true 
+  common:
+    config: 
+      namespaceSelector: 
+        matchLabels: 
+          newrelic.com/scrape: "true"
+  kubelet: 
+    resources: []
+
+newrelic-prometheus-agent:
+  enabled: false
+
+nri-metadata-injection:
+  enabled: true
+
+nri-kube-events:
+  enabled: true
+
+newrelic-logging:
+  enabled: true
+  resources: []
+  fluentBit: 
+    k8sBufferSize: "256k"
+
+kube-state-metrics:
+  enabled: true
+
