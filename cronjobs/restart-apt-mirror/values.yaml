@@ -1,0 +1,21 @@
+namespace: ubuntu-apt-mirror
+
+serviceAccount:
+  name: restart-apt-mirror
+
+role:
+  name: restart-apt-mirror
+
+roleBinding:
+  name: restart-apt-mirror
+
+cronjob:
+  name: restart-apt-mirror
+  namespace: ubuntu-apt-mirror
+  schedule: "0 6 * * 0"
+  serviceAccountName: restart-apt-mirror
+  image: 440953937617.dkr.ecr.us-east-2.amazonaws.com/kubectl:1.33.2
+  imagePullPolicy: Always
+  deploymentToRestart: ubuntu-apt-mirror
+  imagePullSecret: image-pull-secret
+
