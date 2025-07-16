@@ -3,7 +3,7 @@ kind: Pod
 metadata:
   name: "{{ include "opsera-etl-service.fullname" . }}-test-connection"
   labels:
-    {{- include "opsera-etl-service.labels" . | nindent 4 }}
+    {{- include "opsera-saas-deploy-service.labels" . | nindent 4 }}
   annotations:
     "helm.sh/hook": test-success
 spec:
@@ -11,5 +11,5 @@ spec:
     - name: wget
       image: busybox
       command: ['wget']
-      args: ['{{ include "opsera-etl-service.fullname" . }}:{{ .Values.service.port }}']
+      args: ['{{ include "opsera-saas-deploy-service.fullname" . }}:{{ .Values.service.port }}']
   restartPolicy: Never
