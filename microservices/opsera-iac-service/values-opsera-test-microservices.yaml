@@ -1,0 +1,17 @@
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 3
+
+HELM_GIT_BRANCH: master-test
+
+clusterName: opsera-test-platform
+
+datadogApm:
+  enabled: false
+
+CONTROL_PLANE_ENV: test
+CONTROL_PLANE_ENV_SQS: opsera-test
+
+accountid: 440953937617
+nodeGroupIAM: opsera-test-eks-node-group
