@@ -3,11 +3,11 @@ autoscaling:
   minReplicas: 1
   maxReplicas: 3
 
-clusterName: opsera-test-platform
+clusterName: opsera-uat-platform
 
 datadogApm:
   enabled: false
 
 
-nodeGroupIAM: opsera-test-eks-node-group
+nodeGroupIAM: opsera-uat-eks-node-group
 accountid: "440953937617"

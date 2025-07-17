@@ -9,3 +9,5 @@ ingress:
           pathType: ImplementationSpecific
 
 OPSERA_ARTIFACT_SQS: workday-platform-artifact-sqs
+nodeGroupIAM: workday-platform-eks-node-group
+accountid: "440953937617"

@@ -13,3 +13,6 @@ autoscaling:
 
 CONTROL_PLANE_ENV: honprod
 CONTROL_PLANE_ENV_SQS: honeywell-platform
+
+nodeGroupIAM: honeywell-platform-eks-node-group
+accountid: "440953937617"

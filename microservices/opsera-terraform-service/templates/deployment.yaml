@@ -66,6 +66,8 @@ spec:
               secretKeyRef:
                 key: NEWRELIC_LICENSE_KEY
                 name: microservices-ms-env
+          - name: "OPSERA_HELM_GIT_BRANCH_NAME"
+            value: {{ .Values.OPSERA_HELM_GIT_BRANCH_NAME }}
           - name: "TF_VAR_control_plane_env"
             value: {{ .Values.CONTROL_PLANE_ENV }}
           - name: "TF_VAR_control_plane_env_sqs"

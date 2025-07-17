@@ -18,3 +18,6 @@ autoscaling:
 
 CONTROL_PLANE_ENV: workdayprod
 CONTROL_PLANE_ENV_SQS: workday-platform
+
+nodeGroupIAM: workday-platform-eks-node-group
+accountid: "440953937617"

@@ -12,3 +12,5 @@ autoscaling:
   maxReplicas: 10
   targetCPUUtilizationPercentage: 60
   targetMemoryUtilizationPercentage: 60
+
+accountid: "440953937617"

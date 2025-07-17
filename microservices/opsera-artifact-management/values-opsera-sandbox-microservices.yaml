@@ -14,3 +14,6 @@ ingress:
           pathType: ImplementationSpecific
 
 OPSERA_ARTIFACT_SQS: opsera-sandbox-artifact-sqs
+
+nodeGroupIAM: opsera-sandbox-eks-node-group
+accountid: "440953937617"

@@ -5,3 +5,6 @@ autoscaling:
 
 CONTROL_PLANE_ENV: uat
 CONTROL_PLANE_ENV_SQS: opsera-uat
+
+nodeGroupIAM: opsera-uat-eks-node-group
+accountid: "440953937617"

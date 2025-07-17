@@ -9,3 +9,6 @@ ingress:
           pathType: ImplementationSpecific
 
 OPSERA_ARTIFACT_SQS: honeywell-platform-artifact-sqs
+
+nodeGroupIAM: honeywell-platform-eks-node-group
+accountid: "440953937617"

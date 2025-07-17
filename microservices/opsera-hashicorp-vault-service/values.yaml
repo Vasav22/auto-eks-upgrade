@@ -89,3 +89,4 @@ extraSecretEnvironmentVars:
     secretKey: OPSERA_VAULT_ENCRYPTION_KEY
 
 serviceCategory: Platform_Security_Services
+
