@@ -61,16 +61,13 @@ spec:
           {{- include "datadogApm.environmentVars" . | nindent 10 }}
           - name: "DOCKER_ENV"
             value: {{ .Values.DOCKER_ENV }}
-<<<<<<< HEAD
           - name: "TF_VAR_newrelic_license_key"
             valueFrom: 
               secretKeyRef:
                 key: NEWRELIC_LICENSE_KEY
                 name: microservices-ms-env
-=======
           - name: "OPSERA_HELM_GIT_BRANCH_NAME"
             value: {{ .Values.OPSERA_HELM_GIT_BRANCH_NAME }}
->>>>>>> 4c4e199a (add-var-OPSERA_HELM_GIT_BRANCH_NAME)
           - name: "TF_VAR_control_plane_env"
             value: {{ .Values.CONTROL_PLANE_ENV }}
           - name: "TF_VAR_control_plane_env_sqs"
