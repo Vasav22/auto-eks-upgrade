@@ -15,5 +15,5 @@ ingress:
 
 OPSERA_ARTIFACT_SQS: opsera-dev-artifact-sqs
 
-accountid: 440953937617
 nodeGroupIAM: opsera-dev-eks-node-group
+accountid: "440953937617"
