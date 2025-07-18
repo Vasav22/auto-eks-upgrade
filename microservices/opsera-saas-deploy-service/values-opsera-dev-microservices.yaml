@@ -4,3 +4,5 @@ autoscaling:
   maxReplicas: 2
 
 natsHubUrl: nats://nats-svc.nats-hub:4222/
+nodeGroupIAM: opsera-dev-eks-node-group
+accountid: "440953937617"
