@@ -81,5 +81,14 @@ extraSecretEnvironmentVars:
   - secretName: microservices-ms-env
     envName: OPSERA_KAFKA_BOOTSTRAP_URL
     secretKey: OPSERA_KAFKA_BOOTSTRAP_URL
+  - secretName: microservices-ms-env
+    envName: OPSERA_VAULT_AUTH_ROLE
+    secretKey: OPSERA_VAULT_AUTH_ROLE
+  - secretName: microservices-ms-env
+    envName: OPSERA_VAULT_URI
+    secretKey: OPSERA_VAULT_URI
+  - secretName: microservices-ms-env
+    envName: OPSERA_VAULT_ENCRYPTION_KEY
+    secretKey: OPSERA_VAULT_ENCRYPTION_KEY
 
 serviceCategory: Artifact_CI_Services
