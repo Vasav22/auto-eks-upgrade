@@ -1,0 +1,90 @@
+
+helm install opsera-etl-service . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-dev 
+
+helm upgrade opsera-etl-service . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-dev 
+
+
+helm uninstall opsera-etl-service . \
+    -n microservices 
+
+
+
+#test
+
+
+helm install opsera-etl-service . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-test 
+
+helm upgrade opsera-etl-service . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-test 
+
+
+
+helm uninstall opsera-etl-service . \
+    -n microservices 
+
+#production
+
+helm install opsera-etl-service . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-prod 
+
+helm upgrade opsera-etl-service . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-prod 
+
+
+helm uninstall opsera-etl-service . \
+    -n microservices 
+
+<<<<<<< HEAD
+#production
+
+helm install opsera-etl-service . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-prod 
+
+helm upgrade opsera-etl-service . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=kube-prod 
+
+
+helm uninstall opsera-etl-service . \
+    -n microservices 
+    
+=======
+>>>>>>> master-dev
+#honeywell-sandbox
+
+helm install opsera-etl-service . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=honeywell-sandbox
+
+helm upgrade opsera-etl-service . \
+    -n microservices \
+    --set DOCKER_ENV=kubernetes \
+    --set image.tag=khoneywell-sandbox 
+
+
+helm uninstall opsera-etl-service . \
+    -n microservices 
+
+
+
+#kubectl 
+kubectl -n microservices get po -l app.kubernetes.io/name=opsera-etl-service
