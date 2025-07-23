@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera-migration-service-service
+  repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera-migration-service
   pullPolicy: Always
 
 imagePullSecrets: []
