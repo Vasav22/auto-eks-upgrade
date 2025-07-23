@@ -84,5 +84,11 @@ extraSecretEnvironmentVars:
   - secretName: microservices-ms-env
     envName: OPSERA_API_NODE_URL
     secretKey: OPSERA_API_NODE_URL
+  - secretName: microservices-ms-env
+    envName: OPSERA_CLIENT_HOST
+    secretKey: OPSERA_CLIENT_HOST
+  - secretName: microservices-ms-env
+    envName: OPSERA_SLACK_INTERNAL_CHANNEL
+    secretKey: OPSERA_SLACK_INTERNAL_CHANNEL
 
 serviceCategory: Notification_Services
