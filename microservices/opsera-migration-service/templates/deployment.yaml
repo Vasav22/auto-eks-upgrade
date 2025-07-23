@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "opsera-migration-service-service.fullname" . }}
+  name: {{ include "opsera-migration-service.fullname" . }}
   labels:
-    {{- include "opsera-migration-service-service.labels" . | nindent 4 }}
+    {{- include "opsera-migration-service.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "opsera-migration-service-service.selectorLabels" . | nindent 6 }}
+      {{- include "opsera-migration-service.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
@@ -18,13 +18,13 @@ spec:
         serviceCategory: {{ .Values.serviceCategory }}
         {{ end }}
         {{- include "datadogApm.selectorLabels" . | nindent 8 }}
-        {{- include "opsera-migration-service-service.selectorLabels" . | nindent 8 }}
+        {{- include "opsera-migration-service.selectorLabels" . | nindent 8 }}
     spec:
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      serviceAccountName: {{ include "opsera-migration-service-service.serviceAccountName" . }}
+      serviceAccountName: {{ include "opsera-migration-service.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       {{- include "datadogApm.initContainer" . | nindent 6 }}

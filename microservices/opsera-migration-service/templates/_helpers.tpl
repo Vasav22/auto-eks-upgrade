@@ -2,7 +2,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "opsera-migration-service-service.name" -}}
+{{- define "opsera-migration-service.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
@@ -11,7 +11,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "opsera-migration-service-service.fullname" -}}
+{{- define "opsera-migration-service.fullname" -}}
 {{- if .Values.fullnameOverride -}}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
@@ -27,16 +27,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "opsera-migration-service-service.chart" -}}
+{{- define "opsera-migration-service.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
 Common labels
 */}}
-{{- define "opsera-migration-service-service.labels" -}}
-helm.sh/chart: {{ include "opsera-migration-service-service.chart" . }}
-{{ include "opsera-migration-service-service.selectorLabels" . }}
+{{- define "opsera-migration-service.labels" -}}
+helm.sh/chart: {{ include "opsera-migration-service.chart" . }}
+{{ include "opsera-migration-service.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -46,17 +46,17 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "opsera-migration-service-service.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "opsera-migration-service-service.name" . }}
+{{- define "opsera-migration-service.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "opsera-migration-service.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "opsera-migration-service-service.serviceAccountName" -}}
+{{- define "opsera-migration-service.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create -}}
-    {{ default (include "opsera-migration-service-service.fullname" .) .Values.serviceAccount.name }}
+    {{ default (include "opsera-migration-service.fullname" .) .Values.serviceAccount.name }}
 {{- else -}}
     {{ default "default" .Values.serviceAccount.name }}
 {{- end -}}
@@ -65,10 +65,10 @@ Create the name of the service account to use
 {{/*
 Datadog Service Check Annotations
 */}}
-{{- define "opsera-migration-service-service.annotations" -}}
+{{- define "opsera-migration-service.annotations" -}}
 ad.datadoghq.com/service.check_names: '["http_check"]'
 ad.datadoghq.com/service.init_configs: '[{}]'
-ad.datadoghq.com/service.instances: "[\n  {\n    \"name\": \"opsera-migration-service-service\",\n
+ad.datadoghq.com/service.instances: "[\n  {\n    \"name\": \"opsera-migration-service\",\n
   \   \"url\": \"http://%%host%%:%%port%%/status\",\n    \"timeout\": 1,\n     \"http_response_status_code\": 200\n  }\n] \n"
 {{- end -}}
 

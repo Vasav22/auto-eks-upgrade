@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "opsera-migration-service-service.fullname" . }}
+  name: {{ include "opsera-migration-service.fullname" . }}
   labels:
-    {{- include "opsera-migration-service-service.labels" . | nindent 4 }}
+    {{- include "opsera-migration-service.labels" . | nindent 4 }}
   annotations:
     service.kubernetes.io/topology-mode: auto
-    {{- include "opsera-migration-service-service.annotations" . | nindent 4 }}
+    {{- include "opsera-migration-service.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -15,4 +15,4 @@ spec:
       protocol: TCP
       name: http
   selector:
-    {{- include "opsera-migration-service-service.selectorLabels" . | nindent 4 }}
+    {{- include "opsera-migration-service.selectorLabels" . | nindent 4 }}
