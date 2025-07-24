@@ -53,36 +53,7 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           env:
-            - name: OPSERA_DB_HOST
-              valueFrom:
-                secretKeyRef:
-                  name: microservices-ms-env
-                  key: OPSERA_DB_HOST
-            - name: OPSERA_DB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: microservices-ms-env
-                  key: OPSERA_DB_USER
-            - name: OPSERA_DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: microservices-ms-env
-                  key: OPSERA_DB_PASSWORD
-            - name: OPSERA_INFRA_SERVICE_AWS_ACCESS_KEY_ID
-              valueFrom:
-                secretKeyRef:
-                  name: microservices-ms-env
-                  key: OPSERA_INFRA_SERVICE_AWS_ACCESS_KEY_ID
-            - name: OPSERA_INFRA_SERVICE_AWS_SECRET_ACCESS_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: microservices-ms-env
-                  key: OPSERA_INFRA_SERVICE_AWS_SECRET_ACCESS_KEY
-            - name: ASSUME_ROLE_ARN_CUSTOMER
-              valueFrom:
-                secretKeyRef:
-                  name: microservices-ms-env
-                  key: ASSUME_ROLE_ARN_CUSTOMER
+          {{- include "ms.extraSecretEnvironmentVars" .Values | nindent 10 }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
