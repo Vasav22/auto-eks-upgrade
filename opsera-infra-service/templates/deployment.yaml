@@ -54,9 +54,10 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
           env:
             - name: OPSERA_DB_HOST
-              value: "mongodb.opsera.svc.cluster.local"
-            - name: OPSERA_DB_PORT
-              value: "27017"
+              valueFrom:
+                secretKeyRef:
+                  name: microservices-ms-env
+                  key: OPSERA_DB_HOST
             - name: OPSERA_DB_USER
               valueFrom:
                 secretKeyRef:
