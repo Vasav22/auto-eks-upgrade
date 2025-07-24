@@ -34,7 +34,7 @@ securityContext: {}
 
 service:
   type: ClusterIP
-  port: 8071
+  port: 80
 
 ingress:
   enabled: false
@@ -70,6 +70,9 @@ autoscaling:
 tolerations: []
 
 affinity: {}
+
+
+DOCKER_ENV: kubernetes
 
 extraSecretEnvironmentVars:
   - secretName: microservices-ms-env
