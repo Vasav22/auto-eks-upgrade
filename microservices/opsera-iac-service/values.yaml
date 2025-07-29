@@ -24,7 +24,12 @@ serviceAccount:
 podSecurityContext: {}
   # fsGroup: 2000
 
-securityContext: {}
+securityContext: 
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  allowPrivilegeEscalation: false
+
   # capabilities:
   #   drop:
   #   - ALL
@@ -34,7 +39,7 @@ securityContext: {}
 
 service:
   type: ClusterIP
-  port: 8081
+  port: 80
 
 ingress:
   enabled: false
@@ -111,8 +116,12 @@ extraSecretEnvironmentVars:
   - secretName: microservices-ms-env
     envName: OPSERA_VAULT_WRITE_EXTERNAL_URL
     secretKey: OPSERA_VAULT_WRITE_EXTERNAL_URL
+  - secretName: microservices-ms-env
+    envName: OPSERA_PLATFORM_VPCID
+    secretKey: OPSERA_PLATFORM_VPCID
 
-HELM_GIT_BRANCH: master
+
+OPSERA_HELM_GIT_BRANCH_NAME: master
 GIT_CREDENTIAL: opsera-nawaz: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
 
 serviceCategory: Infrastructure_as_Code_Services
