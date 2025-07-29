@@ -24,7 +24,12 @@ serviceAccount:
 podSecurityContext: {}
   # fsGroup: 2000
 
-securityContext: {}
+securityContext: 
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  allowPrivilegeEscalation: false
+
   # capabilities:
   #   drop:
   #   - ALL
@@ -84,5 +89,7 @@ extraSecretEnvironmentVars:
   - secretName: microservices-ms-env
     envName: OPSERA_NODE_SERVER_URL
     secretKey: OPSERA_NODE_SERVER_URL
+
+CONTAINER_PORT: 8080
 
 serviceCategory: Source_Code_Management_Services
