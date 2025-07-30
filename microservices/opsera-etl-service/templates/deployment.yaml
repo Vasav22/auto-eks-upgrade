@@ -37,7 +37,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: {{ .Values.service.port }}
+              containerPort: {{ .Values.CONTAINER_PORT }}
               protocol: TCP
           livenessProbe:
             httpGet:
@@ -61,6 +61,8 @@ spec:
           {{- include "datadogApm.environmentVars" . | nindent 10 }}
           - name: "DOCKER_ENV"
             value: {{ .Values.DOCKER_ENV }}
+          - name: CONTAINER_PORT
+            value: "{{ .Values.CONTAINER_PORT }}"
           {{ if .Values.natsHubUrl }}
           - name: "OPSERA_NATS_SERVICE_URL"
             value: {{ .Values.natsHubUrl }}

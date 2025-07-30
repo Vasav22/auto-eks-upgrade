@@ -88,6 +88,8 @@ spec:
           {{- include "datadogApm.environmentVars" . | nindent 10 }}
           - name: "DOCKER_ENV"
             value: {{ .Values.DOCKER_ENV }}
+          - name: CONTAINER_PORT
+            value: "{{ .Values.CONTAINER_PORT }}"
           - name: CURL_CA_BUNDLE
             value: /truststore/ca-certificates.crt
           - name: JAVA_OPTS

@@ -24,7 +24,11 @@ serviceAccount:
 podSecurityContext: {}
   # fsGroup: 2000
 
-securityContext: {}
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  allowPrivilegeEscalation: false
   # capabilities:
   #   drop:
   #   - ALL
@@ -82,3 +86,5 @@ extraSecretEnvironmentVars:
     secretKey: OPSERA_KAFKA_BOOTSTRAP_URL
 
 serviceCategory: Artifact_CI_Services
+
+CONTAINER_PORT: 8080  
