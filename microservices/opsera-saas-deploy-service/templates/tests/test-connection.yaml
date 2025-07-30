@@ -9,7 +9,7 @@ metadata:
 spec:
   containers:
     - name: wget
-      image: busybox
+      image: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera/busybox:1.32
       command: ['wget']
       args: ['{{ include "opsera-saas-deploy-service.fullname" . }}:{{ .Values.service.port }}']
   restartPolicy: Never
