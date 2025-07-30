@@ -97,4 +97,6 @@ extraSecretEnvironmentVars:
     envName: OPSERA_HAZELCAST_K8_SERVICE_DNS
     secretKey: OPSERA_HAZELCAST_K8_SERVICE_DNS
 
+
+CONTAINER_PORT: 8080
 serviceCategory: Notification_Services
