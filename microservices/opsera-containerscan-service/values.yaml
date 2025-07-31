@@ -42,7 +42,7 @@ securityContext:
 
 service:
   type: ClusterIP
-  port: 8066
+  port: 80
 
 ingress:
   enabled: false
@@ -115,3 +115,5 @@ extraSecretEnvironmentVars:
 serviceCategory: Container_Scanning_Services
 
 CONTAINER_PORT: 8080
+
+DOCKER_ENV: kubernetes
