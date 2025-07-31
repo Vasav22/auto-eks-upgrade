@@ -72,29 +72,8 @@ spec:
           {{- include "datadogApm.volumeMounts" . | nindent 10 }}
           - name: microservices-efs
             mountPath: /apps/OpsERA/logs/components/
-          - mountPath: "/apps/OpsERA/components/helmcharts"
-            name: helm-charts
-          lifecycle:
-            postStart:
-              exec:
-                command: ["/bin/mkdir", "/apps/OpsERA/components/terraform"]
-      initContainers:
-        - name: git-cloner
-          image: alpine/git
-          args:
-              - clone
-              - -b
-              - {{ .Values.OPSERA_HELM_GIT_BRANCH_NAME }}
-              - --single-branch
-              - https://{{ .Values.GIT_CREDENTIAL }}@github.com/OpseraEngineering/infra-helmcharts.git
-              - /data
-          volumeMounts:
-          - mountPath: /data
-            name: helm-charts
       volumes:
         {{- include "datadogApm.volumes" . | nindent 8 }}
-        - name: helm-charts
-          emptyDir: {}
         - name: microservices-efs
           persistentVolumeClaim:
             claimName: microservices-efs
