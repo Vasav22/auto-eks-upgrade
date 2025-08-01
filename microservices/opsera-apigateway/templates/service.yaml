@@ -5,7 +5,6 @@ metadata:
   labels:
     {{- include "opsera-apigateway.labels" . | nindent 4 }}
   annotations:
-    service.kubernetes.io/topology-mode: auto
     {{- include "opsera-apigateway.annotations" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
