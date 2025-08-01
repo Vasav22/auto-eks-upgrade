@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "backstage.fullname" . }}
+  labels:
+    {{- include "backstage.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "backstage.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "backstage.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}{{ .Values.image.name }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["node"]
+          args: ["packages/backend", "--config", "app-config.cm.yaml"]
+          ports:
+            - name: http
+              containerPort: 7007
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          envFrom:
+            - secretRef:
+                name: backstage-secrets
+            - configMapRef:
+                name: {{ include "backstage.name" . }}-config
+          volumeMounts:
+          - name: app-config
+            mountPath: /app/app-config.cm.yaml
+            subPath: app-config.cm.yaml
+          {{- range $k, $v := .Values.additionalConfigMapMounts }}
+          - mountPath: {{ $v.mountPath }}
+            name: {{ printf "additional-cm-%d" $k }}
+            subPath: {{ $v.subPath }}
+          {{- end }}
+      {{- if .Values.serviceAccount.create }}
+      serviceAccountName: backstage-service-account
+      {{- end }}
+      volumes:
+      - name: app-config
+        configMap:
+          name: {{ include "backstage.name" . }}-app-config
+      {{- range $k, $v := .Values.additionalConfigMapMounts }}
+      - name: {{ printf "additional-cm-%d" $k }}
+        configMap:
+          name: {{ $v.configMap }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
