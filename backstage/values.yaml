@@ -58,9 +58,9 @@ github:
 
 postgres:
   port: "5432"
-  host: backstage-rw
-  user: app
-  password: password
+  host: postgres
+  user: backstage
+  password: hunter2
 
 catalog:
   demoCatalogLocation: "https://github.com/PlatformersCommunity/backstage-helm-chart/blob/main/demo-catalog/all.yaml"
