@@ -41,6 +41,9 @@ spec:
               port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          env:
+            - name: BACKEND_URL
+              value: {{ .Values.BACKSTAGE_URL }}
           envFrom:
             - secretRef:
                 name: backstage-secrets
