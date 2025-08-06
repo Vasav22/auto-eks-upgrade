@@ -114,6 +114,6 @@ extraSecretEnvironmentVars:
 
 serviceCategory: Container_Scanning_Services
 
-CONTAINER_PORT: 8080
+CONTAINER_PORT: 8116
 
 DOCKER_ENV: kubernetes

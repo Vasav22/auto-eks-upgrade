@@ -90,6 +90,6 @@ extraSecretEnvironmentVars:
     envName: OPSERA_NODE_SERVER_URL
     secretKey: OPSERA_NODE_SERVER_URL
 
-CONTAINER_PORT: 8080
+CONTAINER_PORT: 8112
 
 serviceCategory: Source_Code_Management_Services

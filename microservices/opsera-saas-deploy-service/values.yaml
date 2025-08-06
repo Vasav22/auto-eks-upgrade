@@ -97,6 +97,6 @@ extraSecretEnvironmentVars:
     secretKey: OPSERA_VAULT_ENCRYPTION_KEY
 
 
-CONTAINER_PORT: 8080
+CONTAINER_PORT: 8114
 
 serviceCategory: Artifact_CI_Services
