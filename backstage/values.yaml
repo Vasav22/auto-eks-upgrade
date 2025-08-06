@@ -62,6 +62,8 @@ postgres:
   user: fromHelmUpgrade
   password: fromHelmUpgrade
 
+backstageToken: fromHelmUpgrade
+
 catalog:
   demoCatalogLocation: "https://github.com/PlatformersCommunity/backstage-helm-chart/blob/main/demo-catalog/all.yaml"
   customCatalogLocation: "None"

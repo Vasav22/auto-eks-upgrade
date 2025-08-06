@@ -45,7 +45,7 @@ spec:
             - name: BACKEND_PORT
               value: "7007"
             - name: BACKSTAGE_TOKEN
-              value: 8YSw1MYwRrqPKJCJLehVnA6SWVm0kl9JEI5oP5MLXA8=
+              value: {{ .Values.backstageToken }}
           envFrom:
             - secretRef:
                 name: backstage-secrets
