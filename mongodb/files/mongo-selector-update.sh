@@ -34,7 +34,7 @@ do
 	if test -s new_primary_node; then
 		rm -rf new_primary_node
 	fi
-	mongo -u ${mongo_username} -p${mongo_password} --quiet --authenticationDatabase ${mongo_auth_db} --eval 'rs.status().members.filter(function(rsStatus) { return rsStatus.state === 1;})[0].name' > /tmp/new_primary_node
+	mongosh -u ${mongo_username} -p ${mongo_password} --quiet --authenticationDatabase ${mongo_auth_db} --eval 'rs.status().members.filter(function(rsStatus) { return rsStatus.state === 1;})[0].name' > /tmp/new_primary_node
 	if [[ $? -ne 0 ]] ;
 	then
 		echo "${datetime} Can not connect to Mongo DB to get the new pod status."
