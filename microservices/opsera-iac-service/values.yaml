@@ -121,6 +121,11 @@ extraSecretEnvironmentVars:
     secretKey: OPSERA_PLATFORM_VPCID
 
 
+
+CONTAINER_PORT: 8117
+DOCKER_ENV: kubernetes
+
+
 OPSERA_HELM_GIT_BRANCH_NAME: master
 GIT_CREDENTIAL: opsera-nawaz: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
 
