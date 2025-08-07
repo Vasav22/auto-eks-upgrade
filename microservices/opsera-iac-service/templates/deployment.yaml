@@ -69,6 +69,11 @@ spec:
             value: {{ .Values.CONTROL_PLANE_ENV }}
           - name: "TF_VAR_control_plane_env_sqs"
             value: {{ .Values.CONTROL_PLANE_ENV_SQS }}
+          - name: TF_VAR_newrelic_license_key
+            valueFrom:
+              secretKeyRef:
+                key: NEWRELIC_LICENSE_KEY
+                name: microservices-ms-env
           {{- include "ms.extraSecretEnvironmentVars" .Values | nindent 10 }}
           volumeMounts:
           {{- include "datadogApm.volumeMounts" . | nindent 10 }}
