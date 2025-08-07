@@ -84,6 +84,21 @@ extraSecretEnvironmentVars:
   - secretName: microservices-ms-env
     envName: OPSERA_KAFKA_BOOTSTRAP_URL
     secretKey: OPSERA_KAFKA_BOOTSTRAP_URL
+  - secretName: microservices-ms-env
+    envName: OPSERA_MONGODB_USERNAME
+    secretKey: OPSERA_MONGODB_USERNAME
+  - secretName: microservices-ms-env
+    envName: OPSERA_MONGODB_PASSWORD
+    secretKey: OPSERA_MONGODB_PASSWORD
+  - secretName: microservices-ms-env
+    envName: OPSERA_MONGODB_HOST
+    secretKey: OPSERA_MONGODB_HOST
+  - secretName: microservices-ms-env
+    envName: OPSERA_MONGODB_PORT
+    secretKey: OPSERA_MONGODB_PORT
+  - secretName: microservices-ms-env
+    envName: OPSERA_MONGODB_DATABASE
+    secretKey: OPSERA_MONGODB_DATABASE
 
 serviceCategory: Artifact_CI_Services
 
