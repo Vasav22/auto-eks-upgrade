@@ -119,7 +119,9 @@ extraSecretEnvironmentVars:
   - secretName: microservices-ms-env
     envName: OPSERA_PLATFORM_VPCID
     secretKey: OPSERA_PLATFORM_VPCID
-
+  - secretName: microservices-ms-env
+    envName: OPSERA_HAZELCAST_K8_SERVICE_DNS
+    secretKey: OPSERA_HAZELCAST_K8_SERVICE_DNS
 
 
 CONTAINER_PORT: 8117
