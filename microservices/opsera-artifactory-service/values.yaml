@@ -88,4 +88,7 @@ extraSecretEnvironmentVars:
 
 serviceCategory: Artifact_CI_Services
 
+
+DOCKER_ENV: kubernetes
+
 CONTAINER_PORT: 8109
