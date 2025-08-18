@@ -86,3 +86,19 @@ Inject extra environment populated by secrets, if populated
 {{- end -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Inject extra environment populated by secrets for extended values files, if populated
+This is used to allow adding more secrets in a cluster specific env, but can not override ones already added in values
+*/}}
+{{- define "ms.extraSecretEnvironmentVarsExtended" -}}
+{{- if .extraSecretEnvironmentVarsExtended -}}
+{{- range .extraSecretEnvironmentVarsExtended }}
+- name: {{ .envName }}
+  valueFrom:
+   secretKeyRef:
+     name: {{ .secretName }}
+     key: {{ .secretKey }}
+{{- end -}}
+{{- end -}}
+{{- end -}}
