@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vault-agent
+  labels:
+    app: vault-agent
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: vault-agent
+  template:
+    metadata:
+      labels:
+        app: vault-agent
+    spec:
+      containers:
+      - args:
+        - agent
+        - -config=/etc/vault/vault-agent-config.hcl
+        - -log-level=debug
+        env:
+        - name: VAULT_ADDR
+          value: http://vault-active:8200
+        image: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera/vault
+        name: vault-agent
+        ports:
+        - containerPort: 8200
+        volumeMounts:
+        - mountPath: /etc/vault
+          name: config
+      serviceAccountName: vault
+      volumes:
+      - configMap:
+          items:
+          - key: vault-agent-config.hcl
+            path: vault-agent-config.hcl
+          name: vault-agent-config
+        name: config
+
+  
