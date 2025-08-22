@@ -87,6 +87,8 @@ tolerations: []
 
 affinity: {}
 
+ORCHESTRATION_ENABLED: "true"
+
 extraSecretEnvironmentVars:
   - secretName: microservices-ms-env
     envName: OPSERA_DB_HOST

@@ -16,3 +16,4 @@ ingress:
       paths: [/]
 
 NODE_ENV: testing
+ORCHESTRATION_ENABLED: "true"
