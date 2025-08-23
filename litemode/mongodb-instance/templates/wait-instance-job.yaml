@@ -1,0 +1,23 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: wait-mongodb-instance
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  template:
+    spec:
+      serviceAccount: {{ include "mongodb-instance.fullname" . }}-wait-job
+      serviceAccountName: {{ include "mongodb-instance.fullname" . }}-wait-job
+      restartPolicy: Never
+      containers:
+      - name: kubectl-wait
+        image: 440953937617.dkr.ecr.us-east-2.amazonaws.com/kubectl:1.33.2
+        command:
+        - /bin/sh
+        - -c
+        - |
+          echo "Waiting for MongoDBCommunity Instance to be established..."
+
+          kubectl wait --for=jsonpath='{.status.phase}'=Running mongodbcommunity/mongodb -n {{ .Release.Namespace }}  --timeout=300s

@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: wait-mongodb-crd
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  template:
+    spec:
+      serviceAccount: {{ .Values.operator.name }}-wait-job
+      serviceAccountName: {{ .Values.operator.name }}-wait-job
+      restartPolicy: Never
+      containers:
+      - name: kubectl-wait
+        image: 440953937617.dkr.ecr.us-east-2.amazonaws.com/kubectl:1.33.2
+        command:
+        - /bin/sh
+        - -c
+        - |
+          echo "Waiting for MongoDBCommunity CRD to be established..."
+          kubectl wait --for=condition=Established crd/mongodbcommunity.mongodbcommunity.mongodb.com --timeout=60s
+          kubectl wait --for=condition=Established crd/mongodb.mongodb.com --timeout=60s
+          kubectl wait --for=condition=Established crd/mongodbmulti.mongodb.com --timeout=60s
+          kubectl wait --for=condition=Established crd/mongodbmulticluster.mongodb.com --timeout=60s
+          kubectl wait --for=condition=Established crd/mongodbsearch.mongodb.com --timeout=60s
+          kubectl wait --for=condition=Established crd/mongodbusers.mongodb.com --timeout=60s

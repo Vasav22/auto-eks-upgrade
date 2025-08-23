@@ -90,6 +90,4 @@ spec:
 
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
         name: create-tenant-vault
-      serviceAccount: {{ include "vault-tenant.serviceAccountName" . }}
-      serviceAccountName: {{ include "vault-tenant.serviceAccountName" . }}
       restartPolicy: Never

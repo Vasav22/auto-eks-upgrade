@@ -2,9 +2,6 @@ image:
   repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera/vault-lite-job
   tag: 1.17.2
 
-serviceAccount:
-  create: true
-
 liteClusterId: litedevaza
 
 customerId: tenant1
