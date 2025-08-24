@@ -8,7 +8,17 @@ spec:
   arbiters: 1
   type: ReplicaSet
   version: "6.0.5"
+  replicaSetHorizons:
+    - mongodb-0: mongodb.litedev-private.opsera.io:27017
+    - mongodb-1: mongodb.litedev-private.opsera.io:27018
+    - mongodb-2: mongodb.litedev-private.opsera.io:27019
   security:
+    tls:
+      enabled: true
+      certificateKeySecretRef:
+        name: mongodb-tls
+      caConfigMapRef:
+        name: mongodb-ca-tls
     authentication:
       modes: ["SCRAM"]
   users:

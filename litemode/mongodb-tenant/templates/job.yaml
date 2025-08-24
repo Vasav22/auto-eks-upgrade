@@ -23,7 +23,7 @@ spec:
         - |
           set -e
 
-          mongosh "mongodb://mongodb-0.mongodb-svc.opsera-system.svc.cluster.local:27017,mongodb-1.mongodb-svc.opsera-system.svc.cluster.local:27017,mongodb-2.mongodb-svc.opsera-system.svc.cluster.local:27017/?replicaSet=mongodb" -u root -p {{ .Values.mongodbRootPassword }} --eval '
+          mongosh "mongodb://mongodb-primary-0.mongodb-headless.opsera-system.svc.cluster.local:27017,mongodb-secondary-0.mongodb-headless.opsera-system.svc.cluster.local:27017,mongodb-secondary-1.mongodb-headless.opsera-system.svc.cluster.local:27017/?replicaSet=rs0" -u root -p {{ .Values.mongodbRootPassword }} --eval '
           try {
             use("{{ .Values.customerId }}_{{ .Values.mongodbDatabase }}");
             db.createUser({
@@ -38,7 +38,7 @@ spec:
           }
           '
 
-          mongosh "mongodb://mongodb-0.mongodb-svc.opsera-system.svc.cluster.local:27017,mongodb-1.mongodb-svc.opsera-system.svc.cluster.local:27017,mongodb-2.mongodb-svc.opsera-system.svc.cluster.local:27017/{{ .Values.customerId}}_{{ .Values.mongodbDatabase }}?replicaSet=mongodb" -u {{ .Values.customerId }}_{{ .Values.mongodbUsername }} -p {{ .Values.mongodbPassword }}  --eval '
+          mongosh "mongodb://mongodb-primary-0.mongodb-headless.opsera-system.svc.cluster.local:27017,mongodb-secondary-0.mongodb-headless.opsera-system.svc.cluster.local:27017,mongodb-secondary-1.mongodb-headless.opsera-system.svc.cluster.local:27017/{{ .Values.customerId}}_{{ .Values.mongodbDatabase }}?replicaSet=rs0" -u {{ .Values.customerId }}_{{ .Values.mongodbUsername }} -p {{ .Values.mongodbPassword }}  --eval '
           try {
             db.dummy.insertOne({ init: true });
           } catch (e) {
