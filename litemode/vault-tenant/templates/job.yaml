@@ -30,7 +30,7 @@ spec:
               --header 'accept: application/json' \
               --header 'Content-Type: application/json' \
               --data-raw '{
-                  "customerId": "{{ .Values.liteClusterId }}",
+                  "customerId": "{{ .Values.cluster_name }}",
                   "componentKeys": [
                       "VAULT_TOKEN",
                       "VAULT_KEY",
@@ -51,11 +51,11 @@ spec:
           set +e
 
           ### Enable tenant's path 
-          vault secrets enable -path={{ .Values.liteClusterId }}{{ .Values.customerId }} kv
+          vault secrets enable -path={{ .Values.tenant_name }} kv
          
           ### Create policy for tenant token 
-          vault policy write {{ .Values.liteClusterId }}{{ .Values.customerId }}-policy - <<EOF
-          path "litedev1tenant1/*" {
+          vault policy write {{ .Values.tenant_name }}-policy - <<EOF
+          path "{{ .Values.tenant_name }}/*" {
             capabilities = ["create", "read", "update", "delete", "list"]
           }
           EOF
@@ -63,11 +63,11 @@ spec:
           set -e
          
           ### Create tenant token with the tenant policy 
-          tenant_token=$(vault token create -policy="{{ .Values.liteClusterId }}{{ .Values.customerId }}-policy" -orphan -format=json | jq -r '.auth.client_token')
+          tenant_token=$(vault token create -policy="{{ .Values.tenant_name }}-policy" -orphan -format=json | jq -r '.auth.client_token')
 
           ### Login as tenant tokena and write sample secret
           vault login -no-print $tenant_token
-          vault kv put {{ .Values.liteClusterId }}{{ .Values.customerId }}/data1 value="secretA"
+          vault kv put {{ .Values.tenant_name }}/data1 value="secretA"
 
           ### Push tenant token to Platform Vault
           vault_uri=$(printf "{{ .Values.VAULT_URI }}" | base64 | tr -d '\n')
@@ -78,7 +78,7 @@ spec:
                   --header 'accept: application/json' \
                   --header 'Content-Type: application/json' \
                   --data-raw '{
-                      "customerId": "{{ .Values.liteClusterId }}{{ .Values.customerId }}",
+                      "customerId": "{{ .Values.tenant_name }}",
                       "data": {
                         "VAULT_TOKEN": "'$vault_tenant_token'",
                         "VAULT_KEY": "b3BzZXJh",
@@ -86,7 +86,6 @@ spec:
                         "VAULT_ROLE": "'$vault_role'"
                       }
                   }' -k
-
 
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
         name: create-tenant-vault
