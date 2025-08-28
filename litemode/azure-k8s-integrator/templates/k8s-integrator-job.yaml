@@ -1,9 +1,14 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "k8s-integrator-volume.fullname" . }}-update-platform-vault
+  name: {{ .Values.tenant_name }}-{{ include "k8s-integrator-volume.fullname" . }}-update-platform-vault
+  namespace: {{ .Values.opsera_system_namespace }}
   labels:
     {{- include "k8s-integrator-volume.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "2"
+    "helm.sh/hook-delete-policy": before-hook-creation
 spec:
   template:
     spec:

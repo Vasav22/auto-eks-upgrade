@@ -24,7 +24,7 @@ spec:
           image: 440953937617.dkr.ecr.us-east-2.amazonaws.com/httpd:2.4.65
           ports:
             - containerPort: 80
-              name: opsera-shared-workspace
+              name: http
           volumeMounts:
             - name: opsera-shared-workspace
               mountPath: "/opsera/shared/workspace"
