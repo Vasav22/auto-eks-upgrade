@@ -594,7 +594,9 @@ postgresql:
 ##
 pgpoolImage:
   registry: docker.io
-  repository: bitnami/pgpool
+  #repository: bitnami/pgpool
+  #tag: 4.3.1-debian-10-r55
+  repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/bitnami/pgpool
   tag: 4.3.1-debian-10-r55
   ## Specify a imagePullPolicy. Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
   ## ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images
