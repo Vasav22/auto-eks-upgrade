@@ -593,7 +593,7 @@ postgresql:
 ## @param pgpoolImage.debug Specify if debug logs should be enabled
 ##
 pgpoolImage:
-  registry: docker.io
+  #registry: docker.io
   #repository: bitnami/pgpool
   #tag: 4.3.1-debian-10-r55
   repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/bitnami/pgpool
