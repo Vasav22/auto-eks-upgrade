@@ -5,6 +5,13 @@ autoscaling:
 
 NODE_ENV: testing
 
+ingress:
+  enabled: true
+  hosts:
+  - host: agent-supervisor-service.opsera-test-private.opsera.io
+    paths: 
+    - path: /
+
 extraSecretEnvironmentVarsExtended:
   - secretName: microservices-ms-env
     envName: WANDB_API_KEY

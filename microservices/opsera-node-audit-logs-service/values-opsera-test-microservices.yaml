@@ -13,4 +13,12 @@ autoscaling:
   targetCPUUtilizationPercentage: 300
   targetMemoryUtilizationPercentage: 120
 
+ingress:
+  enabled: true
+  hosts:
+    - host: node-audit-logs-service.opsera-test-private.opsera.io
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+
 NODE_ENV: testing

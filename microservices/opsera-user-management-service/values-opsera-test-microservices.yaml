@@ -3,4 +3,9 @@ autoscaling:
   minReplicas: 1
   maxReplicas: 2
 
+ingress:
+  enabled: true
+  hosts:
+    - host: user-management-service.opsera-test-private.opsera.io
+
 NODE_ENV: testing

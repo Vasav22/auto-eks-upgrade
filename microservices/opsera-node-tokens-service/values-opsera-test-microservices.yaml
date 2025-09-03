@@ -11,4 +11,10 @@ autoscaling:
   minReplicas: 1
   maxReplicas: 3
 
+ingress:
+  enabled: true
+  hosts:
+    - host: node-tokens-service.opsera-test-private.opsera.io
+      paths: [/]
+
 NODE_ENV: testing

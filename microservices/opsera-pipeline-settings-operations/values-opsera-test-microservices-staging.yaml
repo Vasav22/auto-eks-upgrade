@@ -6,6 +6,14 @@ resources:
     cpu: 100m
     memory: 1Gi
 
+ingress:
+  enabled: true
+  hosts:
+    - host: pipeline-settings-operations-service.opsera-test-private.opsera.io
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+
 autoscaling:
   enabled: true
   minReplicas: 1
