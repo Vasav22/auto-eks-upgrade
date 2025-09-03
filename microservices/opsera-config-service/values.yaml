@@ -55,11 +55,11 @@ ingress:
 
 resources:
   limits:
-    cpu: 750m
-    memory: 1Gi
+    cpu: 1500m
+    memory: 3Gi
   requests:
-    cpu: 100m
-    memory: 512Mi
+    cpu: 1500m
+    memory: 3Gi
 
 nodeSelector:
   Name: microservice-node
