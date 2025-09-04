@@ -78,7 +78,7 @@ spec:
                   --header 'accept: application/json' \
                   --header 'Content-Type: application/json' \
                   --data-raw '{
-                      "customerId": "{{ .Values.tenant_name }}",
+                      "customerId": "{{ .Values.customer_id }}",
                       "data": {
                         "VAULT_TOKEN": "'$vault_tenant_token'",
                         "VAULT_KEY": "b3BzZXJh",
