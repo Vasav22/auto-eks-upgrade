@@ -2,3 +2,8 @@ autoscaling:
   minReplicas: 1
 
 NODE_ENV: staging
+
+extraSecretEnvironmentVarsExtended:
+  - secretName: microservices-ms-env
+    envName: WANDB_API_KEY
+    secretKey: OPSERA_WANDB_API_KEY
