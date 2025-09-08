@@ -59,15 +59,15 @@ spec:
             capabilities = ["create", "read", "update", "delete", "list"]
           }
           
-          path "transit/encrypt/{{ .Values.tenant_name }}/*" {
+          path "transit/encrypt/{{ .Values.tenant_name }}" {
             capabilities = ["update"]
           }
           
-          path "transit/decrypt/{{ .Values.tenant_name }}/*" {
+          path "transit/decrypt/{{ .Values.tenant_name }}" {
             capabilities = ["update"]
           }
           
-          path "transit/keys/{{ .Values.tenant_name }}/*" {
+          path "transit/keys/{{ .Values.tenant_name }}" {
             capabilities = ["create", "read", "update", "delete", "list"]
           }
           
