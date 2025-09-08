@@ -13,7 +13,7 @@ autoscaling:
   targetCPUUtilizationPercentage: 320
   targetMemoryUtilizationPercentage: 160
 
-clusterName: opsera-test-platform
+#clusterName: opsera-test-platform
 
 datadogApm:
   enabled: false
