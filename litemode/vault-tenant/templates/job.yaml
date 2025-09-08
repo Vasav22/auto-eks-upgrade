@@ -50,12 +50,28 @@ spec:
          
           set +e
 
-          ### Enable tenant's path 
-          vault secrets enable -path={{ .Values.tenant_name }} kv
-         
+          # Create a transit key for {{ .Values.tenant_name }}
+          vault write -f transit/keys/{{ .Values.tenant_name }}/opsera
+
           ### Create policy for tenant token 
           vault policy write {{ .Values.tenant_name }}-policy - <<EOF
-          path "{{ .Values.tenant_name }}/*" {
+          path "secret/{{ .Values.tenant_name }}/*" {
+            capabilities = ["create", "read", "update", "delete", "list"]
+          }
+          
+          path "transit/encrypt/{{ .Values.tenant_name }}/*" {
+            capabilities = ["update"]
+          }
+          
+          path "transit/decrypt/{{ .Values.tenant_name }}/*" {
+            capabilities = ["update"]
+          }
+          
+          path "transit/keys/{{ .Values.tenant_name }}/*" {
+            capabilities = ["create", "read", "update", "delete", "list"]
+          }
+          
+          path "kv/{{ .Values.tenant_name }}/*" {
             capabilities = ["create", "read", "update", "delete", "list"]
           }
           EOF
@@ -67,7 +83,7 @@ spec:
 
           ### Login as tenant tokena and write sample secret
           vault login -no-print $tenant_token
-          vault kv put {{ .Values.tenant_name }}/data1 value="secretA"
+          vault kv put kv/{{ .Values.tenant_name }}/data1 value="secretA"
 
           ### Push tenant token to Platform Vault
           vault_uri=$(printf "{{ .Values.VAULT_URI }}" | base64 | tr -d '\n')
