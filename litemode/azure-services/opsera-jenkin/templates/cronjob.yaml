@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cron-delete-archive
+spec:
+  schedule: "0 0 * * *"
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 5
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: cron-delete-archive
+            image: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera-pipeline/jenkins-agent:latest
+            imagePullPolicy: Always
+            command: ["/home/cronjobs/delete-artifacts/01.sh"]
+            args:
+            - admin
+            - {{  .Values.password }}
+            - {{ .Values.JENKINS_CRONJOB_URL }}
+          restartPolicy: Never
