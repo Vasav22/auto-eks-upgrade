@@ -51,7 +51,7 @@ spec:
           set +e
 
           # Create a transit key for {{ .Values.tenant_name }}
-          vault write -f transit/keys/{{ .Values.tenant_name }}/opsera
+          vault write -f transit/keys/{{ .Values.tenant_name }}
 
           ### Create policy for tenant token 
           vault policy write {{ .Values.tenant_name }}-policy - <<EOF
