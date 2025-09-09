@@ -76,6 +76,17 @@ spec:
           }
           EOF
 
+          vault auth enable kubernetes
+          vault write auth/kubernetes/config kubernetes_host="{{ .Values.K8S_HOST }}" disable_iss_validation=true
+          vault write auth/kubernetes/role/{{ .Values.tenant_name }} \
+            bound_service_account_names=vault \
+            bound_service_account_namespaces=opsera-system \
+            policies={{ .Values.tenant_name }}-policy \
+            ttl=1h
+
+          KUBE_TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
+          echo $KUBE_TOKEN
+
           set -e
          
           ### Create tenant token with the tenant policy 
@@ -87,8 +98,9 @@ spec:
 
           ### Push tenant token to Platform Vault
           vault_uri=$(printf "{{ .Values.VAULT_URI }}" | base64 | tr -d '\n')
-          vault_role=$(printf "dev" | base64)
+          vault_role=$(printf "{{ .Values.tenant_name }}" | base64)
           vault_tenant_token=$(echo -n $tenant_token | base64 -w 0)
+          kube_token=$(echo $KUBE_TOKEN | base64 | tr -d '\n')
          
           curl --location --request POST {{ .Values.microservice_url }} \
                   --header 'accept: application/json' \
@@ -99,7 +111,8 @@ spec:
                         "VAULT_TOKEN": "'$vault_tenant_token'",
                         "VAULT_KEY": "b3BzZXJh",
                         "VAULT_URI": "'$vault_uri'",
-                        "VAULT_ROLE": "'$vault_role'"
+                        "VAULT_ROLE": "'$vault_role'",
+                        "KUBE_TOKEN": "'$kube_token'"
                       }
                   }' -k
 
