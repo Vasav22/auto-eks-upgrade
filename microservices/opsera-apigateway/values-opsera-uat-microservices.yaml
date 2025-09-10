@@ -1,6 +1,6 @@
 ingress:
   hosts:
-    - host: apigateway.uat-private.opsera.io
+    - host: apigateway.opsera-uat-private.opsera.io
       paths:
         - path: /
           pathType: ImplementationSpecific
