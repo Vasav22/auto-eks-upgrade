@@ -120,7 +120,7 @@ diagnosticMode:
 ## @param postgresqlImage.debug Specify if debug logs should be enabled
 ##
 postgresqlImage:
-  registry: docker.io
+  registry: 440953937617.dkr.ecr.us-east-2.amazonaws.com
   repository: bitnami/postgresql-repmgr
   tag: 11.15.0-debian-10-r63
   ## Specify a imagePullPolicy. Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
@@ -593,7 +593,7 @@ postgresql:
 ## @param pgpoolImage.debug Specify if debug logs should be enabled
 ##
 pgpoolImage:
-  registry: docker.io
+  registry: 440953937617.dkr.ecr.us-east-2.amazonaws.com
   repository: bitnami/pgpool
   tag: 4.3.1-debian-10-r55
   ## Specify a imagePullPolicy. Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
@@ -1025,7 +1025,7 @@ ldap:
 ## @param metricsImage.debug Specify if debug logs should be enabled
 ##
 metricsImage:
-  registry: docker.io
+  registry: 440953937617.dkr.ecr.us-east-2.amazonaws.com
   repository: bitnami/postgres-exporter
   tag: 0.10.1-debian-10-r85
   ## Specify a imagePullPolicy. Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
