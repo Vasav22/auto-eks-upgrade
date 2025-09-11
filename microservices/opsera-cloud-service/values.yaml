@@ -104,3 +104,5 @@ extraSecretEnvironmentVars:
     secretKey: OPSERA_HAZELCAST_K8_SERVICE_DNS
 
 serviceCategory: Cloud_Management_Services
+
+AWS_REGION: us-east-2
