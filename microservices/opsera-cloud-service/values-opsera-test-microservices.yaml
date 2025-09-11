@@ -17,3 +17,6 @@ clusterName: opsera-test-platform
 
 datadogApm:
   enabled: false
+
+nodeGroupIAM: opsera-test-eks-node-group
+accountid: "440953937617"

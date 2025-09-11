@@ -3,10 +3,13 @@ resources:
     cpu: 500m
     memory: 3Gi
   requests:
-    cpu: 100m
-    memory: 1Gi
+    cpu: 500m
+    memory: 3Gi
 
 autoscaling:
   enabled: true
   targetCPUUtilizationPercentage: 300
   targetMemoryUtilizationPercentage: 180
+
+nodeGroupIAM: honeywell-platform-eks-node-group
+accountid: "440953937617"

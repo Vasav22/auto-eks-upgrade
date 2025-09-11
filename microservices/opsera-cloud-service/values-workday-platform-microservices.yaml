@@ -10,3 +10,6 @@ autoscaling:
   enabled: true
   targetCPUUtilizationPercentage: 300
   targetMemoryUtilizationPercentage: 180
+
+nodeGroupIAM: workday-platform-eks-node-group
+accountid: "440953937617"

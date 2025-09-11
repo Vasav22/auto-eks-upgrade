@@ -5,7 +5,6 @@ resources:
   requests:
     cpu: 100m
     memory: 1Gi
-
 autoscaling:
   enabled: true
   minReplicas: 1
@@ -17,3 +16,6 @@ clusterName: opsera-uat-platform
 
 datadogApm:
   enabled: false
+
+nodeGroupIAM: opsera-uat-eks-node-group
+accountid: "440953937617"
