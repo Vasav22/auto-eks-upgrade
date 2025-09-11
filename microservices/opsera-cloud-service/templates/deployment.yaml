@@ -63,6 +63,8 @@ spec:
             value: {{ .Values.DOCKER_ENV }}
           - name: CONTAINER_PORT
             value: "{{ .Values.CONTAINER_PORT }}"
+          - name: AWS_REGION
+            value: {{ .Values.AWS_REGION }}
           {{- include "ms.extraSecretEnvironmentVars" .Values | nindent 10 }}
           volumeMounts:
           {{- include "datadogApm.volumeMounts" . | nindent 10 }}
