@@ -76,7 +76,7 @@ diagnosticMode:
 ## @param image.debug Enable image debug mode
 ##
 image:
-  registry: docker.io
+  registry: 440953937617.dkr.ecr.us-east-2.amazonaws.com
   repository: bitnami/redis
   tag: 6.2.7-debian-11-r0
   ## Specify a imagePullPolicy
@@ -923,7 +923,7 @@ sentinel:
   ## @param sentinel.image.debug Enable image debug mode
   ##
   image:
-    registry: docker.io
+    registry: 440953937617.dkr.ecr.us-east-2.amazonaws.com
     repository: bitnami/redis-sentinel
     tag: 6.2.7-debian-11-r0
     ## Specify a imagePullPolicy
@@ -1338,7 +1338,7 @@ metrics:
   ## @param metrics.image.pullSecrets Redis&reg; Exporter image pull secrets
   ##
   image:
-    registry: docker.io
+    registry: 440953937617.dkr.ecr.us-east-2.amazonaws.com
     repository: bitnami/redis-exporter
     tag: 1.39.0-debian-11-r0
     pullPolicy: IfNotPresent
