@@ -1,0 +1,13 @@
+resources:
+  limits:
+    cpu: 700m
+    memory: 2Gi
+  requests:
+    cpu: 700m
+    memory: 2Gi
+
+autoscaling:
+  enabled: true
+  minReplicas: 4
+
+natsHubUrl: nats://nats-svc.nats-hub:4222
