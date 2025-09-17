@@ -1,0 +1,135 @@
+# Default values for backstage.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: "440953937617.dkr.ecr.us-east-2.amazonaws.com/"
+  name: "backstage"
+  tag: "0.0.1"
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+clusterRoleBinding:
+  # Specifies whether a cluster role binding should be created
+  create: true
+
+podAnnotations: {}
+
+service:
+  type: ClusterIP
+  port: 7007
+
+resources:
+  limits:
+    cpu: 1000m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+
+additionalConfigMapMounts: []
+# - configMap: ca-bundle
+#   mountPath: /etc/ssl/bundle.pem
+#   subPath: bundle.pem
+
+github:
+  accessToken: ""
+
+postgres:
+  port: "5432"
+  host: postgres
+  user: fromHelmUpgrade
+  password: fromHelmUpgrade
+
+backstageToken: fromHelmUpgrade
+
+catalog:
+  demoCatalogLocation: "https://github.com/PlatformersCommunity/backstage-helm-chart/blob/main/demo-catalog/all.yaml"
+  customCatalogLocation: "None"
+
+backstage:
+  baseURL: "http://localhost"
+
+appConfig: |
+  organization:
+    name: Platformers Community
+
+  app:
+    title: Platformers Community Backstage
+    baseUrl: ${BASE_URL}:7007
+
+  backend:
+    baseUrl: ${BASE_URL}:7007
+    listen: ':7007'
+    
+    database:
+      client: pg
+      connection:
+        host: ${POSTGRES_HOST}
+        port: ${POSTGRES_PORT}
+        user: ${POSTGRES_USER}
+        password: ${POSTGRES_PASSWORD}
+
+  integrations:
+    github:
+      - host: github.com
+        token: ${GITHUB_TOKEN}
+  auth:
+    # see https://backstage.io/docs/auth/ to learn about auth providers
+    providers: {}
+
+  scaffolder:
+
+  techdocs:
+    builder: 'local'
+    generator:
+      runIn: 'local'
+    publisher:
+      type: 'local'
+
+  scorecards:
+    test: none
+
+  catalog:
+    locations:
+    - type: url
+      target: ${DEMO_CATALOG_LOCATION}
+      rules:
+      - allow: [Component, System, API, Resource, Location]
+    - type: url
+      target: ${CUSTOM_CATALOG_LOCATION}
+      rules:
+      - allow: [Component, System, API, Resource, Location]
+
+  kubernetes:
+    serviceLocatorMethod:
+      type: 'multiTenant'
+    clusterLocatorMethods:
+      - type: 'config'
+        clusters:
+          - url: kubernetes.default.svc.cluster.local:443
+            name: local
+            authProvider: 'serviceAccount'
+            skipTLSVerify: false
+            skipMetricsLookup: true
