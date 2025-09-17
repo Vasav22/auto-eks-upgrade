@@ -94,7 +94,6 @@ extraSecretEnvironmentVars:
     envName: OPSERA_HAZELCAST_K8_SERVICE_DNS
     secretKey: OPSERA_HAZELCAST_K8_SERVICE_DNS
 
-natsHubUrl: nats://nats-svc.nats-hub:4222/
 serviceCategory: Source_Code_Management_Services
 
 CONTAINER_PORT: 8120 
