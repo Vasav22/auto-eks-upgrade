@@ -1,6 +1,0 @@
-dependencies:
-- name: community-operator
-  repository: file://../mongodb-community-operator
-  version: 0.13.0
-digest: sha256:7ab735c854ccf7dc5b9b1540b55eb9451723508f677423f5a528be4224170b7c
-generated: "2025-08-21T18:19:36.800765+05:30"
