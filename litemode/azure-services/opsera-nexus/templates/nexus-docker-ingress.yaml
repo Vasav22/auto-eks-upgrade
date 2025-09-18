@@ -1,0 +1,82 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/proxy-body-size: 10G
+    nginx.org/client-max-body-size: 10G
+  name: opsera-nexus-docker
+  # namespace: nexustoolnew
+spec:
+  rules:
+  {{- range .Values.ingress.hosts }}
+    - host: "8082-{{ .host }}"
+      http:
+        paths:
+        - backend:
+              service:
+                name: opsera-nexus-docker
+                port:
+                  number: 8082
+          path: /
+          pathType: ImplementationSpecific
+    - host: "8083-{{ .host }}"
+      http:
+        paths:
+        - backend:
+              service:
+                name: opsera-nexus-docker
+                port:
+                  number: 8083
+          path: /
+          pathType: ImplementationSpecific
+    - host: "8084-{{ .host }}"
+      http:
+        paths:
+        - backend:
+              service:
+                name: opsera-nexus-docker
+                port:
+                  number: 8084
+          path: /
+          pathType: ImplementationSpecific
+    - host: "8085-{{ .host }}"
+      http:
+        paths:
+        - backend:
+              service:
+                name: opsera-nexus-docker
+                port:
+                  number: 8085
+          path: /
+          pathType: ImplementationSpecific
+  {{- end }}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: opsera-nexus-docker
+  # namespace: nexustoolnew
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8082
+      targetPort: 8082
+      protocol: TCP
+      name: docker-1
+    - port: 8083
+      targetPort: 8083
+      protocol: TCP
+      name: docker-2
+    - port: 8084
+      targetPort: 8084
+      protocol: TCP
+      name: docker-3
+    - port: 8085
+      targetPort: 8085
+      protocol: TCP
+      name: docker-4
+  selector:
+    app.kubernetes.io/name: opsera-nexus
+    app.kubernetes.io/instance: opsera-nexus
