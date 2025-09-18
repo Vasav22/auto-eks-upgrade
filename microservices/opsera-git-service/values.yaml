@@ -24,11 +24,11 @@ serviceAccount:
 podSecurityContext: {}
   # fsGroup: 2000
 
-securityContext:
-  runAsNonRoot: true
-  runAsUser: 1000
-  runAsGroup: 1000
-  allowPrivilegeEscalation: false
+  #securityContext:
+  #runAsNonRoot: true
+  #runAsUser: 1000
+  #runAsGroup: 1000
+  #allowPrivilegeEscalation: false
   # capabilities:
   #   drop:
   #   - ALL
