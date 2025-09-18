@@ -7,6 +7,7 @@ replicaCount: 1
 image:
   repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera-dataops-service
   pullPolicy: Always
+  tag: 3b64b047d8a94b359b29f74d3f6d7f804bbfb8e4
 
 imagePullSecrets: []
 nameOverride: ""
@@ -68,6 +69,8 @@ autoscaling:
   targetMemoryUtilizationPercentage: 240
 
 tolerations: []
+
+CONTAINER_PORT: 8121
 
 affinity: {}
 
