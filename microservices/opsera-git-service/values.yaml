@@ -88,9 +88,6 @@ extraSecretEnvironmentVars:
     envName: OPSERA_API_NODE_URL
     secretKey: OPSERA_API_NODE_URL
   - secretName: microservices-ms-env
-    envName: OPSERA_NATS_SERVICE_URL
-    secretKey: OPSERA_NATS_SERVICE_URL
-  - secretName: microservices-ms-env
     envName: OPSERA_HAZELCAST_K8_SERVICE_DNS
     secretKey: OPSERA_HAZELCAST_K8_SERVICE_DNS
 
