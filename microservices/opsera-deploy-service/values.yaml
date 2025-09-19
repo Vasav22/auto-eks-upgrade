@@ -56,11 +56,12 @@ ingress:
 
 resources:
   limits:
-    cpu: 750m
-    memory: 1Gi
+    cpu: 2000m
+    memory: 2Gi
   requests:
-    cpu: 100m
-    memory: 512Mi
+    cpu: 1000m
+    memory: 1Gi
+
 
 nodeSelector:
   Name: microservice-node
@@ -69,7 +70,7 @@ autoscaling:
   enabled: true
   minReplicas: 1
   maxReplicas: 10
-  targetCPUUtilizationPercentage: 450
+  targetCPUUtilizationPercentage: 120
   targetMemoryUtilizationPercentage: 120
 
 tolerations: []
