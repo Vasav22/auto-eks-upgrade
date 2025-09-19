@@ -103,6 +103,10 @@ spec:
           {{- include "datadogApm.volumeMounts" . | nindent 10 }}
           - name: microservices-efs
             mountPath: /apps/OpsERA/logs/components/
+          - name: certs-volume
+            mountPath: /certs
+          - name: truststore-volume
+            mountPath: /truststore
       volumes:
         {{- include "datadogApm.volumes" . | nindent 8 }}
         - name: microservices-efs
