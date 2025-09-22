@@ -3,10 +3,10 @@ autoscaling:
 
 resources:
   limits:
-    cpu: 750m
-    memory: 2Gi
+    cpu: 1500m
+    memory: 7Gi
   requests:
-    cpu: 750m
-    memory: 2Gi
+    cpu: 1500m
+    memory: 7Gi
 
 natsHubUrl: nats://nats-svc.nats-hub:4222/
