@@ -102,12 +102,12 @@ extraSecretEnvironmentVars:
     secretKey: OPSERA_ENV
   - secretName: microservices-ms-env
     envName: OPSERA_LDAP_URL
-    secretkey: OPSERA_LDAP_URL
+    secretKey: OPSERA_LDAP_URL
   - secretName: microservices-ms-env
     envName: OPSERA_LDAP_SERVICE_ACC_PASS
-    secretkey: OPSERA_LDAP_SERVICE_ACC_PASS
+    secretKey: OPSERA_LDAP_SERVICE_ACC_PASS
   - secretName: microservices-ms-env
     envName: LDAP_DIR_ACC_PASS
-    secretkey: LDAP_DIR_ACC_PASS
+    secretKey: LDAP_DIR_ACC_PASS
 
 serviceCategory: Platform_Services
