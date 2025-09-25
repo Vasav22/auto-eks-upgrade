@@ -82,4 +82,6 @@ extraSecretEnvironmentVars:
     envName: OPSERA_KAFKA_BOOTSTRAP_URL
     secretKey: OPSERA_KAFKA_BOOTSTRAP_URL
 
+DOCKER_ENV: kubernetes
+
 serviceCategory: Artifact_CI_Services
