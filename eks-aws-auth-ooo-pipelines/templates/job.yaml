@@ -8,7 +8,7 @@ spec:
       serviceAccountName: {{ include "eks-aws-auth.serviceAccountName" . }}
       containers:
         - name: {{ include "eks-aws-auth.fullname" . }}
-          image: bitnami/kubectl:latest
+          image: 440953937617.dkr.ecr.us-east-2.amazonaws.com/bitnami/kubectl:latest
           command:
             - /bin/sh
             - -c
