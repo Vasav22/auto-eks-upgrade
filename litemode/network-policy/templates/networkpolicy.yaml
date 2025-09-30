@@ -40,3 +40,10 @@ spec:
       protocol: UDP
     - port: 53
       protocol: TCP
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: opsera-system
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: opsera-jobengine-core
