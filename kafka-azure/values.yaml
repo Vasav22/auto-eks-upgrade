@@ -524,7 +524,7 @@ externalAccess:
     ## ref: https://hub.docker.com/r/bitnami/kubectl/tags/
     ##
     image:
-      registry: docker.io
+      registry: 440953937617.dkr.ecr.us-east-2.amazonaws.com
       repository: bitnami/kubectl
       tag: 1.17.13-debian-10-r21
       ## Specify a imagePullPolicy
@@ -661,7 +661,7 @@ volumePermissions:
   ## ref: https://hub.docker.com/r/bitnami/minideb/tags/
   ##
   image:
-    registry: docker.io
+    registry: 440953937617.dkr.ecr.us-east-2.amazonaws.com
     repository: bitnami/minideb
     tag: buster
     ## Specify a imagePullPolicy
@@ -813,7 +813,7 @@ metrics:
     ## ref: https://hub.docker.com/r/bitnami/jmx-exporter/tags/
     ##
     image:
-      registry: docker.io
+      registry: 440953937617.dkr.ecr.us-east-2.amazonaws.com
       repository: bitnami/jmx-exporter
       tag: 0.14.0-debian-10-r64
       ## Specify a imagePullPolicy

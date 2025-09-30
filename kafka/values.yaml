@@ -67,7 +67,7 @@ diagnosticMode:
 ## @param image.debug Specify if debug values should be set
 ##
 image:
-  registry: docker.io
+  registry: 440953937617.dkr.ecr.us-east-2.amazonaws.com
   repository: bitnami/kafka
   tag: 3.3.2-debian-11-r0
   digest: ""
@@ -767,7 +767,7 @@ externalAccess:
     ## @param externalAccess.autoDiscovery.image.pullSecrets Init container auto-discovery image pull secrets
     ##
     image:
-      registry: docker.io
+      registry: 440953937617.dkr.ecr.us-east-2.amazonaws.com
       repository: bitnami/kubectl
       tag: 1.25.6-debian-11-r1
       digest: ""
@@ -1088,7 +1088,7 @@ metrics:
     ## @param metrics.kafka.image.pullSecrets Specify docker-registry secret names as an array
     ##
     image:
-      registry: docker.io
+      registry: 440953937617.dkr.ecr.us-east-2.amazonaws.com
       repository: bitnami/kafka-exporter
       tag: 1.6.0-debian-11-r52
       digest: ""
@@ -1325,7 +1325,7 @@ metrics:
     ## @param metrics.jmx.image.pullSecrets Specify docker-registry secret names as an array
     ##
     image:
-      registry: docker.io
+      registry: 440953937617.dkr.ecr.us-east-2.amazonaws.com
       repository: bitnami/jmx-exporter
       tag: 0.17.2-debian-11-r41
       digest: ""
