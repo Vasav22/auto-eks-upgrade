@@ -107,9 +107,8 @@ spec:
   {{- end -}}
   {{- if .Values.server.ingress.tls }}
   tls:
-    {{- range .Values.server.ingress.tls }}
-    - hosts: 
-        {{- range .hosts }}
+    - hosts:
+        {{- range .Values.server.ingress.tls }} 
         - {{ . | quote }}
         {{- end }}
       secretName: {{ $.Release.Namespace }}-argocd-tls
