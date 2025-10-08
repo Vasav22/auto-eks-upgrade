@@ -120,7 +120,7 @@ diagnosticMode:
 ## @param postgresqlImage.debug Specify if debug logs should be enabled
 ##
 postgresqlImage:
-  registry: docker.io
+  registry: 440953937617.dkr.ecr.us-east-2.amazonaws.com
   repository: bitnami/postgresql-repmgr
   tag: 11.15.0-debian-10-r63
   ## Specify a imagePullPolicy. Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
