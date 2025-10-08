@@ -109,7 +109,7 @@ spec:
   tls:
   {{- if .Values.server.ingress.tls }}
     {{- range $host := .Values.server.ingress.tls }}
-    - host: {{ $host }}
+    - hosts: {{ $host }}
       secretName: {{ $.Release.Namespace }}-argocd-tls
     {{- end }}
   {{- end -}}
