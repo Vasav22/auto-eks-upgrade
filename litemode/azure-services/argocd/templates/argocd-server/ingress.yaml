@@ -1,11 +1,11 @@
 {{- if .Values.server.ingress.enabled -}}
 {{- $ := . -}}
-{{- $serviceName := include "argo-cd.server.fullname" $ -}}
-{{- $servicePort := ternary .Values.server.ingress.https .Values.server.service.servicePortHttps .Values.server.service.servicePortHttp -}}
+{{- $serviceName := include "argo-cd.server.fullname" . -}}
+{{- $servicePort := ternary .Values.server.service.servicePortHttps .Values.server.service.servicePortHttp .Values.server.ingress.https -}}
 {{- $paths := .Values.server.ingress.paths -}}
 {{- $extraPaths := .Values.server.ingress.extraPaths -}}
 {{- $pathType := .Values.server.ingress.pathType -}}
-apiVersion: {{ include "argo-cd.ingress.apiVersion" $ }}
+apiVersion: {{ include "argo-cd.ingress.apiVersion" . }}
 kind: Ingress
 metadata:
 {{- if .Values.server.ingress.annotations }}
@@ -14,13 +14,13 @@ metadata:
     {{ $key }}: {{ $value | quote }}
   {{- end }}
   {{- if and .Values.server.ingressGrpc.isAWSALB .Values.server.ingressGrpc.enabled }}
-    alb.ingress.kubernetes.io/conditions.{{ template "argo-cd.server.fullname" $ }}-grpc: |
+    alb.ingress.kubernetes.io/conditions.{{ template "argo-cd.server.fullname" . }}-grpc: |
       [{"field":"http-header","httpHeaderConfig":{"httpHeaderName": "Content-Type", "values":["application/grpc"]}}]
   {{- end }}
 {{- end }}
-  name: {{ template "argo-cd.server.fullname" $ }}
+  name: {{ template "argo-cd.server.fullname" . }}
   labels:
-    {{- include "argo-cd.labels" (dict "context" $ "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.server.name "name" .Values.server.name) | nindent 4 }}
     {{- if .Values.server.ingress.labels }}
     {{- toYaml .Values.server.ingress.labels | nindent 4 }}
     {{- end }}
@@ -40,45 +40,45 @@ spec:
           {{- toYaml $extraPaths | nindent 10 }}
           {{- end }}
           {{- range $p := $paths }}
-            {{- if and $.Values.server.ingressGrpc.isAWSALB $.Values.server.ingressGrpc.enabled }}
-            - {{- if eq (include "argo-cd.ingress.apiVersion" $) "networking.k8s.io/v1" }}
-              pathType: Prefix
-              {{- end }}
-              backend:
-                {{- if eq (include "argo-cd.ingress.apiVersion" $) "networking.k8s.io/v1" }}
-                service:
-                  name: {{ template "argo-cd.server.fullname" $ }}-grpc
-                  port:
-                    {{- if kindIs "float64" $servicePort }}
-                    number: {{ $servicePort }}
-                    {{- else }}
-                    name: {{ $servicePort }}
-                    {{- end }}
-                {{- else }}
-                serviceName: {{ template "argo-cd.server.fullname" $ }}-grpc
-                servicePort: {{ $servicePort }}
-                {{- end }}
+          {{- if and $.Values.server.ingressGrpc.isAWSALB $.Values.server.ingressGrpc.enabled }}
+          - {{- if eq (include "argo-cd.ingress.apiVersion" $) "networking.k8s.io/v1" }}
+            pathType: Prefix
             {{- end }}
-            - {{- if eq (include "argo-cd.ingress.apiVersion" $) "networking.k8s.io/v1" }}
-              pathType: {{ $pathType }}
+            backend:
+              {{- if eq (include "argo-cd.ingress.apiVersion" $) "networking.k8s.io/v1" }}
+              service:
+                name: {{ template "argo-cd.server.fullname" $ }}-grpc
+                port:
+                  {{- if kindIs "float64" $servicePort }}
+                  number: {{ $servicePort }}
+                  {{- else }}
+                  name: {{ $servicePort }}
+                  {{- end }}
+              {{- else }}
+              serviceName: {{ template "argo-cd.server.fullname" $ }}-grpc
+              servicePort: {{ $servicePort }}
               {{- end }}
-              path: /
-              backend:
-                {{- if eq (include "argo-cd.ingress.apiVersion" $) "networking.k8s.io/v1" }}
-                service:
-                  name: {{ $serviceName }}
-                  port:
-                    {{- if kindIs "float64" $servicePort }}
-                    number: {{ $servicePort }}
-                    {{- else }}
-                    name: {{ $servicePort }}
-                    {{- end }}
-                {{- else }}
-                serviceName: {{ $serviceName }}
-                servicePort: {{ $servicePort }}
-                {{- end }}
-          {{- end }}
-    {{- end }}
+            {{- end }}
+          - {{- if eq (include "argo-cd.ingress.apiVersion" $) "networking.k8s.io/v1" }}
+            pathType: {{ $pathType }}
+            {{- end }}
+            path: /
+            backend:
+              {{- if eq (include "argo-cd.ingress.apiVersion" $) "networking.k8s.io/v1" }}
+              service:
+                name: {{ $serviceName }}
+                port:
+                  {{- if kindIs "float64" $servicePort }}
+                  number: {{ $servicePort }}
+                  {{- else }}
+                  name: {{ $servicePort }}
+                  {{- end }}
+              {{- else }}
+              serviceName: {{ $serviceName }}
+              servicePort: {{ $servicePort }}
+              {{- end }}
+          {{- end -}}
+    {{- end -}}
   {{- else }}
     - http:
         paths:
@@ -104,15 +104,14 @@ spec:
               serviceName: {{ $serviceName }}
               servicePort: {{ $servicePort }}
               {{- end }}
-          {{- end }}
-  {{- end }}
+          {{- end -}}
+  {{- end -}}
   {{- if .Values.server.ingress.tls }}
   tls:
+  {{- if .Values.server.ingress.tls }}
     {{- range $host := .Values.server.ingress.tls }}
-    - hosts:
-        - {{ $host | quote }}
+    - host: {{ $host }}
       secretName: {{ $.Release.Namespace }}-argocd-tls
     {{- end }}
-  {{- end }}
-{{- end }}
-
+  {{- end -}}
+{{- end -}}
