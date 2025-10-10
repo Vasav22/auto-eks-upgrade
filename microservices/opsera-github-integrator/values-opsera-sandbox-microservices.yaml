@@ -1,4 +1,3 @@
 autoscaling:
   enabled: true
 
-# natsHubUrl: nats://nats-svc.nats-hub:4222/
