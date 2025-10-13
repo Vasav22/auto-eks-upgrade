@@ -1122,11 +1122,10 @@ server:
       #         name: use-annotation
 
     # -- Ingress TLS configuration for dedicated [gRPC-ingress]
-    tls:
-      []
-      # - secretName: argocd-tls-certificate
-      #   hosts:
-      #     - argocd.example.com
+    tls: []
+    # - secretName: argocd-tls-certificate
+    #   hosts:
+    #     - argocd.example.com
 
     # -- Uses `server.service.servicePortHttps` instead `server.service.servicePortHttp`
     https: false
