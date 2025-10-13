@@ -3,10 +3,10 @@ kind: Certificate
 metadata:
   name: {{ .Release.Namespace }}-argocd
 spec:
-  commonName: {{ if gt (len .Values.ingress.hosts) 0 }}{{ (index .Values.ingress.hosts 0).host | quote }}{{ else }}{{ "example.com" | quote }}{{ end }}
+  commonName: {{ if gt (len .Values.server.ingress.hosts) 0 }}{{ (index .Values.server.ingress.hosts 0) | quote }}{{ else }}{{ "example.com" | quote }}{{ end }}
   dnsNames:
-    {{- range .Values.ingress.hosts }}
-    - {{ .host }}
+    {{- range .Values.server.ingress.hosts }}
+    - {{ . }}
     {{- end }}
   issuerRef:
     kind: ClusterIssuer

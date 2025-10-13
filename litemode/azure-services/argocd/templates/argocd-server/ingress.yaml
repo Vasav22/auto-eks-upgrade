@@ -113,7 +113,7 @@ spec:
         {{- range .hosts }}
         - {{ . | quote }}
         {{- end }}
-      secretName: {{ $.Release.Namespace }}-argocd-tls
-   {{- end }}
+    secretName: {{ $.Release.Namespace }}-argocd-tls
+    {{- end }}
   {{- end }}
 {{- end }}
