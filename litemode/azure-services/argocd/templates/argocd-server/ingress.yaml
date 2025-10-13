@@ -107,15 +107,22 @@ spec:
           {{- end -}}
   {{- end -}}
   {{- if .Values.server.ingress.tls }}
-  # DEBUG: TLS config type={{ typeOf .Values.server.ingress.tls }}, length={{ len .Values.server.ingress.tls }}
   tls:
     {{- range .Values.server.ingress.tls }}
-    {{- if and . (hasKey . "hosts") }}
+    {{- if kindIs "map" . }}
+    {{- if .hosts }}
     - hosts:
         {{- range .hosts }}
         - {{ . | quote }}
         {{- end }}
       secretName: {{ .secretName | default (printf "%s-argocd-tls" $.Release.Namespace) }}
+    {{- end }}
+    {{- else if kindIs "string" . }}
+    - hosts:
+        {{- range $.Values.server.ingress.hosts }}
+        - {{ . | quote }}
+        {{- end }}
+      secretName: {{ . }}
     {{- end }}
     {{- end }}
   {{- end }}
