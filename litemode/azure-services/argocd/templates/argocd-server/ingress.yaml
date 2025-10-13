@@ -116,6 +116,4 @@ spec:
       secretName: {{ $.Release.Namespace }}-argocd-tls
    {{- end }}
   {{- end }}
-
-
-
+{{- end }}
