@@ -106,8 +106,9 @@ spec:
               {{- end }}
           {{- end -}}
   {{- end -}}
-  {{- if .Values.server.ingress.tls }}
+  {{- if or .Values.server.ingress.tls .Values.server.ingress.https }}
   tls:
+    {{- if .Values.server.ingress.tls }}
     {{- range .Values.server.ingress.tls }}
     {{- if kindIs "map" . }}
     {{- if .hosts }}
@@ -122,8 +123,15 @@ spec:
         {{- range $.Values.server.ingress.hosts }}
         - {{ . | quote }}
         {{- end }}
-      secretName: {{ . }}
+      secretName: {{ $.Release.Namespace }}-argocd-tls
     {{- end }}
+    {{- end }}
+    {{- else if .Values.server.ingress.https }}
+    - hosts:
+        {{- range .Values.server.ingress.hosts }}
+        - {{ . | quote }}
+        {{- end }}
+      secretName: {{ $.Release.Namespace }}-argocd-tls
     {{- end }}
   {{- end }}
 {{- end }}

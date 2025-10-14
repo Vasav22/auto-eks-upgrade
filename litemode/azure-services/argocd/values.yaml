@@ -1063,7 +1063,7 @@ server:
     #     - argocd.example.com
 
     # -- Uses `server.service.servicePortHttps` instead `server.service.servicePortHttp`
-    https: false
+    https: true
 
   # dedicated ingress for gRPC as documented at
   # Ref: https://argoproj.github.io/argo-cd/operator-manual/ingress/
