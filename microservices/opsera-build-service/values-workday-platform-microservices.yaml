@@ -10,3 +10,4 @@ autoscaling:
   enabled: true
   targetMemoryUtilizationPercentage: 180
   minReplicas: 6
+  maxReplicas: 10
