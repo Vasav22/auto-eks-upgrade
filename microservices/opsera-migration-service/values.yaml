@@ -89,6 +89,9 @@ extraSecretEnvironmentVars:
   - secretName: microservices-ms-env
     envName: OPSERA_NODE_SERVER_URL
     secretKey: OPSERA_NODE_SERVER_URL
+  - secretName: microservices-ms-env
+    envName: OPSERA_HAZELCAST_K8_SERVICE_DNS
+    secretKey: OPSERA_HAZELCAST_K8_SERVICE_DNS
 
 CONTAINER_PORT: 8112
 
