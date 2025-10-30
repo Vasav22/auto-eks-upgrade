@@ -72,6 +72,8 @@ tolerations: []
 
 CONTAINER_PORT: 8121
 
+DOCKER_ENV: kubernetes
+
 affinity: {}
 
 extraSecretEnvironmentVars:
