@@ -89,4 +89,6 @@ extraSecretEnvironmentVars:
     envName: OPSERA_VAULT_ENCRYPTION_KEY
     secretKey: OPSERA_VAULT_ENCRYPTION_KEY
 
+DOCKER_ENV: kubernetes
+
 serviceCategory: Platform_Security_Services
