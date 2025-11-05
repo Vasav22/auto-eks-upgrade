@@ -71,6 +71,8 @@ tolerations: []
 
 affinity: {}
 
+DOCKER_ENV: kubernetes
+
 extraSecretEnvironmentVars:
   - secretName: microservices-ms-env
     envName: OPSERA_API_SERVICE_URL
