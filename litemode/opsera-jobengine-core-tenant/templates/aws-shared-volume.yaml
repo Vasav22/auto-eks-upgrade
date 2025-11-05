@@ -1,0 +1,41 @@
+{{- if eq .Values.CLOUD_PROVIDER "AWS" }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  finalizers:
+  - kubernetes.io/pvc-protection
+  name: {{ .Values.jobEngineVolumeClaim }}
+  namespace: {{ .Values.jobEngineNamespace }}
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: efs-sc
+  volumeMode: Filesystem
+  volumeName: {{ .Values.jobEngineVolumeClaim }}-jobengine
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  finalizers:
+  - kubernetes.io/pv-protection
+  name: {{ .Values.jobEngineVolumeClaim }}-jobengine
+spec:
+  accessModes:
+  - ReadWriteMany
+  capacity:
+    storage: 5Gi
+  claimRef:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: {{ .Values.jobEngineVolumeClaim }}
+    namespace: {{ .Values.jobEngineNamespace }}
+  csi:
+    driver: efs.csi.aws.com
+    volumeHandle: {{ include "opsera-jobengine-core-tenant.efsVolumeId" . }}
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: efs-sc
+  volumeMode: Filesystem
+{{- end }}

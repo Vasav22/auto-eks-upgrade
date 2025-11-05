@@ -1,0 +1,32 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.sharedWorkspaceBrowserName }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.sharedWorkspaceBrowserName }}
+  serviceName: {{ .Values.sharedWorkspaceBrowserName }}
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.sharedWorkspaceBrowserName }}
+    spec:
+      volumes:
+        - name: opsera-shared-workspace
+          persistentVolumeClaim:
+            claimName: {{ .Values.k8sIntegratorVolumeName }}
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: {{ .Values.sharedWorkspaceBrowserName }}
+          image: 440953937617.dkr.ecr.us-east-2.amazonaws.com/httpd:2.4.65
+          ports:
+            - containerPort: 80
+              name: http
+          volumeMounts:
+            - name: opsera-shared-workspace
+              mountPath: "/opsera/shared/workspace"
+      nodeSelector:
+        Name: tools-node

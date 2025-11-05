@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ .Release.Namespace }}-jenkins
+spec:
+  commonName: {{ if gt (len .Values.ingress.hosts) 0 }}{{ (index .Values.ingress.hosts 0).host | quote }}{{ else }}{{ "example.com" | quote }}{{ end }}
+  dnsNames:
+    {{- range .Values.ingress.hosts }}
+    - {{ .host }}
+    {{- end }}
+  issuerRef:
+    kind: ClusterIssuer
+    name: letsencrypt-prod
+  secretName: {{ .Release.Namespace }}-jenkins-tls

@@ -1,0 +1,121 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  labels:
+    job-name:  {{ include "vault-tenant.fullname" . }}
+  name: {{ include "vault-tenant.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  backoffLimit: 4
+  suspend: false
+  template:
+    metadata:
+      labels:
+        job-name: {{ include "vault-tenant.fullname" . }}
+    spec:
+      containers:
+      - command:
+        - /bin/bash
+        - -c
+        - |
+          set -e
+
+          sleep 30
+
+          ### Get admin token
+          read VAULT_URI_ENCODED VAULT_TOKEN_ENCODED < <(curl --location --request POST {{ .Values.microservice_url_read }} \
+              --header 'accept: application/json' \
+              --header 'Content-Type: application/json' \
+              --data-raw '{
+                  "customerId": "{{ .Values.cluster_name }}",
+                  "componentKeys": [
+                      "VAULT_TOKEN",
+                      "VAULT_KEY",
+                      "VAULT_URI",
+                      "KUBE_TOKEN",
+                      "VAULT_ROLE"
+                  ]
+              }' -k | jq -r '"\(.data.VAULT_URI) \(.data.VAULT_TOKEN)"')
+
+
+          export VAULT_URI=$(echo $VAULT_URI_ENCODED | base64 -d)
+          export VAULT_TOKEN=$(echo $VAULT_TOKEN_ENCODED | base64 -d)
+
+          ### Login to vault with admin token
+          export VAULT_ADDR=$VAULT_URI
+          vault login -no-print $VAULT_TOKEN
+         
+          set +e
+
+          # Create a transit key for {{ .Values.tenant_name }}
+          vault write -f transit/keys/{{ .Values.tenant_name }}
+
+          ### Create policy for tenant token 
+          vault policy write {{ .Values.tenant_name }}-policy - <<EOF
+          path "secret/{{ .Values.tenant_name }}/*" {
+            capabilities = ["create", "read", "update", "delete", "list"]
+          }
+          
+          path "transit/encrypt/{{ .Values.tenant_name }}" {
+            capabilities = ["update"]
+          }
+          
+          path "transit/decrypt/{{ .Values.tenant_name }}" {
+            capabilities = ["update"]
+          }
+          
+          path "transit/keys/{{ .Values.tenant_name }}" {
+            capabilities = ["create", "read", "update", "delete", "list"]
+          }
+          
+          path "kv/{{ .Values.tenant_name }}/*" {
+            capabilities = ["create", "read", "update", "delete", "list"]
+          }
+          EOF
+
+          vault auth enable kubernetes
+          vault write auth/kubernetes/config kubernetes_host="{{ .Values.K8S_HOST }}" disable_iss_validation=true
+          vault write auth/kubernetes/role/{{ .Values.tenant_name }} \
+            bound_service_account_names=vault \
+            bound_service_account_namespaces=opsera-system \
+            policies={{ .Values.tenant_name }}-policy \
+            ttl=1h
+
+          KUBE_TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
+          echo $KUBE_TOKEN
+
+          set -e
+         
+          ### Create tenant token with the tenant policy 
+          tenant_token=$(vault token create -policy="{{ .Values.tenant_name }}-policy" -orphan -format=json | jq -r '.auth.client_token')
+
+          ### Login as tenant tokena and write sample secret
+          vault login -no-print $tenant_token
+          vault kv put kv/{{ .Values.tenant_name }}/data1 value="secretA"
+
+          ### Push tenant token to Platform Vault
+          vault_uri=$(printf "{{ .Values.VAULT_URI }}" | base64 | tr -d '\n')
+          vault_role=$(printf "{{ .Values.tenant_name }}" | base64)
+          vault_tenant_token=$(echo -n $tenant_token | base64 -w 0)
+          kube_token=$(echo $KUBE_TOKEN | base64 | tr -d '\n')
+         
+          curl --location --request POST {{ .Values.microservice_url }} \
+                  --header 'accept: application/json' \
+                  --header 'Content-Type: application/json' \
+                  --data-raw '{
+                      "customerId": "{{ .Values.customer_id }}",
+                      "data": {
+                        "VAULT_TOKEN": "'$vault_tenant_token'",
+                        "VAULT_KEY": "b3BzZXJh",
+                        "VAULT_URI": "'$vault_uri'",
+                        "VAULT_ROLE": "'$vault_role'",
+                        "KUBE_TOKEN": "'$kube_token'"
+                      }
+                  }' -k
+
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        name: create-tenant-vault
+      restartPolicy: Never

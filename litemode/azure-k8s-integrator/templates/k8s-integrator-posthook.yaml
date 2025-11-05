@@ -1,0 +1,57 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "k8s-integrator-volume.fullname" . }}-post-hook
+  labels:
+    {{- include "k8s-integrator-volume.labels" . | nindent 4 }}
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "1"
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  template:
+    spec:
+      serviceAccount: {{ include "k8s-integrator-volume.fullname" . }}
+      serviceAccountName: {{ include "k8s-integrator-volume.fullname" . }}
+      containers:
+      - name: post-install-job
+        image: 440953937617.dkr.ecr.us-east-2.amazonaws.com/alpine:3.22.1
+        command:
+        - sh
+        - "-c"
+        - |
+          /bin/sh <<'EOF'
+
+          apk add --no-cache curl jq
+
+          ### Get the service account token from pod filesystem
+          KUBE_TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
+
+          ### Check for PVC Status
+          pvc_status="Pending"
+
+          # 60 x 2, 120 seconds, 2 minutes
+          timeout=60
+          count=0
+          while [ "$pvc_status" == "Pending" ] && [ $count -lt $timeout ]
+          do
+            sleep 2
+            uri_to_call="{{ .Values.K8S_HOST }}/api/v1/namespaces/{{ .Release.Namespace }}/persistentvolumeclaims/{{ .Values.k8sIntegratorVolumeName }}/status"
+            echo "Calling, $uri_to_call"
+            pvc_status=$(curl $uri_to_call \
+                --header "Authorization: Bearer $KUBE_TOKEN" -s -k \
+                | jq .status.phase -r)
+            echo "Try count: ${count}, PVC Status: ${pvc_status}"
+            count=$((count+1))
+          done
+
+          # Exit with non zero code if status is not Bound
+          if [ "$pvc_status" != "Bound" ]; then
+            echo "PVC Status: ${pvc_status}, failing!"
+            exit 1
+          fi
+
+          EOF
+      restartPolicy: Never

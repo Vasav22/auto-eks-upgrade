@@ -1,0 +1,4 @@
+USER-SUPPLIED VALUES:
+APIGATEWAY_URL: https://apigateway.opsera-test-private.opsera.io/api/vault/write
+K8S_HOST: https://litetestaz01-c607a32o.hcp.eastus2.azmk8s.io:443
+customer_id: tenant1
