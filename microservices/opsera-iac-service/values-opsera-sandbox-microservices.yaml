@@ -1,0 +1,10 @@
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 5
+
+CONTROL_PLANE_ENV: sandbox
+CONTROL_PLANE_ENV_SQS: opsera-sandbox
+
+accountid: 440953937617
+nodeGroupIAM: opsera-sandbox-eks-node-group

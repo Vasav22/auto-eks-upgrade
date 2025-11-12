@@ -1,0 +1,15 @@
+resources:
+  limits:
+    cpu: 500m
+    memory: 2Gi
+  requests:
+    cpu: 100m
+    memory: 512Mi
+
+autoscaling:
+  enabled: true
+  targetCPUUtilizationPercentage: 300
+  targetMemoryUtilizationPercentage: 120
+
+accountid: 440953937617
+nodeGroupIAM: -eks-node-group
