@@ -1,0 +1,2 @@
+autoscaling:
+  targetMemoryUtilizationPercentage: 120

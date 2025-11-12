@@ -28,7 +28,11 @@ podAnnotations: {}
 podSecurityContext: {}
   # fsGroup: 2000
 
-securityContext: {}
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  allowPrivilegeEscalation: false
   # capabilities:
   #   drop:
   #   - ALL
@@ -38,7 +42,7 @@ securityContext: {}
 
 service:
   type: ClusterIP
-  port: 8066
+  port: 80
 
 ingress:
   enabled: false
@@ -109,3 +113,7 @@ extraSecretEnvironmentVars:
     secretKey: OPSERA_MONGODB_DATABASE
 
 serviceCategory: Container_Scanning_Services
+
+CONTAINER_PORT: 8116
+
+DOCKER_ENV: kubernetes

@@ -71,6 +71,8 @@ tolerations: []
 
 affinity: {}
 
+DOCKER_ENV: kubernetes
+
 extraSecretEnvironmentVars:
   - secretName: microservices-ms-env
     envName: OPSERA_API_SERVICE_URL
@@ -81,7 +83,7 @@ extraSecretEnvironmentVars:
   - secretName: microservices-ms-env
     envName: OPSERA_API_NODE_URL
     secretKey: OPSERA_API_NODE_URL
-
-DOCKER_ENV: kubernetes
-
+  - secretName: microservices-ms-env
+    envName: OPSERA_HAZELCAST_K8_SERVICE_DNS
+    secretKey: OPSERA_HAZELCAST_K8_SERVICE_DNS
 serviceCategory: Source_Code_Management_Services

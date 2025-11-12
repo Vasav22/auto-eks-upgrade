@@ -43,7 +43,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: {{ .Values.service.port }}
+              containerPort: {{ .Values.CONTAINER_PORT }}
               protocol: TCP
           livenessProbe:
             httpGet:
@@ -68,6 +68,8 @@ spec:
           - name: "DOCKER_ENV"
             value: {{ .Values.DOCKER_ENV }}
           {{- include "ms.extraSecretEnvironmentVars" .Values | nindent 10 }}
+          - name: CONTAINER_PORT
+            value: "{{ .Values.CONTAINER_PORT }}"
           volumeMounts:
            {{- include "datadogApm.volumeMounts" . | nindent 10 }}
           - name: microservices-efs

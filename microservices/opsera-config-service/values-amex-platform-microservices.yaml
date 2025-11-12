@@ -1,0 +1,9 @@
+resources:
+  limits:
+    memory: 4Gi
+  requests:
+    memory: 2Gi
+
+autoscaling:
+  minReplicas: 1
+  targetMemoryUtilizationPercentage: 120

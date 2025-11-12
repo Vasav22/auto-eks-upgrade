@@ -1,0 +1,15 @@
+resources:
+  limits:
+    cpu: 500m
+    memory: 3Gi
+  requests:
+    cpu: 100m
+    memory: 1Gi
+
+autoscaling:
+  enabled: true
+  targetCPUUtilizationPercentage: 300
+  targetMemoryUtilizationPercentage: 180
+
+nodeGroupIAM: workday-platform-eks-node-group
+accountid: "440953937617"

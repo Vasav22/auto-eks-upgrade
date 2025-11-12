@@ -1,0 +1,20 @@
+resources:
+  limits:
+    cpu: 500m
+    memory: 1Gi
+  requests:
+    cpu: 100m
+    memory: 512Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 400
+  targetMemoryUtilizationPercentage: 160
+
+
+clusterName: opsera-test-platform
+
+datadogApm:
+  enabled: false
