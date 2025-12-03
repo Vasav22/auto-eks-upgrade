@@ -1,0 +1,10 @@
+resources:
+  limits:
+    cpu: 700m
+    memory: 2Gi
+  requests:
+    cpu: 700m
+    memory: 2Gi
+
+autoscaling:
+  minReplicas: 3
