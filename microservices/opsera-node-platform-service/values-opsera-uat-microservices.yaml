@@ -1,4 +1,4 @@
 autoscaling:
-  minReplicas: 1
+  minReplicas: 2
 
 NODE_ENV: staging
