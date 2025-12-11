@@ -1,0 +1,15 @@
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 4
+
+ingress:
+  enabled: false
+  hosts:
+    - host: orchestration-service.opsera-uat-private.opsera.io
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+
+NODE_ENV: staging
+

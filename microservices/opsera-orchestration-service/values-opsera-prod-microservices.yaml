@@ -1,0 +1,8 @@
+ingress:
+  enabled: false
+  hosts:
+    - host: orchestration-service.opsera-prod-private.opsera.io
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+
