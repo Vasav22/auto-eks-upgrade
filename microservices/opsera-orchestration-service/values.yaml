@@ -1,11 +1,7 @@
 # Default values for opsera-orchestration-service.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
-# This consolidated service combines:
-#   - opsera-node-pipeline-monitor-service
-#   - opsera-node-scheduler
-#   - opsera-node-workflow-consumers-service
-#   - opsera-pipeline-settings-operations
+
 
 replicaCount: 1
 
@@ -46,7 +42,7 @@ securityContext: {}
 
 service:
   type: ClusterIP
-  port: 8122
+  port: 3333
 
 ingress:
   enabled: false
@@ -70,9 +66,9 @@ resources:
 autoscaling:
   enabled: true
   minReplicas: 3
-  maxReplicas: 5
-  targetCPUUtilizationPercentage: 240
-  targetMemoryUtilizationPercentage: 120
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 60
+  targetMemoryUtilizationPercentage: 60
 
 nodeSelector:
   Name: microservice-node

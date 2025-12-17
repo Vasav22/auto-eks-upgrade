@@ -44,15 +44,26 @@ spec:
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /status
-              port: http
+              path: /livez
+              port: {{ .Values.service.port }}
+            failureThreshold: 9
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 15
+            initialDelaySeconds: 30
           readinessProbe:
             httpGet:
-              path: /status
-              port: http
+              path: /readyz
+              port: {{ .Values.service.port }}
+            failureThreshold: 3
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 15
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           env:
+          - name: "DOCKER_ENV"
+            value: {{ .Values.DOCKER_ENV }}
           - name: "NODE_ENV"
             value: {{default "production" .Values.NODE_ENV }}
           - name: "OPSERA_ORCHESTRATION_ENABLED"

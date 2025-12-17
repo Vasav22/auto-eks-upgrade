@@ -1,7 +1,17 @@
+resources:
+  limits:
+    cpu: 2
+    memory: 4Gi
+  requests:
+    cpu: 1
+    memory: 4Gi
+
 autoscaling:
   enabled: true
-  minReplicas: 2
+  minReplicas: 4
   maxReplicas: 4
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 70
 
 ingress:
   enabled: false
