@@ -1,16 +1,21 @@
 resources:
   limits:
-    cpu: 1000m
-    memory: 2Gi
+    cpu: 2
+    memory: 4Gi
   requests:
-    cpu: 500m
-    memory: 1Gi
+    cpu: 1
+    memory: 2Gi
 
 autoscaling:
   enabled: true
-  minReplicas: 2
-  maxReplicas: 5
+  minReplicas: 4
+  maxReplicas: 4
+  targetCPUUtilizationPercentage: 60
+  targetMemoryUtilizationPercentage: 60
 
+ingress:
+  hosts:
+    - host: app-v2.opsera-uat.opsera.io
+      paths: [/]
 
-
-
+NODE_ENV: staging

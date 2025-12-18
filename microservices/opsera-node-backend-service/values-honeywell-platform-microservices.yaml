@@ -1,16 +1,17 @@
+ingress:
+  hosts:
+    - host: app-v2.honeywell.opsera.io
+      paths: [/]
+
 resources:
   limits:
-    cpu: 1500m
-    memory: 3Gi
+    cpu: 3300m
+    memory: 4800Mi
   requests:
-    cpu: 750m
-    memory: 2Gi
+    cpu: 1500m
+    memory: 4800Mi
 
 autoscaling:
   enabled: true
-  minReplicas: 3
-  maxReplicas: 8
-
-
-
-
+  minReplicas: 4
+  maxReplicas: 4

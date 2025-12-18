@@ -1,31 +1,12 @@
-# Opsera Node Backend Service
+service_name=node-backend-service
+values_file_path=values-opsera-dev-microservices.yaml
+k8_ns=microservices
 
-This is a consolidated Helm chart that combines the following Node.js backend services (non-orchestration parts):
-1. nodeapi (non-orchestration parts)
-2. opsera-nodejs-api-integrator-service
-3. opsera-backstage-integrator-service
-4. opsera-node-blueprints-logs-service
-5. opsera-pipeline-settings-operations (API parts)
-
-## Purpose
-This consolidated service reduces operational overhead by combining multiple related backend services into a single deployable unit.
-
-## Environment-Specific Values Files
-- values-opsera-test-microservices.yaml
-- values-opsera-uat-microservices.yaml
-- values-opsera-prod-microservices.yaml
-- values-opsera-sandbox-microservices.yaml
-- values-honeywell-platform-microservices.yaml
-- values-honeywell-sandbox-microservices.yaml
-- values-workday-platform-microservices.yaml
-
-## Deployment
-```bash
-helm upgrade --install opsera-node-backend-service . \
-  -f values-<environment>-microservices.yaml \
-  --namespace <namespace>
-```
+helm upgrade opsera-${service_name} . \
+        -n ${k8_ns} \
+        --set DOCKER_ENV=kubernetes \
+        --set image.tag=git-496ea2e411d430e32978c90153b93d4afd38e948 \
+        -f ${values_file_path} 
 
 
-
-
+kubectl -n microservices get po -l app.kubernetes.io/name=opsera-node-backend-service
