@@ -54,6 +54,7 @@ spec:
             periodSeconds: 30
             successThreshold: 1
             timeoutSeconds: 15
+            initialDelaySeconds: 60
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           env:
