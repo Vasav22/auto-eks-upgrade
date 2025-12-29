@@ -1,6 +1,6 @@
 ingress:
   hosts:
-    - host: app-v2.honeywell.opsera.io
+    - host: api-v2.honeywell.opsera.io
       paths: [/]
 
 resources:

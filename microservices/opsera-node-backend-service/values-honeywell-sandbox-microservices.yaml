@@ -1,5 +1,5 @@
 ingress:
   hosts:
-    - host: app-v2.honeywell-sandbox.opsera.io
+    - host: api-v2.honeywell-sandbox.opsera.io
       paths: [/]
 

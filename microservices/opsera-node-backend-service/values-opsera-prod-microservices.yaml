@@ -1,6 +1,6 @@
 ingress:
   hosts:
-    - host: app-v2.opsera.io
+    - host: api-v2.opsera.io
       paths: [/]
 
 resources:

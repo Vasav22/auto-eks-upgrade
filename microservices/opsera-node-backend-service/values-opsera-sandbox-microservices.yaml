@@ -15,7 +15,7 @@ autoscaling:
 
 ingress:
   hosts:
-    - host: app-v2.sandbox.opsera.io
+    - host: api-v2.sandbox.opsera.io
       paths: [/]
 
 NODE_ENV: production
