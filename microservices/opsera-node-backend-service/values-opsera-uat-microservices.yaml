@@ -15,7 +15,7 @@ autoscaling:
 
 ingress:
   hosts:
-    - host: api-v2.opsera-uat.opsera.io
+    - host: api.opsera-uat.opsera.io
       paths: [/]
 
 NODE_ENV: staging
