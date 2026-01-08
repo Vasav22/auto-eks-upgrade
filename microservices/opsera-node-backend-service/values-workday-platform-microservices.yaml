@@ -1,6 +1,6 @@
 ingress:
   hosts:
-    - host: api-v2.workday.opsera.io
+    - host: app.workday.opsera.io
       paths: [/]
 
 resources:
