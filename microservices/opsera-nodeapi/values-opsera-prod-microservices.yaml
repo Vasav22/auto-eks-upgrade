@@ -1,6 +1,6 @@
 ingress:
   hosts:
-    - host: app.opsera.io
+    - host: app-decommissioned.opsera.io
       paths: [/]
 
 resources:

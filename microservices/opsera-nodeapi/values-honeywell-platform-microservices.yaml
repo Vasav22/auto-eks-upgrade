@@ -1,6 +1,6 @@
 ingress:
   hosts:
-    - host: api.honeywell.opsera.io
+    - host: api-decommissioned.honeywell.opsera.io
       paths: [/]
 
 resources:

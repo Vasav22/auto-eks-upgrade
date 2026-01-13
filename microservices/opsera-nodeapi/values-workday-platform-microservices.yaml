@@ -1,6 +1,6 @@
 ingress:
   hosts:
-    - host: app.workday.opsera.io
+    - host: app-decommissioned.workday.opsera.io
       paths: [/]
 
 resources:
