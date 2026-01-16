@@ -227,6 +227,9 @@ extraSecretEnvironmentVars:
   - secretName: microservices-ms-env
     envName: OPSERA_SEGMENT_WRITE_KEY
     secretKey: OPSERA_SEGMENT_WRITE_KEY
+  - secretName: microservices-ms-env
+    envName: BACKSTAGE_ACCESS_TOKEN
+    secretKey: BACKSTAGE_ACCESS_TOKEN
 
 ORCHESTRATION_ENABLED: "true"
 
