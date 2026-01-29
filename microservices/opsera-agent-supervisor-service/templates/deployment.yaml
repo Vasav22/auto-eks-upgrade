@@ -57,7 +57,7 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
           env:          
           - name: "DOCKER_ENV"
-            value: {{ .Values.DOCKER_ENV }}
+            value: {{ .Values.DOCKER_ENV | default "" | quote }}
           - name: "NODE_ENV"
             value: {{default "production" .Values.NODE_ENV }}
           - name: "PORT"
@@ -67,10 +67,19 @@ spec:
               fieldRef:
                 apiVersion: v1
                 fieldPath: metadata.labels['app.kubernetes.io/name']
-          {{- include "ms.extraSecretEnvironmentVars" .Values | nindent 10 }}
-          {{- include "ms.extraSecretEnvironmentVarsExtended" .Values | nindent 10 }}
           - name: "GIT_SHA"
             value: {{ .Values.image.tag }}
+          {{- include "ms.extraSecretEnvironmentVars" .Values | nindent 10 }}
+          {{- if .Values.extraSecretEnvironmentVarsExtended }}
+          {{- include "ms.extraSecretEnvironmentVarsExtended" .Values | nindent 10 }}
+          {{- else }}
+          {{- /* Placeholder so env array length is stable when switching between values files (avoids patch merge issues) */}}
+          - name: "OPSERA_EXTENDED_PLACEHOLDER"
+            valueFrom:
+              secretKeyRef:
+                name: microservices-ms-env
+                key: OPSERA_ENV
+          {{- end }}
           volumeMounts:
           - name: microservices-efs
             mountPath: /apps/OpsERA/logs/components/

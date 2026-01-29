@@ -19,3 +19,10 @@
   echo "Visit http://127.0.0.1:8080 to use your application"
   kubectl --namespace {{ .Release.Namespace }} port-forward $POD_NAME 8080:80
 {{- end }}
+
+Troubleshooting:
+  If upgrade fails with "env[17].valueFrom: may not be specified when value is not empty"
+  (after switching values files, e.g. test -> sandbox), delete the Deployment once
+  so Helm can recreate it with a clean spec, then re-run helm upgrade:
+    kubectl delete deployment {{ include "opsera-agent-supervisor-service.fullname" . }} -n {{ .Release.Namespace }}
+    helm upgrade {{ .Release.Name }} . -n {{ .Release.Namespace }} --install -f <your-values-file> ...
