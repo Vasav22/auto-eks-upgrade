@@ -1,3 +1,11 @@
+resources:
+  requests:
+    cpu: 1
+    memory: 3Gi
+  limits:
+    cpu: 3
+    memory: 5Gi
+
 ingress:
   hosts:
     - host: vnext-insights-api.workday-platform.opsera.io
