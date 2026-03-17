@@ -1,0 +1,14 @@
+service_name=orchestration-service
+values_file_path=values-opsera-test-microservices.yaml
+k8_ns=microservices
+
+# Deploy to test environment
+helm upgrade opsera-orchestration-service . \
+        -n ${k8_ns} \
+        --set image.tag=git-496ea2e411d430e32978c90153b93d4afd38e948 \
+        -f ${values_file_path} 
+
+
+kubectl -n microservices get po -l app.kubernetes.io/name=opsera-orchestration-service
+
+

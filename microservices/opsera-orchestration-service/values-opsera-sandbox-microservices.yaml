@@ -1,0 +1,25 @@
+resources:
+  limits:
+    cpu: 2
+    memory: 4Gi
+  requests:
+    cpu: 1
+    memory: 2Gi
+
+autoscaling:
+  enabled: true
+  minReplicas: 4
+  maxReplicas: 4
+  targetCPUUtilizationPercentage: 60
+  targetMemoryUtilizationPercentage: 60
+
+ingress:
+  enabled: false
+  hosts:
+    - host: orchestration-service.sandbox-private.opsera.io
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+
+NODE_ENV: production
+
