@@ -43,11 +43,17 @@ spec:
               path: /status
               port: http
             initialDelaySeconds: 120
+            periodSeconds: 2            
+            timeoutSeconds: 1
+            failureThreshold: 2 
           readinessProbe:
             httpGet:
               path: /status
               port: http
             initialDelaySeconds: 120
+            periodSeconds: 2          
+            timeoutSeconds: 1
+            failureThreshold: 2
           lifecycle:
             preStop:
               httpGet:
