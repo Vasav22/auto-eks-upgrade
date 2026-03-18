@@ -29,7 +29,7 @@ spec:
         - name: temp-data
           mountPath: /temp/nexus-data
       - name: copy-data
-        image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
         command: ['sh', '-c', 'cp -r /nexus-data/* /temp/nexus-data/']
         volumeMounts:
         - name: temp-data
@@ -54,7 +54,7 @@ spec:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           # image: "brndnmtthws/nginx-echo-headers"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           # ports:
@@ -69,6 +69,8 @@ spec:
           #   value: /
           - name: NEXUS_PASSWORD
             value: {{ .Values.NEXUS_PASSWORD }}
+          - name: INSTALL4J_ADD_VM_PARAMS
+            value: "-Dnexus.datastore.enabled=true -Dnexus.scripts.allowCreation=true -Dnexus.security.randompassword=false"
           # livenessProbe:
           #   httpGet:
           #     path: /

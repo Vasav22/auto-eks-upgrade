@@ -8,6 +8,7 @@ sidecarImage: 440953937617.dkr.ecr.us-east-2.amazonaws.com/nginx-nexus-sidecar:v
 
 image:
   repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/nexus3
+  tag: "3.86.0"
   pullPolicy: Always
 
 imagePullSecrets: []
