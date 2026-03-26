@@ -78,8 +78,3 @@ affinity: {}
 
 # Must match the Nexus **admin** password in the DB (change in UI after H2 reset; see Nexus-info/ops/nexus-admin-reset/README.md).
 NEXUS_PASSWORD: ""
-
-nexusPasswordFromSecret:
-  enabled: false
-  name: ""
-  key: NEXUS_PASSWORD

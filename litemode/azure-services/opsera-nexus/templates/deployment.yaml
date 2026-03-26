@@ -67,18 +67,8 @@ spec:
           env:
           # - name: NEXUS_CONTEXT
           #   value: /
-          {{- if .Values.nexusPasswordFromSecret.enabled }}
           - name: NEXUS_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ required "nexusPasswordFromSecret.name is required when nexusPasswordFromSecret.enabled" .Values.nexusPasswordFromSecret.name }}
-                key: {{ .Values.nexusPasswordFromSecret.key | default "NEXUS_PASSWORD" }}
-          {{- else }}
-          - name: NEXUS_PASSWORD
-            value: {{ .Values.NEXUS_PASSWORD | quote }}
-          {{- end }}
-          - name: INSTALL4J_ADD_VM_PARAMS
-            value: "-Dnexus.datastore.enabled=true -Dnexus.scripts.allowCreation=true -Dnexus.security.randompassword=false"
+            value: {{ .Values.NEXUS_PASSWORD }}
           # livenessProbe:
           #   httpGet:
           #     path: /
