@@ -8,7 +8,8 @@ sidecarImage: 440953937617.dkr.ecr.us-east-2.amazonaws.com/nginx-nexus-sidecar:v
 
 image:
   repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/nexus3
-  tag: "3.86.0"
+  # Custom image from infra-opsera-tools nexus-docker-image; ECR mirror-only tag remains 3.86.0
+  tag: "3.86.0-opsera"
   pullPolicy: Always
 
 imagePullSecrets: []
@@ -74,3 +75,11 @@ nodeSelector:
 tolerations: []
 
 affinity: {}
+
+# Must match the Nexus **admin** password in the DB (change in UI after H2 reset; see Nexus-info/ops/nexus-admin-reset/README.md).
+NEXUS_PASSWORD: ""
+
+nexusPasswordFromSecret:
+  enabled: false
+  name: ""
+  key: NEXUS_PASSWORD
