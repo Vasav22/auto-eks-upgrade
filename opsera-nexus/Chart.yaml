@@ -16,6 +16,5 @@ type: application
 # to the chart and its templates, including the app version.
 version: 0.1.0
 
-# This is the version number of the application being deployed. This version number should be
-# incremented each time you make changes to the application.
-appVersion: latest
+# Nexus product version (not the ECR image tag). Image tag is values.yaml image.tag (e.g. 3.86.0-opsera).
+appVersion: "3.86.0"
