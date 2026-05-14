@@ -230,6 +230,9 @@ extraSecretEnvironmentVars:
   - secretName: microservices-ms-env
     envName: BACKSTAGE_ACCESS_TOKEN
     secretKey: BACKSTAGE_ACCESS_TOKEN
+  - secretName: microservices-ms-env
+    envName: BACKUP_SECRET_KEY
+    secretKey: b4e4acf1e2752af5a8dfdcda50fd242a69ef877a190346050da4a224100d4d78
 
 ORCHESTRATION_ENABLED: "true"
 
