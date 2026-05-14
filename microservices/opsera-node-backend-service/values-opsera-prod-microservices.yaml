@@ -1,0 +1,17 @@
+ingress:
+  hosts:
+    - host: app.opsera.io
+      paths: [/]
+
+resources:
+  limits:
+    cpu: 3300m
+    memory: 4800Mi
+  requests:
+    cpu: 1500m
+    memory: 4800Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 6
+  maxReplicas: 6
