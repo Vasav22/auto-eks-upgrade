@@ -2,7 +2,7 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount: 1
+replicaCount: 3
 
 image:
   repository: 440953937617.dkr.ecr.us-east-2.amazonaws.com/opsera-cloud-service
@@ -67,7 +67,7 @@ nodeSelector:
 
 autoscaling:
   enabled: true
-  minReplicas: 1
+  minReplicas: 3
   maxReplicas: 10
   targetCPUUtilizationPercentage: 300
   targetMemoryUtilizationPercentage: 120
