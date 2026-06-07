@@ -28,6 +28,34 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       {{- include "datadogApm.initContainer" . | nindent 6 }}
+      initContainers:
+        - name: cert-setup
+          image: eclipse-temurin:17-jdk
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              set -e
+              mkdir -p /truststore
+              for f in /certs/*.pem; do
+                cp "$f" "/usr/local/share/ca-certificates/$(basename "${f%.pem}.crt")"
+              done
+              update-ca-certificates
+              cp /etc/ssl/certs/ca-certificates.crt /truststore/
+
+              TRUSTSTORE=/truststore/custom-cacerts
+              cp $JAVA_HOME/lib/security/cacerts $TRUSTSTORE
+
+              for cert in /certs/*.pem; do
+                alias=$(basename "$cert" .pem)
+                keytool -importcert -noprompt -trustcacerts \
+                  -keystore "$TRUSTSTORE" -storepass changeit \
+                  -alias "$alias" -file "$cert"
+              done
+          volumeMounts:
+            - name: certs-volume
+              mountPath: /certs
+            - name: truststore-volume
+              mountPath: /truststore
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -71,11 +99,20 @@ spec:
           {{- include "datadogApm.volumeMounts" . | nindent 10 }}
           - name: microservices-efs
             mountPath: /apps/OpsERA/logs/components/
+          - name: certs-volume
+            mountPath: /certs
+          - name: truststore-volume
+            mountPath: /truststore
       volumes:
         {{- include "datadogApm.volumes" . | nindent 8 }}
         - name: microservices-efs
           persistentVolumeClaim:
             claimName: microservices-efs
+        - name: certs-volume
+          configMap:
+            name: onprem-certs-config
+        - name: truststore-volume
+          emptyDir: {}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
