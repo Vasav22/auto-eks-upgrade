@@ -54,8 +54,8 @@ resources:
     cpu: 750m
     memory: 2Gi
   requests:
-    cpu: 250m
-    memory: 1Gi
+    cpu: 750m
+    memory: 2Gi
 
 nodeSelector:
   Name: microservice-node
@@ -64,8 +64,8 @@ autoscaling:
   enabled: true
   minReplicas: 1
   maxReplicas: 10
-  targetCPUUtilizationPercentage: 180
-  targetMemoryUtilizationPercentage: 120
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 70
 
 tolerations: []
 

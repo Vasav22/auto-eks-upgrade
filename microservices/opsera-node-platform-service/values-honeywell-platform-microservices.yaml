@@ -1,10 +1,13 @@
 autoscaling:
   minReplicas: 2
 
+  enabled: true
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 70
 resources:
   limits:
     cpu: 1
     memory: 1Gi
   requests:
-    cpu: 500
+    cpu: 1
     memory: 1Gi

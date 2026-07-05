@@ -1,6 +1,9 @@
 autoscaling:
   minReplicas: 1
 
+  enabled: true
+  targetCPUUtilizationPercentage: 140
+  targetMemoryUtilizationPercentage: 240
 NODE_ENV: staging
 
 extraSecretEnvironmentVarsExtended:

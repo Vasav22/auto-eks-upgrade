@@ -1,2 +1,5 @@
 autoscaling:
   minReplicas: 1
+  enabled: true
+  targetCPUUtilizationPercentage: 700
+  targetMemoryUtilizationPercentage: 240

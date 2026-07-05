@@ -1,6 +1,9 @@
 autoscaling:
   minReplicas: 3
 
+  enabled: true
+  targetCPUUtilizationPercentage: 560
+  targetMemoryUtilizationPercentage: 120
 resources:
   limits:
     cpu: 2

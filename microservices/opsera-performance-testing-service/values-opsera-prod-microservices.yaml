@@ -1,6 +1,6 @@
     
 autoscaling:
   enabled: true
-  targetCPUUtilizationPercentage: 400
-  targetMemoryUtilizationPercentage: 200
+  targetCPUUtilizationPercentage: 175
+  targetMemoryUtilizationPercentage: 140
   minReplicas: 3

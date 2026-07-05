@@ -1,6 +1,8 @@
 autoscaling:
   enabled: true
 
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 70
 resources:
   limits:
     cpu: 1000m

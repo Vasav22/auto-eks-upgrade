@@ -1,0 +1,13 @@
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 1Gi
+  requests:
+    cpu: 500m
+    memory: 1Gi
+
+autoscaling:
+  enabled: true
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 70

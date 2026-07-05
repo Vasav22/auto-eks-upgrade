@@ -11,7 +11,7 @@ autoscaling:
   minReplicas: 2
   maxReplicas: 3
   targetCPUUtilizationPercentage: 320
-  targetMemoryUtilizationPercentage: 160
+  targetMemoryUtilizationPercentage: 140
 
 #clusterName: opsera-test-platform
 

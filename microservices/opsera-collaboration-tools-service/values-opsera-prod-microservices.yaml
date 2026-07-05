@@ -2,4 +2,6 @@ autoscaling:
   enabled: true
   minReplicas: 4
 
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 140
 natsHubUrl: nats://nats-svc.nats-hub:4222

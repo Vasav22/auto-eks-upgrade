@@ -3,15 +3,15 @@ resources:
     cpu: 2
     memory: 4Gi
   requests:
-    cpu: 1
-    memory: 2Gi
+    cpu: 2
+    memory: 4Gi
 
 autoscaling:
   enabled: true
   minReplicas: 4
   maxReplicas: 4
-  targetCPUUtilizationPercentage: 60
-  targetMemoryUtilizationPercentage: 60
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 70
 
 ingress:
   hosts:

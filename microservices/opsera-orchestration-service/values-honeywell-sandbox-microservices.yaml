@@ -6,3 +6,7 @@ ingress:
         - path: /
           pathType: ImplementationSpecific
 
+autoscaling:
+  enabled: true
+  targetCPUUtilizationPercentage: 140
+  targetMemoryUtilizationPercentage: 60
