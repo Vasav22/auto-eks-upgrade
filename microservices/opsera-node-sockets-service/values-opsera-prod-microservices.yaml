@@ -1,6 +1,13 @@
 ingress:
   hosts:
     - host: app.opsera.io
+resources:
+  limits:
+    cpu: 2
+    memory: 2Gi
+  requests:
+    cpu: 1
+    memory: 1Gi
 
 autoscaling:
   enabled: true
