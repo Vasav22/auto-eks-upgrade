@@ -1,6 +1,9 @@
 autoscaling:
   minReplicas: 1
 
+  enabled: true
+  targetCPUUtilizationPercentage: 140
+  targetMemoryUtilizationPercentage: 120
 ingress:
   hosts:
     - host: agent.opsera-uat.opsera.io

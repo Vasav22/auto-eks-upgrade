@@ -1,3 +1,8 @@
 ingress:
   hosts:
     - host: api.honeywell.opsera.io
+
+autoscaling:
+  enabled: true
+  targetCPUUtilizationPercentage: 420
+  targetMemoryUtilizationPercentage: 140

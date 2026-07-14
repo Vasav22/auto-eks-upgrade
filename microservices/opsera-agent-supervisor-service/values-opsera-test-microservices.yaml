@@ -3,6 +3,8 @@ autoscaling:
   minReplicas: 1
   maxReplicas: 2
 
+  targetCPUUtilizationPercentage: 140
+  targetMemoryUtilizationPercentage: 280
 NODE_ENV: testing
 
 ingress:

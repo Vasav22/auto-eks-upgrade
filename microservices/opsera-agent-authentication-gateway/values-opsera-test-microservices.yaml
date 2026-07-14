@@ -3,6 +3,8 @@ autoscaling:
   minReplicas: 1
   maxReplicas: 2
 
+  targetCPUUtilizationPercentage: 140
+  targetMemoryUtilizationPercentage: 120
 ingress:
   hosts:
     - host: agent.opsera-test.opsera.io

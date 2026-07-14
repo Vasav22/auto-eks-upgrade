@@ -1,1 +1,6 @@
 natsHubUrl: nats://nats-svc.nats-hub:4222/
+
+autoscaling:
+  enabled: true
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 70

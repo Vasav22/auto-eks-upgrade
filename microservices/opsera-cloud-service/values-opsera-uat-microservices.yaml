@@ -10,7 +10,7 @@ autoscaling:
   minReplicas: 1
   maxReplicas: 3
   targetCPUUtilizationPercentage: 400
-  targetMemoryUtilizationPercentage: 160
+  targetMemoryUtilizationPercentage: 140
 
 clusterName: opsera-uat-platform
 

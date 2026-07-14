@@ -3,3 +3,8 @@ ingress:
     - host: api.opsera-uat.opsera.io
     
 NODE_ENV: staging
+
+autoscaling:
+  enabled: true
+  targetCPUUtilizationPercentage: 280
+  targetMemoryUtilizationPercentage: 60
