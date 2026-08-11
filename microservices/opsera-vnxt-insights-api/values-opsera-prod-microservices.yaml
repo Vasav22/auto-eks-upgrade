@@ -1,4 +1,0 @@
-ingress:
-  hosts:
-    - host: vnext-insights-api.opsera-prod.opsera.io
-      paths: [/]

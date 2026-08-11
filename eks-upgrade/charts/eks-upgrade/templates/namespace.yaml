@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: {{ include "eks-upgrade.namespace" . }}
-  labels:
-    {{- include "eks-upgrade.labels" . | nindent 4 }}
-    app.kubernetes.io/component: namespace

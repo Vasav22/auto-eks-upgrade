@@ -1,6 +1,0 @@
-ingress:
-  hosts:
-    - host: vnext-api.sandbox.opsera.io
-      paths: [/]
-
-NODE_ENV: production

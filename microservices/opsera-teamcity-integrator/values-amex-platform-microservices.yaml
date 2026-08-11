@@ -1,8 +1,0 @@
-resources:
-  requests:
-    memory: 384Mi
-
-autoscaling:
-  enabled: true
-  targetCPUUtilizationPercentage: 300
-  targetMemoryUtilizationPercentage: 160

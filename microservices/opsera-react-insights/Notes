@@ -1,6 +1,0 @@
-helm upgrade --install opsera-react-insights . \
-     -n microservices-staging \
-    --set DOCKER_ENV=kubernetes \
-    --set image.tag=kube-staging \
-    --set ingress.hosts[0].host=uat.opsera.io \
-    --set ingress.hosts[0].paths[0]=/

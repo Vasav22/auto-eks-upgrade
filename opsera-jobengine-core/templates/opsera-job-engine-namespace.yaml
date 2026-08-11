@@ -1,8 +1,0 @@
-apiVersion: v1
-kind: Namespace
-{{ if .Values.jobEngineNamespace }}
-metadata:
-  name: {{ .Values.jobEngineNamespace }}
-  annotations:
-    "helm.sh/resource-policy": keep
-{{ end }}

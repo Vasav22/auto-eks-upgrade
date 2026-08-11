@@ -1,9 +1,0 @@
-resources:
-  limits:
-    memory: 3Gi
-
-autoscaling:
-  enabled: true
-  targetMemoryUtilizationPercentage: 105
-  minReplicas: 3
-  targetCPUUtilizationPercentage: 350

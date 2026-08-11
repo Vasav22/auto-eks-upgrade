@@ -1,6 +1,0 @@
-dependencies:
-- name: datadog-apm-helper
-  repository: file://../datadog-apm-helper/
-  version: 1.0.0
-digest: sha256:6ad94ada33321e77e803595162fc9dc7dee4b27924a9f3f75be5b38e48fe61bc
-generated: "2022-08-10T20:58:14.256792+05:30"

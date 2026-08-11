@@ -1,5 +1,0 @@
-community-operator:
-  enabled: true
-
-serviceAccount:
-  create: true

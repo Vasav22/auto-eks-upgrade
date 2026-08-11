@@ -1,4 +1,0 @@
-ingress:
-  hosts:
-    - host: analytics-api.opsera.io
-      paths: [/]

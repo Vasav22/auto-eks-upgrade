@@ -1,6 +1,0 @@
-resources:
-  requests:
-    memory: 3Gi
-
-autoscaling:
-  targetMemoryUtilizationPercentage: 120

@@ -1,8 +1,0 @@
-ingress:
-  hosts:
-    - host: app.opsera.io
-
-autoscaling:
-  enabled: true
-  targetCPUUtilizationPercentage: 140
-  targetMemoryUtilizationPercentage: 120

@@ -1,0 +1,24 @@
+{
+  "networkPolicy": {
+    "default": "allow"
+  },
+  "additionalReadwritePaths": [
+    "/var/run/docker.sock",
+    "/run/docker.sock",
+    "/home/vasav-ayush/.docker",
+    "/home/vasav-ayush/.kube",
+    "/home/vasav-ayush/.aws",
+    "/home/vasav-ayush/.gitconfig",
+    "/home/vasav-ayush/.ssh",
+    "/home/vasav-ayush/opsera/auto-eks-upgrade/.git",
+    "/tmp"
+  ],
+  "additionalReadonlyPaths": [
+    "/usr/bin/docker",
+    "/usr/bin/git",
+    "/usr/local/bin/kubectl",
+    "/usr/local/bin/helm",
+    "/usr/local/bin/aws"
+  ],
+  "enableSharedBuildCache": true
+}

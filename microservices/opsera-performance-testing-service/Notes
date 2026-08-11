@@ -1,5 +1,0 @@
-helm -n microservices install opsera-perforamce-testing-service .
-
-helm -n microservices uninstall opsera-performance-testing-service
-
-helm -n microservices upgrade opsera-performance-testing-service .

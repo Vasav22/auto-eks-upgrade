@@ -1,3 +1,0 @@
-clusterName: honeywell-sandbox-cluster
-clusterType: control-plane
-nodeSelector: microservice-node

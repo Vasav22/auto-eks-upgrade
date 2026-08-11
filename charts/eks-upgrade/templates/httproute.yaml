@@ -1,0 +1,50 @@
+{{- if .Values.httpRoute.enabled }}
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ include "eks-upgrade.fullname" . }}
+  namespace: {{ include "eks-upgrade.namespace" . }}
+  labels:
+    {{- include "eks-upgrade.labels" . | nindent 4 }}
+    app.kubernetes.io/component: httproute
+spec:
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: {{ .Values.httpRoute.gatewayName }}
+      namespace: {{ .Values.httpRoute.gatewayNamespace }}
+      sectionName: {{ .Values.httpRoute.sectionName }}
+  hostnames:
+    - {{ .Values.httpRoute.hostname | quote }}
+  rules:
+    {{- if .Values.api.enabled }}
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: {{ .Values.api.name }}
+          port: {{ .Values.api.port }}
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: /api
+        - path:
+            type: PathPrefix
+            value: /health
+        - path:
+            type: PathPrefix
+            value: /socket.io
+    {{- end }}
+    {{- if .Values.web.enabled }}
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: {{ .Values.web.name }}
+          port: {{ .Values.web.port }}
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
+    {{- end }}
+{{- end }}

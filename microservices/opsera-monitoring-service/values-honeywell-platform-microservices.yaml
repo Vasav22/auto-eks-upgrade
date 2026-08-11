@@ -1,6 +1,0 @@
-resources:
-  limits:
-    memory: 2560Mi
-
-autoscaling:
-  targetCPUUtilizationPercentage: 400

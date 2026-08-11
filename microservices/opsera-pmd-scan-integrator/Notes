@@ -1,1 +1,0 @@
-helm -n microservices install --set DOCKER_ENV=kubernetes --set image.tag=kube-prod opsera-pmd-scan-integrator .

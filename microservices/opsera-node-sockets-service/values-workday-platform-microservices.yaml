@@ -1,8 +1,0 @@
-ingress:
-  hosts:
-    - host: app.workday.opsera.io
-
-autoscaling:
-  enabled: true
-  targetCPUUtilizationPercentage: 420
-  targetMemoryUtilizationPercentage: 140

@@ -1,6 +1,0 @@
-apiVersion: v2
-name: datadog-apm-helper
-description: A Helper Helm chart for Datadog APM
-type: application
-version: 1.0.0
-appVersion: "1.0.0"

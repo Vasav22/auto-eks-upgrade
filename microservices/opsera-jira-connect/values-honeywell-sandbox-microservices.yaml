@@ -1,6 +1,0 @@
-ingress:
-  hosts:
-    - host: jira-connect.honeywell-sandbox.opsera.io
-      paths:
-        - path: /
-          pathType: ImplementationSpecific

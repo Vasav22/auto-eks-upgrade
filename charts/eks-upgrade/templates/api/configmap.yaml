@@ -1,0 +1,24 @@
+{{- if .Values.api.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.api.name }}-config
+  namespace: {{ include "eks-upgrade.namespace" . }}
+  labels:
+    {{- include "eks-upgrade.labels" . | nindent 4 }}
+    app.kubernetes.io/component: api
+data:
+  NODE_ENV: {{ .Values.api.env.NODE_ENV | quote }}
+  LOG_LEVEL: {{ .Values.api.env.LOG_LEVEL | quote }}
+  PORT: {{ .Values.api.env.PORT | quote }}
+  AWS_REGION: {{ .Values.api.env.AWS_REGION | quote }}
+  {{- if .Values.api.env.DATABASE_HOST }}
+  DATABASE_HOST: {{ .Values.api.env.DATABASE_HOST | quote }}
+  DATABASE_PORT: {{ .Values.api.env.DATABASE_PORT | default "5432" | quote }}
+  DATABASE_NAME: {{ .Values.api.env.DATABASE_NAME | default "eks_upgrade" | quote }}
+  DATABASE_USER: {{ .Values.api.env.DATABASE_USER | default "postgres" | quote }}
+  {{- end }}
+  {{- if .Values.redis.enabled }}
+  REDIS_URL: {{ printf "redis://%s:%d" .Values.redis.name (.Values.redis.port | int) | quote }}
+  {{- end }}
+{{- end }}

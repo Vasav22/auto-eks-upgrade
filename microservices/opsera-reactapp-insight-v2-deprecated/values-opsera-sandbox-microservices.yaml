@@ -1,8 +1,0 @@
-ingress:
-  hosts:
-    - host: vnext.sandbox.opsera.io
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-
-NODE_ENV: production

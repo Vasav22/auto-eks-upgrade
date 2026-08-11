@@ -1,5 +1,0 @@
-autoscaling:
-  enabled: true
-
-nodeGroupIAM: opsera-prod-eks-node-group
-accountid: "440953937617"

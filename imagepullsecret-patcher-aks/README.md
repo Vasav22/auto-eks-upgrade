@@ -1,1 +1,0 @@
-helm install imagepullsecret-patcher -n imagepullsecret-patcher --create-namespace

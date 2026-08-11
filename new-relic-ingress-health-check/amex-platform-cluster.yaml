@@ -1,3 +1,0 @@
-clusterName: amex-platform-cluster
-clusterType: control-plane
-nodeSelector: microservice-node

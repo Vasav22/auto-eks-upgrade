@@ -1,6 +1,0 @@
-dependencies:
-- name: postgresql-ha
-  repository: file://../opsera-postgres/
-  version: 8.6.12
-digest: sha256:7f1fbb5ad5bdcac9ed8466a36fd5984c624d3fdac556e8a28183d0dfe5d08b27
-generated: "2022-04-19T16:45:14.636029999Z"

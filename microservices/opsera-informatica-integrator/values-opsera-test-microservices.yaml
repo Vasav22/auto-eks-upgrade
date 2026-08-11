@@ -1,9 +1,0 @@
-autoscaling:
-  enabled: true
-  minReplicas: 2
-  maxReplicas: 3
-
-clusterName: opsera-test-platform
-
-datadogApm:
-  enabled: false

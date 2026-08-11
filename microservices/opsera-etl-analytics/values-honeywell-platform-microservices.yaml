@@ -1,6 +1,0 @@
-#EMPTY
-
-autoscaling:
-  enabled: true
-  targetCPUUtilizationPercentage: 240
-  targetMemoryUtilizationPercentage: 300

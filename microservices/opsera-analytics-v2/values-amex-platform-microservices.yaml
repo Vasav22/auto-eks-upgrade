@@ -1,9 +1,0 @@
-autoscaling:
-  enabled: true
-  minReplicas: 1
-  maxReplicas: 5
-
-ingress:
-  hosts:
-    - host: analytics-api.amex.opsera.io
-      paths: [/]

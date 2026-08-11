@@ -1,5 +1,0 @@
-anchoreGlobal:
-  defaultAdminPassword: jfAT4K0kim
-ingress:
-  apiHosts:
-  - anchore-mahantha02.prodqa.opsera.io
