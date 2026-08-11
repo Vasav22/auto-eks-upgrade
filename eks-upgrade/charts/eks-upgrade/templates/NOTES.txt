@@ -1,0 +1,32 @@
+╔══════════════════════════════════════════════════════════╗
+║         Auto EKS Upgrade — Deployment Summary           ║
+╚══════════════════════════════════════════════════════════╝
+
+Namespace  : {{ include "eks-upgrade.namespace" . }}
+Environment: {{ .Values.global.environment }}
+Cluster    : {{ .Values.global.clusterName }}
+Release    : {{ .Release.Name }}
+
+Components deployed:
+{{- if .Values.api.enabled }}
+  ✓ API          → http://{{ .Values.api.ingress.host }}/api
+{{- end }}
+{{- if .Values.web.enabled }}
+  ✓ Web UI       → http://{{ .Values.web.ingress.host }}
+{{- end }}
+{{- if .Values.healthAgent.enabled }}
+  ✓ Health Agent → in-cluster (port {{ .Values.healthAgent.port }})
+{{- end }}
+{{- if .Values.redis.enabled }}
+  ✓ Redis        → {{ .Values.redis.name }}:{{ .Values.redis.port }} (in-cluster)
+{{- end }}
+
+Check pod status:
+  kubectl get pods -n {{ include "eks-upgrade.namespace" . }}
+
+Stream API logs:
+  kubectl logs -f -l app.kubernetes.io/name={{ .Values.api.name }} -n {{ include "eks-upgrade.namespace" . }}
+
+Run a manual health check:
+  kubectl exec -it -n {{ include "eks-upgrade.namespace" . }} \
+    deploy/{{ .Values.api.name }} -- curl -s http://localhost:{{ .Values.api.port }}/api/health

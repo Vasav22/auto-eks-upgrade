@@ -1,0 +1,19 @@
+{{- if .Values.redis.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.redis.name }}
+  namespace: {{ include "eks-upgrade.namespace" . }}
+  labels:
+    {{- include "eks-upgrade.labels" . | nindent 4 }}
+    app.kubernetes.io/component: redis
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ .Values.redis.port }}
+      targetPort: redis
+      protocol: TCP
+      name: redis
+  selector:
+    {{- include "eks-upgrade.selectorLabels" (dict "name" .Values.redis.name "instance" .Release.Name) | nindent 4 }}
+{{- end }}

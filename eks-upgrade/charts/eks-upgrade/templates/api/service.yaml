@@ -1,0 +1,19 @@
+{{- if .Values.api.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.api.name }}
+  namespace: {{ include "eks-upgrade.namespace" . }}
+  labels:
+    {{- include "eks-upgrade.labels" . | nindent 4 }}
+    app.kubernetes.io/component: api
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ .Values.api.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "eks-upgrade.selectorLabels" (dict "name" .Values.api.name "instance" .Release.Name) | nindent 4 }}
+{{- end }}

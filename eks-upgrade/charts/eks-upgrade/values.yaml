@@ -1,0 +1,171 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Global
+# ─────────────────────────────────────────────────────────────────────────────
+global:
+  namespace: eks-upgrade
+  imageRegistry: ""          # set to your ECR/registry prefix, e.g. 123456789.dkr.ecr.us-east-1.amazonaws.com
+  imagePullSecrets: []
+  environment: test          # test | staging | production
+  clusterName: opsera-test-cluster
+
+# ─────────────────────────────────────────────────────────────────────────────
+# API (NestJS)
+# ─────────────────────────────────────────────────────────────────────────────
+api:
+  enabled: true
+  name: eks-upgrade-api
+  image:
+    repository: eks-upgrade-api
+    tag: latest
+    pullPolicy: IfNotPresent
+  replicaCount: 2
+  port: 3000
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+  hpa:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 6
+    targetCPUUtilizationPercentage: 70
+  pdb:
+    enabled: true
+    minAvailable: 1
+  livenessProbe:
+    path: /api/health
+    initialDelaySeconds: 30
+    periodSeconds: 15
+    failureThreshold: 3
+  readinessProbe:
+    path: /api/health/ready
+    initialDelaySeconds: 15
+    periodSeconds: 10
+    failureThreshold: 3
+  env:
+    NODE_ENV: production
+    LOG_LEVEL: info
+    PORT: "3000"
+    # Override via --set or a secrets file
+    DATABASE_URL: ""
+    REDIS_URL: ""
+    JWT_SECRET: ""
+    OIDC_ISSUER: ""
+    OIDC_CLIENT_ID: ""
+    OIDC_CLIENT_SECRET: ""
+    CREDENTIAL_ENCRYPTION_KEY: ""
+    AWS_REGION: us-east-1
+  # Extra env vars from existing Secrets/ConfigMaps
+  envFrom: []
+  # - secretRef:
+  #     name: eks-upgrade-secrets
+  serviceAccount:
+    create: true
+    annotations: {}
+    # For IRSA: eks.amazonaws.com/role-arn: arn:aws:iam::ACCOUNT:role/eks-upgrade-api
+  ingress:
+    enabled: true
+    className: nginx
+    host: eks-upgrade-api.opsera-test.internal
+    tlsSecretName: ""
+    annotations:
+      nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+      nginx.ingress.kubernetes.io/proxy-read-timeout: "120"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Web (React / Nginx)
+# ─────────────────────────────────────────────────────────────────────────────
+web:
+  enabled: true
+  name: eks-upgrade-web
+  image:
+    repository: eks-upgrade-web
+    tag: latest
+    pullPolicy: IfNotPresent
+  replicaCount: 2
+  port: 80
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+  pdb:
+    enabled: true
+    minAvailable: 1
+  ingress:
+    enabled: true
+    className: nginx
+    host: eks-upgrade.opsera-test.internal
+    tlsSecretName: ""
+    annotations:
+      nginx.ingress.kubernetes.io/proxy-body-size: "5m"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Health Agent (Go — runs inside each target cluster)
+# ─────────────────────────────────────────────────────────────────────────────
+healthAgent:
+  enabled: true
+  name: eks-upgrade-health-agent
+  image:
+    repository: eks-upgrade-health-agent
+    tag: latest
+    pullPolicy: IfNotPresent
+  replicaCount: 1
+  port: 8080
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+  env:
+    CLUSTER_ID: ""          # set per-cluster
+    POLL_INTERVAL: "30s"
+    API_ENDPOINT: ""        # URL of the eks-upgrade API this agent reports to
+    LOG_LEVEL: info
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Redis (in-cluster for test; use managed Redis in prod)
+# ─────────────────────────────────────────────────────────────────────────────
+redis:
+  enabled: true             # set false and provide REDIS_URL if using external Redis
+  name: eks-upgrade-redis
+  image:
+    repository: redis
+    tag: "7-alpine"
+    pullPolicy: IfNotPresent
+  port: 6379
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+  persistence:
+    enabled: false          # enable for staging/prod
+    storageClass: ""
+    size: 5Gi
+
+# ─────────────────────────────────────────────────────────────────────────────
+# DB Migration Job (runs TypeORM migrations on deploy)
+# ─────────────────────────────────────────────────────────────────────────────
+migrations:
+  enabled: true
+  image:
+    repository: eks-upgrade-api   # reuses API image — runs `npm run migration:run`
+    tag: latest
+    pullPolicy: IfNotPresent
+  ttlSecondsAfterFinished: 300
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Network Policy
+# ─────────────────────────────────────────────────────────────────────────────
+networkPolicy:
+  enabled: true

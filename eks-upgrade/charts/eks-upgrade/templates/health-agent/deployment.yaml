@@ -1,0 +1,71 @@
+{{- if .Values.healthAgent.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.healthAgent.name }}
+  namespace: {{ include "eks-upgrade.namespace" . }}
+  labels:
+    {{- include "eks-upgrade.labels" . | nindent 4 }}
+    app.kubernetes.io/component: health-agent
+spec:
+  replicas: {{ .Values.healthAgent.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "eks-upgrade.selectorLabels" (dict "name" .Values.healthAgent.name "instance" .Release.Name) | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "eks-upgrade.labels" . | nindent 8 }}
+        {{- include "eks-upgrade.selectorLabels" (dict "name" .Values.healthAgent.name "instance" .Release.Name) | nindent 8 }}
+        app.kubernetes.io/component: health-agent
+    spec:
+      serviceAccountName: {{ .Values.healthAgent.name }}
+      {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+      containers:
+        - name: health-agent
+          image: {{ include "eks-upgrade.image" (dict "global" .Values.global "repository" .Values.healthAgent.image.repository "tag" .Values.healthAgent.image.tag) }}
+          imagePullPolicy: {{ .Values.healthAgent.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.healthAgent.port }}
+              protocol: TCP
+          env:
+            - name: CLUSTER_ID
+              value: {{ .Values.healthAgent.env.CLUSTER_ID | quote }}
+            - name: POLL_INTERVAL
+              value: {{ .Values.healthAgent.env.POLL_INTERVAL | quote }}
+            - name: API_ENDPOINT
+              value: {{ .Values.healthAgent.env.API_ENDPOINT | default (printf "http://%s:%d" .Values.api.name (.Values.api.port | int)) | quote }}
+            - name: LOG_LEVEL
+              value: {{ .Values.healthAgent.env.LOG_LEVEL | quote }}
+            - name: PORT
+              value: {{ .Values.healthAgent.port | quote }}
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 20
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            {{- toYaml .Values.healthAgent.resources | nindent 12 }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+      terminationGracePeriodSeconds: 15
+{{- end }}

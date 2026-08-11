@@ -1,0 +1,15 @@
+{{- if and .Values.web.enabled .Values.web.pdb.enabled }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ .Values.web.name }}
+  namespace: {{ include "eks-upgrade.namespace" . }}
+  labels:
+    {{- include "eks-upgrade.labels" . | nindent 4 }}
+    app.kubernetes.io/component: web
+spec:
+  minAvailable: {{ .Values.web.pdb.minAvailable }}
+  selector:
+    matchLabels:
+      {{- include "eks-upgrade.selectorLabels" (dict "name" .Values.web.name "instance" .Release.Name) | nindent 6 }}
+{{- end }}
