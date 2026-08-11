@@ -1,3 +1,0 @@
-clusterName: workday-controlplane
-clusterType: control-plane
-nodeSelector: microservice-node

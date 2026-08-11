@@ -1,9 +1,0 @@
-ingress:
-  enabled: true
-  hosts:
-  - host: opsera-backstage-integrator-service.opsera-prod-private.opsera.io
-    paths: 
-    - path: /protected/idp
-  - host: app.opsera.io
-    paths: 
-    - path: /public/idp

@@ -1,8 +1,0 @@
-resources:
-  limits:
-    memory: 3Gi
-
-autoscaling:
-  enabled: true
-  targetMemoryUtilizationPercentage: 180
-  minReplicas: 3

@@ -1,7 +1,0 @@
-apiVersion: v2
-name: restart-apt-mirror
-description: Helm chart to restart a deployment using kubectl CronJob
-type: application
-version: 0.1.0
-appVersion: "1.0"
-

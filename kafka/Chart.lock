@@ -1,9 +1,0 @@
-dependencies:
-- name: zookeeper
-  repository: file://../zookeeper/
-  version: 11.1.2
-- name: common
-  repository: file://../bitnami-common-v2/
-  version: 2.2.2
-digest: sha256:a6d9e014296f7fff3ad36a71f297ceda98546f5820495b3f5b4375c0a6d4159f
-generated: "2023-02-01T18:52:22.586189761Z"

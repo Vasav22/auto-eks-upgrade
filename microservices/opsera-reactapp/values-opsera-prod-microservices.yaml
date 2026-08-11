@@ -1,8 +1,0 @@
-ingress:
-  hosts:
-    - host: portal.opsera.io
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-
-enableNewRelicRum: false

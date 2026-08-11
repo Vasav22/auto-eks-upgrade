@@ -1,4 +1,0 @@
-autoscaling:
-  targetMemoryUtilizationPercentage: 70
-  enabled: true
-  targetCPUUtilizationPercentage: 70

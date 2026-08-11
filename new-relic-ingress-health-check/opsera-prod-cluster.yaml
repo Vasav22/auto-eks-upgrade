@@ -1,3 +1,0 @@
-clusterName: prod-controlplane
-clusterType: control-plane
-nodeSelector: microservice-node

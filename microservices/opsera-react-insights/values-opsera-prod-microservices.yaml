@@ -1,6 +1,0 @@
-ingress:
-  hosts:
-    - host: portal.opsera.io
-      paths:
-        - path: /nx01
-          pathType: ImplementationSpecific

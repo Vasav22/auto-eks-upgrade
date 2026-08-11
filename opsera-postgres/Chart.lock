@@ -1,6 +1,0 @@
-dependencies:
-- name: common
-  repository: file://../bitnami-common/
-  version: 1.13.0
-digest: sha256:f3f53cafd4997181ddae27fc2e26e75502eb6032fb83278d30dcd6c20f10eca9
-generated: "2022-04-19T16:40:09.990215622Z"

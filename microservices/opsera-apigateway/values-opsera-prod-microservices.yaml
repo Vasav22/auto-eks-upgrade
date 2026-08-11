@@ -1,8 +1,0 @@
-ingress:
-  hosts:
-    - host: apigateway.opsera-prod-private.opsera.io
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-
-replicaCount: 3

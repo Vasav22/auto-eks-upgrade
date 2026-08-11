@@ -1,4 +1,0 @@
-ingress:
-  hosts:
-    - host: analytics-api.workday-platform.opsera.io
-      paths: [/]

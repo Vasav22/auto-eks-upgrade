@@ -1,5 +1,0 @@
-tenantToolsNamespace: tenant1-tools
-
-tenantActionsNamespace: tenant-actions
-
-tenantK8SNamespace: tenant-k8ns

@@ -1,6 +1,0 @@
-ingress:
-  hosts:
-    - host: analytics-api.opsera-uat.opsera.io
-      paths: [/]
-
-NODE_ENV: staging

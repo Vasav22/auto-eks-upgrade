@@ -1,7 +1,0 @@
-ingress:
-  enabled: false
-  hosts:
-    - host: design-system-demo.opsera.io    
-      paths:
-        - path: /
-          pathType: ImplementationSpecific

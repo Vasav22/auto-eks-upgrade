@@ -1,8 +1,0 @@
-ingress:
-  hosts:
-    - host: portal.workday.opsera.io
-      paths:
-        - path: /vnext
-          pathType: ImplementationSpecific
-        - path: /nx
-          pathType: ImplementationSpecific

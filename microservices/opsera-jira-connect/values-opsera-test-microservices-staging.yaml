@@ -1,9 +1,0 @@
-autoscaling:
-  minReplicas: 1
-
-ingress:
-  hosts:
-    - host: jira-connect.uat.opsera.io
-      paths:
-        - path: /
-          pathType: ImplementationSpecific

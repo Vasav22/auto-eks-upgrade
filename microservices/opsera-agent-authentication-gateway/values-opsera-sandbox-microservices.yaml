@@ -1,8 +1,0 @@
-autoscaling:
-  minReplicas: 1
-
-ingress:
-  hosts:
-    - host: agent.sandbox.opsera.io
-
-NODE_ENV: production

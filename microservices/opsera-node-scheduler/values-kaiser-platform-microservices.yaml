@@ -1,4 +1,0 @@
-ingress:
-  hosts:
-    - host: node-scheduler.kaiserpermanente-private.opsera.io
-      paths: [/]

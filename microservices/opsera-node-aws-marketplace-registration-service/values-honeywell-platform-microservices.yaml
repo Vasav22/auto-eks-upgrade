@@ -1,4 +1,0 @@
-ingress:
-  hosts:
-    - host: aws-marketplace-registration-service.honeywell-private.opsera.io
-      paths: [/]

@@ -1,5 +1,0 @@
-ingress:
-  hosts:
-    - host: api.sandbox.opsera.io
-    
-NODE_ENV: production
