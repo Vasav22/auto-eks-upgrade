@@ -1,6 +1,12 @@
 import { createBrowserRouter } from 'react-router-dom';
-import { lazy } from 'react';
+import { lazy, Suspense } from 'react';
 import { AppLayout } from './components/AppLayout';
+
+const SuspenseWrap = ({ children }: { children: React.ReactNode }) => (
+  <Suspense fallback={<div style={{ textAlign: 'center', padding: 48 }} />}>
+    {children}
+  </Suspense>
+);
 
 const FleetDashboard = lazy(() => import('./pages/FleetDashboard'));
 const ClusterList = lazy(() => import('./pages/ClusterList'));
@@ -25,15 +31,15 @@ const NotFound = lazy(() => import('./pages/NotFound'));
 export const router = createBrowserRouter([
   {
     path: '/login',
-    element: <Login />,
+    element: <SuspenseWrap><Login /></SuspenseWrap>,
   },
   {
     path: '/auth/callback',
-    element: <AuthCallback />,
+    element: <SuspenseWrap><AuthCallback /></SuspenseWrap>,
   },
   {
     path: '/unauthorized',
-    element: <Unauthorized />,
+    element: <SuspenseWrap><Unauthorized /></SuspenseWrap>,
   },
   {
     path: '/',

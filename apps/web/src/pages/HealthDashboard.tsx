@@ -78,7 +78,7 @@ export default function HealthDashboard() {
   });
 
   const loadHealthData = useCallback(async () => {
-    if (!clusterId) return;
+    if (!clusterId) { setLoading(false); return; }
     try {
       const [latestRes, listRes] = await Promise.all([
         fetch(`/api/clusters/${clusterId}/health/latest`, {
@@ -127,6 +127,13 @@ export default function HealthDashboard() {
     : null;
 
   if (loading) return <div style={{ textAlign: 'center', padding: 48 }}><Spin size="large" /></div>;
+  if (!clusterId) return (
+    <Empty
+      image={Empty.PRESENTED_IMAGE_SIMPLE}
+      description="Select a cluster from the Fleet Dashboard to view its health"
+      style={{ padding: 48 }}
+    />
+  );
 
   return (
     <div style={{ padding: 24, maxWidth: 1000, margin: '0 auto' }}>

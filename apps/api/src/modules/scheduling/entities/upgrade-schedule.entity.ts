@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, CreateDateColumn, UpdateDateColumn, Index } from 'typeorm';
-import { ClusterEntity } from '../../clusters/entities/cluster.entity';
+import { Cluster as ClusterEntity } from '../../../database/entities/cluster.entity';
 
 @Entity('upgrade_schedules')
 export class UpgradeScheduleEntity {

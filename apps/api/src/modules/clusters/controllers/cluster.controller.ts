@@ -21,7 +21,7 @@ export class ClusterController {
   constructor(private readonly clusterService: ClusterService) {}
 
   @Post('accounts')
-  @Roles('admin', 'operator')
+  @Roles('cluster_admin', 'upgrade_operator')
   async registerAccount(
     @Body() dto: RegisterAccountDto,
     @Request() req: any,
@@ -39,7 +39,7 @@ export class ClusterController {
   }
 
   @Post('discover')
-  @Roles('admin', 'operator')
+  @Roles('cluster_admin', 'upgrade_operator')
   async discoverClusters(
     @Body() dto: DiscoverClustersDto,
     @Request() req: any,
@@ -48,7 +48,7 @@ export class ClusterController {
   }
 
   @Get('accounts')
-  @Roles('admin', 'operator', 'viewer')
+  @Roles('cluster_admin', 'upgrade_operator', 'sre_oncall', 'compliance_reviewer')
   async listAccounts() {
     const accounts = await this.clusterService.listAccounts();
     return accounts.map((account) => ({
@@ -60,7 +60,7 @@ export class ClusterController {
   }
 
   @Get('accounts/:id')
-  @Roles('admin', 'operator', 'viewer')
+  @Roles('cluster_admin', 'upgrade_operator', 'sre_oncall', 'compliance_reviewer')
   async getAccount(@Param('id') id: string) {
     const account = await this.clusterService.getAccountById(id);
     return {
@@ -72,13 +72,13 @@ export class ClusterController {
   }
 
   @Get()
-  @Roles('admin', 'operator', 'viewer')
+  @Roles('cluster_admin', 'upgrade_operator', 'sre_oncall', 'compliance_reviewer')
   async listClusters(@Query('accountId') accountId?: string) {
     return this.clusterService.listClusters(accountId);
   }
 
   @Get(':id')
-  @Roles('admin', 'operator', 'viewer')
+  @Roles('cluster_admin', 'upgrade_operator', 'sre_oncall', 'compliance_reviewer')
   async getCluster(@Param('id') id: string) {
     return this.clusterService.getClusterDetail(id);
   }

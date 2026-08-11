@@ -8,13 +8,15 @@ export class RegisterAccountDto {
   })
   accountName: string;
 
+  // Static keys are fully optional.
+  // If omitted, the pod uses its ambient IAM credentials (node role / IRSA) to assume roleArn.
   @IsString()
-  @IsNotEmpty()
-  accessKeyId: string;
+  @IsOptional()
+  accessKeyId?: string;
 
   @IsString()
-  @IsNotEmpty()
-  secretAccessKey: string;
+  @IsOptional()
+  secretAccessKey?: string;
 
   @IsString()
   @IsOptional()

@@ -52,7 +52,7 @@ interface ActivityEvent {
   timestamp: string;
 }
 
-export function UpgradeJobDetail() {
+export default function UpgradeJobDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [job, setJob] = useState<UpgradeJob | null>(null);

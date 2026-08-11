@@ -1,5 +1,6 @@
-import { Layout, Menu } from 'antd';
+import { Layout, Menu, Spin } from 'antd';
 import { Outlet, Link, useLocation } from 'react-router-dom';
+import { Suspense } from 'react';
 import {
   DashboardOutlined,
   ClusterOutlined,
@@ -7,6 +8,7 @@ import {
   ThunderboltOutlined,
   DatabaseOutlined,
   AuditOutlined,
+  CloudServerOutlined,
 } from '@ant-design/icons';
 
 const { Header, Sider, Content, Footer } = Layout;
@@ -19,6 +21,11 @@ export function AppLayout(): JSX.Element {
       key: '/',
       icon: <DashboardOutlined />,
       label: <Link to="/">Fleet Dashboard</Link>,
+    },
+    {
+      key: '/clusters',
+      icon: <CloudServerOutlined />,
+      label: <Link to="/clusters">Clusters</Link>,
     },
     {
       key: '/health',
@@ -81,7 +88,9 @@ export function AppLayout(): JSX.Element {
               minHeight: 280,
             }}
           >
-            <Outlet />
+            <Suspense fallback={<div style={{ textAlign: 'center', padding: 48 }}><Spin size="large" /></div>}>
+              <Outlet />
+            </Suspense>
           </Content>
           <Footer role="contentinfo" style={{ textAlign: 'center' }}>
             EKS Upgrade Control Plane ©2026

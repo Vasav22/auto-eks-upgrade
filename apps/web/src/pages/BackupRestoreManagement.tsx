@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import {
   Card, Table, Tag, Button, Space, Typography, Tabs, Badge,
-  Alert, Spin, Modal, Descriptions, Popconfirm, Statistic, Row, Col,
+  Alert, Spin, Modal, Descriptions, Popconfirm, Statistic, Row, Col, Empty,
 } from 'antd';
 import {
   CloudUploadOutlined, CloudDownloadOutlined, CheckOutlined,
@@ -53,7 +53,7 @@ export default function BackupRestoreManagement() {
   const [restoring, setRestoring] = useState(false);
 
   const load = useCallback(async () => {
-    if (!clusterId) return;
+    if (!clusterId) { setLoading(false); return; }
     try {
       setLoading(true);
       const [bRes, rRes] = await Promise.all([
@@ -191,6 +191,13 @@ export default function BackupRestoreManagement() {
   ];
 
   if (loading) return <div style={{ textAlign: 'center', padding: 48 }}><Spin size="large" /></div>;
+  if (!clusterId) return (
+    <Empty
+      image={Empty.PRESENTED_IMAGE_SIMPLE}
+      description="Select a cluster from the Fleet Dashboard to manage its backups"
+      style={{ padding: 48 }}
+    />
+  );
 
   return (
     <div style={{ padding: 24, maxWidth: 1100, margin: '0 auto' }}>

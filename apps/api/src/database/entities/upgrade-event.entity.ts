@@ -24,3 +24,5 @@ export class UpgradeEvent {
   @PrimaryColumn({ type: 'timestamp with time zone', name: 'occurred_at' })
   occurredAt!: Date;
 }
+
+export { UpgradeEvent as UpgradeEventEntity };

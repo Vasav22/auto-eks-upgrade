@@ -177,10 +177,11 @@ export class ClusterService {
       region,
     );
 
-    const eks = new EKS({
-      region,
-      credentials: awsCredentials,
-    });
+    const eksConfig: any = { region };
+    if (awsCredentials) {
+      eksConfig.credentials = awsCredentials;
+    }
+    const eks = new EKS(eksConfig);
 
     const listCommand = new ListClustersCommand({});
     const listResponse = await eks.send(listCommand);
@@ -268,13 +269,16 @@ export class ClusterService {
     region: string,
   ): Promise<any> {
     if (credentials.roleArn) {
-      const sts = new STS({
-        region,
-        credentials: {
+      // Use ambient credentials (node role / IRSA / env vars) to assume the role.
+      // Do NOT pass explicit credentials to STS — SDK picks up the pod's identity automatically.
+      const stsConfig: any = { region };
+      if (credentials.accessKeyId && credentials.secretAccessKey) {
+        stsConfig.credentials = {
           accessKeyId: credentials.accessKeyId,
           secretAccessKey: credentials.secretAccessKey,
-        },
-      });
+        };
+      }
+      const sts = new STS(stsConfig);
 
       const assumeCommand = new AssumeRoleCommand({
         RoleArn: credentials.roleArn,
@@ -296,10 +300,16 @@ export class ClusterService {
       };
     }
 
-    return {
-      accessKeyId: credentials.accessKeyId,
-      secretAccessKey: credentials.secretAccessKey,
-    };
+    // Static keys provided — use them directly
+    if (credentials.accessKeyId && credentials.secretAccessKey) {
+      return {
+        accessKeyId: credentials.accessKeyId,
+        secretAccessKey: credentials.secretAccessKey,
+      };
+    }
+
+    // No credentials at all — return undefined so AWS SDK uses the default provider chain
+    return undefined;
   }
 
   async getAccountById(id: string): Promise<ClusterAccountEntity> {

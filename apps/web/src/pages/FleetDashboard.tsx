@@ -3,11 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import {
   Card, Table, Tag, Button, Space, Typography, Spin, Alert,
   Row, Col, Statistic, Badge, Input, Select, Progress, Tooltip,
+  Modal, Form, Steps, message,
 } from 'antd';
 import { FixedSizeList as List } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import {
-  ReloadOutlined, SearchOutlined, WifiOutlined,
+  ReloadOutlined, SearchOutlined, WifiOutlined, PlusOutlined,
 } from '@ant-design/icons';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { useAuth } from '../contexts/AuthContext';
@@ -53,6 +54,13 @@ export default function FleetDashboard() {
   const [searchText, setSearchText] = useState('');
   const [regionFilter, setRegionFilter] = useState<string | undefined>();
   const [liveUpdate, setLiveUpdate] = useState<string | null>(null);
+
+  // Register account + discover modal
+  const [addModalOpen, setAddModalOpen] = useState(false);
+  const [addStep, setAddStep] = useState(0);
+  const [addLoading, setAddLoading] = useState(false);
+  const [registeredAccountId, setRegisteredAccountId] = useState<string | null>(null);
+  const [form] = Form.useForm();
 
   const wsUrl = `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/upgrades`;
   const { sendJsonMessage, readyState } = useWebSocket(wsUrl, {
@@ -101,6 +109,54 @@ export default function FleetDashboard() {
 
   const regions = [...new Set(clusters.map((c) => c.region))];
 
+  const handleRegisterAccount = async () => {
+    try {
+      const values = await form.validateFields();
+      setAddLoading(true);
+      const res = await fetch('/api/clusters/accounts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${user?.token ?? ''}` },
+        body: JSON.stringify(values),
+      });
+      if (!res.ok) throw new Error((await res.json()).message ?? 'Registration failed');
+      const account = await res.json();
+      setRegisteredAccountId(account.id);
+      setAddStep(1);
+      form.resetFields();
+      message.success(`Account "${account.accountName}" registered`);
+    } catch (err: any) {
+      message.error(err.message ?? 'Failed to register account');
+    } finally {
+      setAddLoading(false);
+    }
+  };
+
+  const handleDiscoverClusters = async () => {
+    if (!registeredAccountId) return;
+    try {
+      const values = await form.validateFields();
+      setAddLoading(true);
+      const regions_input = values.regions ? values.regions.split(',').map((r: string) => r.trim()).filter(Boolean) : undefined;
+      const res = await fetch('/api/clusters/discover', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${user?.token ?? ''}` },
+        body: JSON.stringify({ accountId: registeredAccountId, regions: regions_input }),
+      });
+      if (!res.ok) throw new Error((await res.json()).message ?? 'Discovery failed');
+      const result = await res.json();
+      message.success(`Discovered ${result.discovered ?? 0} cluster(s)`);
+      setAddModalOpen(false);
+      setAddStep(0);
+      setRegisteredAccountId(null);
+      form.resetFields();
+      void loadFleet();
+    } catch (err: any) {
+      message.error(err.message ?? 'Failed to discover clusters');
+    } finally {
+      setAddLoading(false);
+    }
+  };
+
   const columns = [
     {
       title: 'Cluster', dataIndex: 'clusterName', key: 'clusterName',
@@ -143,8 +199,65 @@ export default function FleetDashboard() {
             text={<Text type="secondary"><WifiOutlined /> Live</Text>}
           />
           <Button icon={<ReloadOutlined />} onClick={loadFleet} />
+          <Button type="primary" icon={<PlusOutlined />} onClick={() => { setAddModalOpen(true); setAddStep(0); form.resetFields(); }}>
+            Add Cluster
+          </Button>
         </Space>
       </Space>
+
+      <Modal
+        title="Add AWS Account & Discover Clusters"
+        open={addModalOpen}
+        onCancel={() => { setAddModalOpen(false); setAddStep(0); setRegisteredAccountId(null); form.resetFields(); }}
+        footer={null}
+        width={560}
+      >
+        <Steps current={addStep} style={{ marginBottom: 24 }} items={[
+          { title: 'Register Account' },
+          { title: 'Discover Clusters' },
+        ]} />
+
+        {addStep === 0 && (
+          <Form form={form} layout="vertical">
+            <Form.Item name="accountName" label="Account Name" rules={[{ required: true, message: 'Account name is required' }]}>
+              <Input placeholder="e.g. prod-aws-account" />
+            </Form.Item>
+            <Form.Item
+              name="roleArn"
+              label="IAM Role ARN"
+              rules={[{ required: true, message: 'Role ARN is required' }]}
+              extra="The API pod will assume this role to discover clusters. Grant sts:AssumeRole to the pod's IAM identity in the role's trust policy."
+            >
+              <Input placeholder="arn:aws:iam::123456789012:role/EKSReadRole" />
+            </Form.Item>
+            <Form.Item name="externalId" label="External ID (optional)" extra="Recommended for cross-account roles.">
+              <Input placeholder="optional-external-id" />
+            </Form.Item>
+            <Form.Item name="defaultRegion" label="Default Region" rules={[{ required: true, message: 'Region is required' }]}>
+              <Input placeholder="us-east-2" />
+            </Form.Item>
+            <Button type="primary" loading={addLoading} onClick={handleRegisterAccount} block>
+              Register Account
+            </Button>
+          </Form>
+        )}
+
+        {addStep === 1 && (
+          <Form form={form} layout="vertical">
+            <Form.Item name="regions" label="Regions to scan (comma-separated, leave blank for default)">
+              <Input placeholder="us-east-1, us-east-2" />
+            </Form.Item>
+            <Space style={{ width: '100%' }} direction="vertical">
+              <Button type="primary" loading={addLoading} onClick={handleDiscoverClusters} block>
+                Discover Clusters
+              </Button>
+              <Button onClick={() => { setAddStep(0); setRegisteredAccountId(null); }} block>
+                Back
+              </Button>
+            </Space>
+          </Form>
+        )}
+      </Modal>
 
       {error && <Alert type="error" message={error} closable onClose={() => setError(null)} style={{ marginBottom: 16 }} />}
       {liveUpdate && <Alert type="info" message={liveUpdate} closable onClose={() => setLiveUpdate(null)} style={{ marginBottom: 8 }} />}

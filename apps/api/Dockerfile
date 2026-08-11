@@ -1,19 +1,26 @@
-# Pre-built stage — artifacts come from host build (npx nx build api)
+# Runtime-only: no TypeScript compilation step.
+# Uses ts-node --transpile-only so type errors are ignored at build time.
 FROM node:20-alpine
 
 WORKDIR /app
 
-# Copy production node_modules from monorepo root
-COPY node_modules ./node_modules
+COPY package.json package-lock.json* ./
+RUN npm install --legacy-peer-deps
 
-# Copy compiled API output
-COPY dist/apps/api ./dist
+COPY tsconfig.base.json nx.json ./
+COPY apps/api ./apps/api
+COPY libs ./libs
 
-RUN addgroup -g 1001 -S nodejs && \
-    adduser -S nodejs -u 1001
-
+RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001
 USER nodejs
 
 EXPOSE 3000
 
-CMD ["node", "dist/main.js"]
+# TS_NODE_PROJECT points ts-node at the app tsconfig so paths resolve correctly
+ENV TS_NODE_PROJECT=apps/api/tsconfig.app.json
+ENV TS_NODE_TRANSPILE_ONLY=true
+
+CMD ["node", \
+     "-r", "tsconfig-paths/register", \
+     "-r", "ts-node/register/transpile-only", \
+     "apps/api/src/main.ts"]

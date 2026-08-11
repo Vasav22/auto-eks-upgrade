@@ -71,3 +71,5 @@ export class UpgradeJob {
   @JoinColumn({ name: 'initiated_by' })
   initiatedByUser!: User;
 }
+
+export { UpgradeJob as UpgradeJobEntity };

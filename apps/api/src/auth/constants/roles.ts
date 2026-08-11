@@ -4,6 +4,10 @@ export const ROLES = {
   CLUSTER_ADMIN: 'cluster_admin',
   CHANGE_COORDINATOR: 'change_coordinator',
   COMPLIANCE_REVIEWER: 'compliance_reviewer',
+  // Aliases used across controllers
+  ADMIN: 'admin',
+  OPERATOR: 'operator',
+  VIEWER: 'viewer',
 } as const;
 
 export type RoleName = (typeof ROLES)[keyof typeof ROLES];

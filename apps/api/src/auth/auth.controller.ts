@@ -9,7 +9,7 @@ import { setAccessTokenCookie, setRefreshTokenCookie, clearAuthCookies } from '.
 import { Public } from './decorators/public.decorator';
 import { RequestWithUser } from './guards/auth.guard';
 
-@Controller('api/v1/auth')
+@Controller('v1/auth')
 export class AuthController {
   private readonly logger = new Logger(AuthController.name);
 

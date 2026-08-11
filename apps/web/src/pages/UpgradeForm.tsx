@@ -45,7 +45,7 @@ interface ClusterDetail {
   };
 }
 
-export function UpgradeForm() {
+export default function UpgradeForm() {
   const { clusterId } = useParams<{ clusterId: string }>();
   const navigate = useNavigate();
   const [form] = Form.useForm();

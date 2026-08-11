@@ -32,7 +32,7 @@ interface Cluster {
   lastSyncedAt: string;
 }
 
-export function ClusterList() {
+export default function ClusterList() {
   const navigate = useNavigate();
   const [clusters, setClusters] = useState<Cluster[]>([]);
   const [loading, setLoading] = useState(true);

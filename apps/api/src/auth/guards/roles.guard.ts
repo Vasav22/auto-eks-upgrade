@@ -9,6 +9,7 @@ import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from '../decorators/roles.decorator';
 import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
 import { ROLES, RoleName } from '../constants/roles';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { PermissionService } from '../services/permission.service';
 import { AuditService } from '../../modules/audit/services/audit.service';
 import { AuditEventType } from '../../modules/audit/enums/audit-event-type.enum';
@@ -72,8 +73,17 @@ export class RolesGuard implements CanActivate {
       return true;
     }
 
+    // Normalize legacy role aliases
+    const ROLE_ALIASES: Record<string, string> = {
+      admin: ROLES.CLUSTER_ADMIN,
+      operator: ROLES.UPGRADE_OPERATOR,
+      viewer: ROLES.COMPLIANCE_REVIEWER,
+    };
+    const normalizedRequired = requiredRoles.map((r) => ROLE_ALIASES[r] ?? r);
+    const normalizedUserRole = ROLE_ALIASES[user.role] ?? user.role;
+
     // Check if user has one of the required roles
-    const hasRole = requiredRoles.includes(user.role);
+    const hasRole = normalizedRequired.includes(normalizedUserRole as RoleName);
 
     if (!hasRole) {
       await this.auditDenial(

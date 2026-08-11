@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Card } from 'antd';
 import { useAuth } from '../contexts/AuthContext';
 
-export function Login() {
+export default function Login() {
   const { isAuthenticated, login } = useAuth();
   const navigate = useNavigate();
 

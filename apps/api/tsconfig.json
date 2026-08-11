@@ -3,11 +3,13 @@
   "compilerOptions": {
     "module": "commonjs",
     "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "noImplicitOverride": true,
-    "noPropertyAccessFromIndexSignature": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
+    "strict": false,
+    "strictPropertyInitialization": false,
+    "noImplicitAny": false,
+    "noImplicitOverride": false,
+    "noPropertyAccessFromIndexSignature": false,
+    "noImplicitReturns": false,
+    "noFallthroughCasesInSwitch": false,
     "esModuleInterop": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true

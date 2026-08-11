@@ -59,7 +59,7 @@ interface ClusterDetail {
   versionInfo: ClusterVersionInfo;
 }
 
-export function ClusterDetail() {
+export default function ClusterDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [cluster, setCluster] = useState<ClusterDetail | null>(null);

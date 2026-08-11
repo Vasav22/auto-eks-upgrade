@@ -10,7 +10,8 @@ async function bootstrap(): Promise<void> {
     const app = await NestFactory.create(AppModule, { bufferLogs: true });
     
     app.useLogger(app.get(Logger));
-    app.enableCors();
+    app.setGlobalPrefix('api');
+    app.enableCors({ origin: true, credentials: true });
     
     app.useGlobalFilters(new AllExceptionsFilter());
     app.useGlobalInterceptors(new CorrelationIdInterceptor());
