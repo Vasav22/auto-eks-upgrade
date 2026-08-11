@@ -18,7 +18,7 @@ api:
   image:
     repository: eks-upgrade-api
     tag: latest
-    pullPolicy: IfNotPresent
+    pullPolicy: Always
   replicaCount: 2
   port: 3000
   resources:
@@ -58,6 +58,7 @@ api:
     OIDC_CLIENT_ID: ""
     OIDC_CLIENT_SECRET: ""
     CREDENTIAL_ENCRYPTION_KEY: ""
+    ENCRYPTION_KEY: ""
     AWS_REGION: us-east-1
   # Extra env vars from existing Secrets/ConfigMaps
   envFrom: []
@@ -85,7 +86,7 @@ web:
   image:
     repository: eks-upgrade-web
     tag: latest
-    pullPolicy: IfNotPresent
+    pullPolicy: Always
   replicaCount: 2
   port: 80
   resources:

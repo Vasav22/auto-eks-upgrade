@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
-import { LoggerModule } from 'nestjs-pino';
 import { DatabaseModule } from './database/database.module';
 import { RedisModule } from './redis/redis.module';
 import { HealthModule } from './health/health.module';
@@ -22,8 +21,7 @@ import { SchedulingModule } from './modules/scheduling/scheduling.module';
 import { NotificationModule } from './modules/notifications/notification.module';
 import { ComplianceModule } from './modules/compliance/compliance.module';
 import { IamModule } from './modules/iam/iam.module';
-import { MetricsController } from './common/metrics/metrics.controller';
-import { PrometheusService } from './common/metrics/prometheus.service';
+import { MetricsModule } from './common/metrics/metrics.module';
 
 @Module({
   imports: [
@@ -32,35 +30,6 @@ import { PrometheusService } from './common/metrics/prometheus.service';
       envFilePath: ['.env.local', '.env'],
     }),
     ScheduleModule.forRoot(),
-    LoggerModule.forRoot({
-      pinoHttp: {
-        level: process.env['LOG_LEVEL'] || 'info',
-        transport:
-          process.env['NODE_ENV'] !== 'production'
-            ? {
-                target: 'pino-pretty',
-                options: {
-                  colorize: true,
-                  singleLine: true,
-                },
-              }
-            : undefined,
-        serializers: {
-          req(req): Record<string, unknown> {
-            return {
-              id: req.id,
-              method: req.method,
-              url: req.url,
-            };
-          },
-          res(res): Record<string, unknown> {
-            return {
-              statusCode: res.statusCode,
-            };
-          },
-        },
-      },
-    }),
     DatabaseModule,
     RedisModule.forRoot(),
     HealthModule,
@@ -81,8 +50,9 @@ import { PrometheusService } from './common/metrics/prometheus.service';
     NotificationModule,
     ComplianceModule,
     IamModule,
+    MetricsModule,
   ],
-  controllers: [MetricsController],
-  providers: [PrometheusService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}

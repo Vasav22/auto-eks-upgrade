@@ -1,8 +1,8 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, EntityManager } from 'typeorm';
-import { ClusterEntity } from 'src/database/entities/cluster.entity';
-import { ClusterAccountEntity } from 'src/database/entities/cluster-account.entity';
+import { ClusterEntity } from '../../../database/entities/cluster.entity';
+import { ClusterAccountEntity } from '../../../database/entities/cluster-account.entity';
 import { RegisterAccountDto } from '../dto/register-account.dto';
 import { DiscoverClustersDto } from '../dto/discover-clusters.dto';
 import { ClusterDetailDto } from '../dto/cluster-detail.dto';

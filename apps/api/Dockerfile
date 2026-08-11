@@ -4,8 +4,9 @@ FROM node:20-alpine
 
 WORKDIR /app
 
+# Install dependencies in a separate layer so it's cached between source changes
 COPY package.json package-lock.json* ./
-RUN npm install --legacy-peer-deps
+RUN npm ci --legacy-peer-deps --prefer-offline 2>/dev/null || npm install --legacy-peer-deps
 
 COPY tsconfig.base.json nx.json ./
 COPY apps/api ./apps/api

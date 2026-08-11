@@ -11,6 +11,7 @@ import { AuthModule } from '../auth/auth.module';
 import { AuditModule } from '../modules/audit/audit.module';
 import { ClusterModule } from '../modules/clusters/cluster.module';
 import { GatewaysModule } from '../gateways/gateways.module';
+import { UpgradeModule } from '../modules/upgrades/upgrade.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UpgradeJobEntity } from '../database/entities/upgrade-job.entity';
 
@@ -25,6 +26,7 @@ import { UpgradeJobEntity } from '../database/entities/upgrade-job.entity';
     AuditModule,
     ClusterModule,
     GatewaysModule,
+    UpgradeModule,
   ],
   providers: [
     PurgeWorker,

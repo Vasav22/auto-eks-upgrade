@@ -50,3 +50,5 @@ export class Cluster {
   @JoinColumn({ name: 'account_id' })
   account!: ClusterAccount;
 }
+
+export { Cluster as ClusterEntity };

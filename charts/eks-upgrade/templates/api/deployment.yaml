@@ -57,7 +57,7 @@ spec:
           envFrom:
             - configMapRef:
                 name: {{ .Values.api.name }}-config
-            {{- if or .Values.api.env.DATABASE_URL .Values.api.env.DATABASE_PASSWORD .Values.api.env.JWT_SECRET .Values.api.env.OIDC_CLIENT_SECRET .Values.api.env.CREDENTIAL_ENCRYPTION_KEY }}
+            {{- if or .Values.api.env.DATABASE_URL .Values.api.env.DATABASE_PASSWORD .Values.api.env.JWT_SECRET .Values.api.env.OIDC_CLIENT_SECRET .Values.api.env.CREDENTIAL_ENCRYPTION_KEY .Values.api.env.ENCRYPTION_KEY }}
             - secretRef:
                 name: {{ .Values.api.name }}-secrets
             {{- end }}

@@ -12,7 +12,7 @@ aws ecr get-login-password --region "$REGION" --profile "$PROFILE" \
   | docker login --username AWS --password-stdin "$ECR"
 
 echo "==> Building API image (ts-node transpile-only)"
-docker build --network=host \
+docker build --network=host --no-cache \
   -f "$REPO_ROOT/apps/api/Dockerfile" \
   -t "$ECR/eks-upgrade-api:latest" \
   "$REPO_ROOT"
@@ -26,6 +26,13 @@ docker build --network=host \
 echo "==> Pushing images"
 docker push "$ECR/eks-upgrade-api:latest"
 docker push "$ECR/eks-upgrade-web:latest"
+
+echo "==> Applying Helm chart"
+helm upgrade eks-upgrade "$REPO_ROOT/charts/eks-upgrade" \
+  -n "$NAMESPACE" \
+  -f "$REPO_ROOT/charts/eks-upgrade/values.yaml" \
+  -f "$REPO_ROOT/charts/eks-upgrade/values-opsera-test.yaml" \
+  2>/dev/null || echo "  (helm upgrade skipped or failed — continuing)"
 
 echo "==> Rolling out deployments"
 kubectl rollout restart deployment/eks-upgrade-api  -n "$NAMESPACE"

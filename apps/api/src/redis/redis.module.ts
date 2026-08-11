@@ -4,6 +4,7 @@ import { BullModule } from '@nestjs/bullmq';
 import Redis from 'ioredis';
 import redisConfig, { getRedisOptions } from '../config/redis.config';
 import { CacheService } from './cache/cache.service';
+import { RedisService } from './redis.service';
 import {
   QUEUE_NAMES,
   UPGRADE_POLL_QUEUE,
@@ -72,12 +73,14 @@ export class RedisModule {
           inject: [ConfigService],
         },
         CacheService,
+        RedisService,
       ],
       exports: [
         'REDIS_CACHE_CLIENT',
         'REDIS_PUBSUB_PUB',
         'REDIS_PUBSUB_SUB',
         CacheService,
+        RedisService,
         BullModule,
       ],
     };

@@ -22,6 +22,8 @@ api:
   replicaCount: 1        # single replica for test
   hpa:
     enabled: false       # disable HPA in test to save resources
+  env:
+    ENCRYPTION_KEY: "ObrqsXzNi6NCZ5pqBW6sG42vBgkc7kpPX1o8BrVyppE="
   resources:
     requests:
       cpu: 100m

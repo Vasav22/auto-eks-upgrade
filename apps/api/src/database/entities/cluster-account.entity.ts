@@ -61,3 +61,5 @@ export class ClusterAccount {
   @OneToMany(() => Cluster, (cluster) => cluster.account)
   clusters!: Cluster[];
 }
+
+export { ClusterAccount as ClusterAccountEntity };

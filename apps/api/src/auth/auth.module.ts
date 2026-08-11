@@ -43,9 +43,11 @@ import { IdleTimeoutMiddleware } from './middleware/idle-timeout.middleware';
     RoleMapperService,
     JwtService,
     SessionService,
+    SessionRepository,
     PermissionService,
     LockoutService,
     RateLimiterService,
+    TypeOrmModule,
   ],
 })
 export class AuthModule implements NestModule {
