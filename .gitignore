@@ -1,29 +1,48 @@
-.DS_Store
-.terraform/
-.terraform.tfstate*
-terraform.tfstate*
-terraform.tfvars
-values.dev.yaml
-vaul-helm-dev-creds.json
-./test/acceptance/vaul-helm-dev-creds.json
-./test/terraform/vaul-helm-dev-creds.json
-./test/unit/vaul-helm-dev-creds.json
-./test/acceptance/values.yaml
-./test/acceptance/values.yml
-.idea/
-.idea/workspace.xml
-.idea/vcs.xml
-.idea/modules.xml
-.idea/helmcharts.iml
+# See http://help.github.com/ignore-files/ for more about ignoring files.
 
-# eks-upgrade project — exclude build artifacts and dependencies
-eks-upgrade/node_modules/
-eks-upgrade/dist/
-eks-upgrade/.nx/
-eks-upgrade/.env
-eks-upgrade/.env.local
-eks-upgrade/.env.*.local
-eks-upgrade/apps/health-agent/.local/
-eks-upgrade/apps/api/dist/
-eks-upgrade/apps/web/dist/
-eks-upgrade/.local/
+# compiled output
+dist
+tmp
+/out-tsc
+
+# dependencies
+node_modules
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# misc
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+yarn-error.log
+testem.log
+/typings
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# Nx
+.nx/cache
+.nx/workspace-data
+
+# Environment
+.env
+.env.local
+.env.*.local
