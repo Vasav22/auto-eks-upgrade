@@ -71,3 +71,10 @@ migrations:
 
 networkPolicy:
   enabled: false         # relax network policy in test for easier debugging
+
+httpRoute:
+  enabled: true
+  gatewayName: nginx-gateway-internal
+  gatewayNamespace: nginx-gateway
+  sectionName: https
+  hostname: eks-upgrade.opsera-test-private.opsera.io

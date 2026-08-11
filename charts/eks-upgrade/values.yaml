@@ -170,3 +170,13 @@ migrations:
 # ─────────────────────────────────────────────────────────────────────────────
 networkPolicy:
   enabled: true
+
+# ─────────────────────────────────────────────────────────────────────────────
+# HTTPRoute (Gateway API — nginx-gateway)
+# ─────────────────────────────────────────────────────────────────────────────
+httpRoute:
+  enabled: false
+  gatewayName: nginx-gateway-internal
+  gatewayNamespace: nginx-gateway
+  sectionName: https
+  hostname: eks-upgrade.opsera-test-private.opsera.io
