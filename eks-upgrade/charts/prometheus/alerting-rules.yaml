@@ -1,0 +1,95 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: eks-upgrade-alerts
+  namespace: monitoring
+  labels:
+    app: eks-upgrade
+    release: prometheus
+spec:
+  groups:
+    - name: eks-upgrade.critical
+      interval: 30s
+      rules:
+        - alert: EKSUpgradeFailed
+          expr: increase(eks_upgrade_jobs_total{status="FAILED"}[10m]) > 0
+          for: 0m
+          labels:
+            severity: critical
+            team: platform
+          annotations:
+            summary: "EKS cluster upgrade failed"
+            description: "An EKS upgrade job has failed in the last 10 minutes. Cluster: {{ $labels.cluster_id }}"
+            runbook_url: "https://wiki.example.com/runbooks/eks-upgrade-failed"
+
+        - alert: EKSClusterNotReady
+          expr: eks_cluster_health_score < 50
+          for: 5m
+          labels:
+            severity: critical
+            team: platform
+          annotations:
+            summary: "EKS cluster health score critical"
+            description: "Cluster {{ $labels.cluster_id }} health score is {{ $value }} (below 50)"
+            runbook_url: "https://wiki.example.com/runbooks/eks-cluster-not-ready"
+
+    - name: eks-upgrade.warning
+      interval: 60s
+      rules:
+        - alert: EKSUpgradeStalled
+          expr: eks_upgrade_stalled_jobs > 0
+          for: 2m
+          labels:
+            severity: warning
+            team: platform
+          annotations:
+            summary: "EKS upgrade job appears stalled"
+            description: "{{ $value }} upgrade job(s) have not progressed in 30+ minutes"
+            runbook_url: "https://wiki.example.com/runbooks/eks-upgrade-stalled"
+
+        - alert: EKSHighCrashLoopPods
+          expr: eks_agent_crashloop_pods_total > 5
+          for: 5m
+          labels:
+            severity: warning
+            team: platform
+          annotations:
+            summary: "High number of CrashLoopBackOff pods detected"
+            description: "{{ $value }} pods are in CrashLoopBackOff state"
+            runbook_url: "https://wiki.example.com/runbooks/crashloop-pods"
+
+        - alert: EKSPDBBlockingUpgrade
+          expr: eks_agent_pdb_blockers_total > 0
+          for: 1m
+          labels:
+            severity: warning
+            team: platform
+          annotations:
+            summary: "PodDisruptionBudget blocking upgrade"
+            description: "{{ $value }} PDB(s) would block cluster upgrade"
+            runbook_url: "https://wiki.example.com/runbooks/pdb-blocker"
+
+        - alert: EKSAPIHighLatency
+          expr: histogram_quantile(0.99, rate(eks_api_request_duration_seconds_bucket[5m])) > 2
+          for: 5m
+          labels:
+            severity: warning
+            team: platform
+          annotations:
+            summary: "EKS API high latency"
+            description: "99th percentile API latency is {{ $value }}s for {{ $labels.method }} {{ $labels.path }}"
+            runbook_url: "https://wiki.example.com/runbooks/api-high-latency"
+
+    - name: eks-upgrade.info
+      interval: 300s
+      rules:
+        - alert: EKSFleetVersionDrift
+          expr: count(count by (version) (eks_cluster_version_info)) > 3
+          for: 24h
+          labels:
+            severity: info
+            team: platform
+          annotations:
+            summary: "Fleet running more than 3 different EKS versions"
+            description: "Version diversity risk: standardize EKS versions across the fleet"
+            runbook_url: "https://wiki.example.com/runbooks/fleet-version-drift"

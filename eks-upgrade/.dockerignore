@@ -1,0 +1,13 @@
+node_modules
+dist
+.git
+.gitignore
+README.md
+.env
+*.log
+coverage
+.nx
+.local
+apps/health-agent/health-agent
+*.md
+test

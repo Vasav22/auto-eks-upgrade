@@ -1,0 +1,35 @@
+grafana:
+  adminPassword: "changeme"
+  sidecar:
+    dashboards:
+      enabled: true
+      label: grafana_dashboard
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+        - name: Prometheus
+          type: prometheus
+          url: http://prometheus-server.monitoring.svc.cluster.local
+          access: proxy
+          isDefault: true
+  dashboardProviders:
+    dashboardproviders.yaml:
+      apiVersion: 1
+      providers:
+        - name: "eks-upgrade"
+          orgId: 1
+          folder: "EKS Upgrade"
+          type: file
+          disableDeletion: false
+          editable: true
+          options:
+            path: /var/lib/grafana/dashboards/eks-upgrade
+  dashboards:
+    eks-upgrade:
+      eks-overview:
+        json: |
+          {{ .Files.Get "dashboards/eks-upgrade-overview.json" | nindent 10 }}
+      eks-health:
+        json: |
+          {{ .Files.Get "dashboards/eks-health-agent.json" | nindent 10 }}
