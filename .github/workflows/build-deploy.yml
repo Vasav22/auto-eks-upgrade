@@ -1,0 +1,84 @@
+name: Build & Deploy to EKS
+
+on:
+  workflow_dispatch:
+    inputs:
+      deploy_api:
+        description: 'Build & deploy API'
+        type: boolean
+        default: true
+      deploy_web:
+        description: 'Build & deploy Web'
+        type: boolean
+        default: true
+  push:
+    branches: [feature/auto-eks-upgrade]
+    paths:
+      - 'apps/api/**'
+      - 'apps/web/**'
+      - 'libs/**'
+      - 'package.json'
+      - 'package-lock.json'
+
+env:
+  AWS_REGION: us-east-2
+  ECR_REGISTRY: 440953937617.dkr.ecr.us-east-2.amazonaws.com
+  EKS_CLUSTER: opsera-test-cluster
+  NAMESPACE: eks-upgrade
+
+jobs:
+  build-push-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write   # for OIDC if configured
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: ECR login
+        id: ecr-login
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build & push API
+        if: ${{ github.event.inputs.deploy_api != 'false' }}
+        run: |
+          docker build --network=host \
+            -f apps/api/Dockerfile \
+            -t $ECR_REGISTRY/eks-upgrade-api:latest \
+            -t $ECR_REGISTRY/eks-upgrade-api:${{ github.sha }} \
+            .
+          docker push $ECR_REGISTRY/eks-upgrade-api:latest
+          docker push $ECR_REGISTRY/eks-upgrade-api:${{ github.sha }}
+
+      - name: Build & push Web
+        if: ${{ github.event.inputs.deploy_web != 'false' }}
+        run: |
+          docker build --network=host \
+            -f apps/web/Dockerfile \
+            -t $ECR_REGISTRY/eks-upgrade-web:latest \
+            -t $ECR_REGISTRY/eks-upgrade-web:${{ github.sha }} \
+            .
+          docker push $ECR_REGISTRY/eks-upgrade-web:latest
+          docker push $ECR_REGISTRY/eks-upgrade-web:${{ github.sha }}
+
+      - name: Update kubeconfig
+        run: |
+          aws eks update-kubeconfig --region $AWS_REGION --name $EKS_CLUSTER
+
+      - name: Rollout restart
+        run: |
+          kubectl rollout restart deployment/eks-upgrade-api -n $NAMESPACE || true
+          kubectl rollout restart deployment/eks-upgrade-web -n $NAMESPACE || true
+          kubectl rollout status deployment/eks-upgrade-api -n $NAMESPACE --timeout=3m
+          kubectl rollout status deployment/eks-upgrade-web -n $NAMESPACE --timeout=3m
+
+      - name: Show pods
+        run: kubectl get pods -n $NAMESPACE
