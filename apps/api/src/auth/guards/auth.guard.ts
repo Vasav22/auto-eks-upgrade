@@ -48,7 +48,7 @@ export class AuthGuard implements CanActivate {
         oidcSubject: 'dev-user',
         email: 'dev@local',
         displayName: 'Dev User',
-        role: 'upgrade_admin' as any,
+        role: 'cluster_admin' as any,
         idpGroups: [],
       };
       return true;
