@@ -9,6 +9,7 @@ metadata:
     app.kubernetes.io/component: api
 data:
   NODE_ENV: {{ .Values.api.env.NODE_ENV | quote }}
+  DISABLE_AUTH: {{ .Values.api.env.DISABLE_AUTH | default "false" | quote }}
   DATABASE_SYNCHRONIZE: {{ .Values.api.env.DATABASE_SYNCHRONIZE | default "false" | quote }}
   LOG_LEVEL: {{ .Values.api.env.LOG_LEVEL | quote }}
   PORT: {{ .Values.api.env.PORT | quote }}
