@@ -16,6 +16,13 @@ export class HealthController {
     private redis: RedisHealthIndicator,
   ) {}
 
+  @Get()
+  @Public()
+  @HealthCheck()
+  async liveness(): Promise<HealthCheckResult> {
+    return this.health.check([]);
+  }
+
   @Get('ready')
   @Public()
   @HealthCheck()

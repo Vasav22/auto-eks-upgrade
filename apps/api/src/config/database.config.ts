@@ -35,7 +35,7 @@ export default registerAs(
             rejectUnauthorized: nodeEnv === 'production',
           }
         : false,
-      synchronize: nodeEnv !== 'production',
+      synchronize: process.env['DATABASE_SYNCHRONIZE'] === 'true' || nodeEnv !== 'production',
       logging: nodeEnv === 'development' ? ['query', 'error', 'warn'] : ['error'],
       entities: [__dirname + '/../**/*.entity{.ts,.js}'],
       migrations: [__dirname + '/../database/migrations/**/*{.ts,.js}'],
