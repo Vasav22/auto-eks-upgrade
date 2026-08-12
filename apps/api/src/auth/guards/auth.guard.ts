@@ -44,7 +44,7 @@ export class AuthGuard implements CanActivate {
     if (AUTH_DISABLED) {
       const request = context.switchToHttp().getRequest<RequestWithUser>();
       request.user = {
-        id: 'dev-user',
+        id: '00000000-0000-0000-0000-000000000001',
         oidcSubject: 'dev-user',
         email: 'dev@local',
         displayName: 'Dev User',

@@ -458,4 +458,31 @@ export class ClusterService {
       order: { lastSyncedAt: 'DESC' },
     });
   }
+
+  /**
+   * Returns an EKSClient scoped to the cluster's region with the correct IAM credentials.
+   * Used by upgrade executor and node-group services.
+   */
+  async getEksClientForCluster(clusterId: string): Promise<{ client: EKS; cluster: ClusterEntity }> {
+    const cluster = await this.getClusterById(clusterId);
+    const account = cluster.account;
+
+    if (!account) {
+      throw new NotFoundException(`Cluster ${clusterId} has no associated account`);
+    }
+
+    const rawCreds = this.encryptionService.decrypt({
+      ciphertext: account.encryptedCredentials,
+      nonce: account.credentialsNonce,
+      tag: account.credentialsTag,
+    });
+
+    const credentials = typeof rawCreds === 'string' ? JSON.parse(rawCreds) : rawCreds;
+    const awsCreds = await this.getAwsCredentials(credentials, cluster.region);
+
+    const clientConfig: any = { region: cluster.region, requestTimeout: 15000 };
+    if (awsCreds) clientConfig.credentials = awsCreds;
+
+    return { client: new EKS(clientConfig), cluster };
+  }
 }

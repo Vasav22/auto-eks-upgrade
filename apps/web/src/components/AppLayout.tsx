@@ -10,6 +10,7 @@ import {
   AuditOutlined,
   CloudServerOutlined,
   LoadingOutlined,
+  UnorderedListOutlined,
 } from '@ant-design/icons';
 
 const { Header, Sider, Content, Footer } = Layout;
@@ -32,6 +33,11 @@ export function AppLayout(): JSX.Element {
       key: '/health',
       icon: <HeartOutlined />,
       label: <Link to="/health">Health Dashboard</Link>,
+    },
+    {
+      key: '/upgrade-jobs',
+      icon: <UnorderedListOutlined />,
+      label: <Link to="/upgrade-jobs">Upgrade Jobs</Link>,
     },
     {
       key: '/campaigns',

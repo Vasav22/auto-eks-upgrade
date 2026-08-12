@@ -9,6 +9,8 @@ import {
   Query,
   UseGuards,
   Request,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { NodeGroupService } from '../services/node-group.service';
 import { CreateNodeGroupDto } from '../dto/create-node-group.dto';
@@ -64,5 +66,33 @@ export class NodeGroupController {
   async countNodeGroups(@Param('clusterId') clusterId: string) {
     const count = await this.nodeGroupService.countNodeGroups(clusterId);
     return { clusterId, count };
+  }
+
+  @Get('cluster/:clusterId/live')
+  @Roles('admin', 'operator', 'viewer')
+  async liveListNodeGroups(@Param('clusterId') clusterId: string) {
+    return this.nodeGroupService.liveListNodeGroups(clusterId);
+  }
+
+  @Post('cluster/:clusterId/upgrade')
+  @Roles('admin', 'operator')
+  @HttpCode(HttpStatus.OK)
+  async upgradeNodeGroups(
+    @Param('clusterId') clusterId: string,
+    @Body() dto: { nodeGroupNames: string[]; targetVersion: string },
+    @Request() req: any,
+  ) {
+    return this.nodeGroupService.queueNodeGroupUpgrades(
+      clusterId,
+      dto.nodeGroupNames,
+      dto.targetVersion,
+      req.user.id,
+    );
+  }
+
+  @Get('cluster/:clusterId/jobs')
+  @Roles('admin', 'operator', 'viewer')
+  async listNodeGroupJobs(@Param('clusterId') clusterId: string) {
+    return this.nodeGroupService.listNodeGroupJobs(clusterId);
   }
 }

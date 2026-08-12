@@ -3,9 +3,6 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Install build tools for native addons (pg, etc.), then clean up
-RUN apk add --no-cache python3 make g++
-
 # Use the minimal API-only package.json + its lock file
 # npm ci uses the lock file — skips dependency resolution, much faster
 COPY apps/api/package.docker.json ./package.json

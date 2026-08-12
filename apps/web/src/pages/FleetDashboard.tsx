@@ -5,7 +5,7 @@ import {
   Row, Col, Statistic, Badge, Input, Select, Tooltip,
   Modal, Form, Steps, message, Result, List,
 } from 'antd';
-import { ThunderboltOutlined, CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
+import { ThunderboltOutlined, CheckCircleOutlined, CloseCircleOutlined, UnorderedListOutlined } from '@ant-design/icons';
 import { Resizable } from 'react-resizable';
 import type { ResizeCallbackData } from 'react-resizable';
 import 'react-resizable/css/styles.css';
@@ -107,6 +107,7 @@ export default function FleetDashboard() {
   const [bulkTargetVersion, setBulkTargetVersion] = useState<string | null>(null);
   const [bulkLoading, setBulkLoading] = useState(false);
   const [bulkResults, setBulkResults] = useState<any | null>(null);
+  const [cancelAllLoading, setCancelAllLoading] = useState(false);
   const [availableVersions, setAvailableVersions] = useState<string[]>([]);
 
   // Fetch available EKS versions when bulk modal opens
@@ -144,6 +145,36 @@ export default function FleetDashboard() {
       message.error(err.message ?? 'Bulk upgrade failed');
     } finally {
       setBulkLoading(false);
+    }
+  };
+
+  const handleCancelAll = async () => {
+    if (!bulkResults) return;
+    const jobIds: string[] = bulkResults.results
+      .filter((r: any) => r.status === 'queued' && r.jobId)
+      .map((r: any) => r.jobId);
+    if (jobIds.length === 0) return;
+    setCancelAllLoading(true);
+    try {
+      await Promise.all(
+        jobIds.map((id) =>
+          fetch(`/api/upgrades/${id}`, {
+            method: 'DELETE',
+            headers: { Authorization: `Bearer ${user?.token ?? ''}` },
+          }),
+        ),
+      );
+      message.success(`${jobIds.length} upgrade job(s) cancelled`);
+      setBulkResults((prev: any) => ({
+        ...prev,
+        results: prev.results.map((r: any) =>
+          r.jobId && jobIds.includes(r.jobId) ? { ...r, status: 'cancelled' } : r,
+        ),
+      }));
+    } catch {
+      message.error('Failed to cancel some jobs');
+    } finally {
+      setCancelAllLoading(false);
     }
   };
 
@@ -483,7 +514,17 @@ export default function FleetDashboard() {
         open={bulkModalOpen}
         onCancel={() => { setBulkModalOpen(false); setBulkResults(null); }}
         footer={bulkResults ? (
-          <Button onClick={() => { setBulkModalOpen(false); setBulkResults(null); }}>Close</Button>
+          <Space>
+            {bulkResults.results.some((r: any) => r.status === 'queued' && r.jobId) && (
+              <Button
+                icon={<UnorderedListOutlined />}
+                onClick={() => { setBulkModalOpen(false); setBulkResults(null); navigate('/upgrade-jobs'); }}
+              >
+                Manage Jobs
+              </Button>
+            )}
+            <Button onClick={() => { setBulkModalOpen(false); setBulkResults(null); }}>Close</Button>
+          </Space>
         ) : (
           <Space>
             <Button onClick={() => setBulkModalOpen(false)}>Cancel</Button>
@@ -511,7 +552,15 @@ export default function FleetDashboard() {
                         : <CloseCircleOutlined style={{ color: '#f5222d' }} />}
                       <Text>{clusters.find((c) => c.id === r.clusterId)?.clusterName ?? r.clusterId}</Text>
                       {r.error && <Text type="danger" style={{ fontSize: 12 }}>— {r.error}</Text>}
-                      {r.jobId && <Text type="secondary" style={{ fontSize: 12 }}>Job: {r.jobId.slice(0, 8)}…</Text>}
+                      {r.jobId && r.status !== 'cancelled' && (
+                        <Button type="link" size="small" style={{ fontSize: 12, padding: 0 }}
+                          onClick={() => { setBulkModalOpen(false); navigate(`/clusters/${r.clusterId}`); }}>
+                          View / Cancel
+                        </Button>
+                      )}
+                      {r.status === 'cancelled' && (
+                        <Text type="secondary" style={{ fontSize: 12 }}>— Cancelled</Text>
+                      )}
                     </Space>
                   </List.Item>
                 )}

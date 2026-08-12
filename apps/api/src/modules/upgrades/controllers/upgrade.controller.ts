@@ -8,6 +8,8 @@ import {
   Query,
   UseGuards,
   Request,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { UpgradeService } from '../services/upgrade.service';
 import { CreateUpgradeDto } from '../dto/create-upgrade.dto';
@@ -80,6 +82,13 @@ export class UpgradeController {
   @Roles('admin', 'operator', 'viewer')
   async getUpgrade(@Param('id') id: string) {
     return this.upgradeService.getUpgradeJob(id);
+  }
+
+  @Post(':id/execute')
+  @Roles('admin', 'operator')
+  @HttpCode(HttpStatus.OK)
+  async executeUpgrade(@Param('id') id: string, @Request() req: any) {
+    return this.upgradeService.executeUpgradeJob(id, req.user.id);
   }
 
   @Delete(':id')
