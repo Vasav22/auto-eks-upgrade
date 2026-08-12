@@ -3,8 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import {
   Card, Table, Tag, Button, Space, Typography, Spin, Alert,
   Row, Col, Statistic, Badge, Input, Select, Tooltip,
-  Modal, Form, Steps, message,
+  Modal, Form, Steps, message, Result, List,
 } from 'antd';
+import { ThunderboltOutlined, CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import { Resizable } from 'react-resizable';
 import type { ResizeCallbackData } from 'react-resizable';
 import 'react-resizable/css/styles.css';
@@ -99,6 +100,52 @@ export default function FleetDashboard() {
   const [addLoading, setAddLoading] = useState(false);
   const [registeredAccountId, setRegisteredAccountId] = useState<string | null>(null);
   const [form] = Form.useForm();
+
+  // Bulk upgrade
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [bulkModalOpen, setBulkModalOpen] = useState(false);
+  const [bulkTargetVersion, setBulkTargetVersion] = useState<string | null>(null);
+  const [bulkLoading, setBulkLoading] = useState(false);
+  const [bulkResults, setBulkResults] = useState<any | null>(null);
+  const [availableVersions, setAvailableVersions] = useState<string[]>([]);
+
+  // Fetch available EKS versions when bulk modal opens
+  const openBulkModal = async () => {
+    // Derive eligible target versions from selected clusters' current versions
+    const selected = clusters.filter((c) => selectedRowKeys.includes(c.id));
+    const minorSet = new Set(
+      selected.map((c) => parseInt((c.eksVersion ?? '1.35').replace('1.', ''), 10)),
+    );
+    // Show versions higher than the lowest selected version (up to skip=2)
+    const min = Math.min(...minorSet);
+    const vers = [];
+    for (let i = min + 1; i <= min + 2; i++) vers.push(`1.${i}`);
+    setAvailableVersions(vers);
+    setBulkTargetVersion(vers[0] ?? null);
+    setBulkResults(null);
+    setBulkModalOpen(true);
+  };
+
+  const handleBulkUpgrade = async () => {
+    if (!bulkTargetVersion) return;
+    setBulkLoading(true);
+    try {
+      const res = await fetch('/api/upgrades/bulk', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${user?.token ?? ''}` },
+        body: JSON.stringify({ clusterIds: selectedRowKeys, targetVersion: bulkTargetVersion }),
+      });
+      const data = await res.json();
+      setBulkResults(data);
+      if (data.succeeded > 0) message.success(`${data.succeeded} upgrade job(s) queued`);
+      if (data.failed > 0) message.warning(`${data.failed} cluster(s) could not be queued`);
+      setSelectedRowKeys([]);
+    } catch (err: any) {
+      message.error(err.message ?? 'Bulk upgrade failed');
+    } finally {
+      setBulkLoading(false);
+    }
+  };
 
   const wsUrl = `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/upgrades`;
   const { sendJsonMessage, readyState } = useWebSocket(wsUrl, {
@@ -367,7 +414,21 @@ export default function FleetDashboard() {
       )}
 
       <Card
-        title={`Clusters (${filteredClusters.length}/${total})`}
+        title={
+          <Space>
+            {`Clusters (${filteredClusters.length}/${total})`}
+            {selectedRowKeys.length > 0 && (
+              <Button
+                type="primary"
+                icon={<ThunderboltOutlined />}
+                onClick={openBulkModal}
+                size="small"
+              >
+                Upgrade {selectedRowKeys.length} Selected
+              </Button>
+            )}
+          </Space>
+        }
         extra={
           <Space>
             <Input
@@ -397,6 +458,14 @@ export default function FleetDashboard() {
             rowKey="id"
             size="small"
             components={{ header: { cell: ResizableTitle } }}
+            rowSelection={{
+              selectedRowKeys,
+              onChange: setSelectedRowKeys,
+              getCheckboxProps: (record: ClusterSummary) => ({
+                disabled: !record.eksVersion,
+                title: !record.eksVersion ? 'Version unknown — cannot upgrade' : '',
+              }),
+            }}
             pagination={{
               current: page,
               pageSize: 50,
@@ -407,6 +476,90 @@ export default function FleetDashboard() {
           />
         )}
       </Card>
+
+      {/* Bulk Upgrade Modal */}
+      <Modal
+        title={<Space><ThunderboltOutlined />Bulk Upgrade {selectedRowKeys.length > 0 ? selectedRowKeys.length : ''} Clusters</Space>}
+        open={bulkModalOpen}
+        onCancel={() => { setBulkModalOpen(false); setBulkResults(null); }}
+        footer={bulkResults ? (
+          <Button onClick={() => { setBulkModalOpen(false); setBulkResults(null); }}>Close</Button>
+        ) : (
+          <Space>
+            <Button onClick={() => setBulkModalOpen(false)}>Cancel</Button>
+            <Button type="primary" icon={<ThunderboltOutlined />} loading={bulkLoading} onClick={handleBulkUpgrade} disabled={!bulkTargetVersion}>
+              Start Upgrade
+            </Button>
+          </Space>
+        )}
+        width={560}
+      >
+        {bulkResults ? (
+          <Result
+            status={bulkResults.failed === 0 ? 'success' : 'warning'}
+            title={`${bulkResults.succeeded} of ${bulkResults.total} upgrade jobs queued`}
+            subTitle={bulkResults.failed > 0 ? `${bulkResults.failed} cluster(s) could not be queued` : undefined}
+            extra={
+              <List
+                size="small"
+                dataSource={bulkResults.results}
+                renderItem={(r: any) => (
+                  <List.Item>
+                    <Space>
+                      {r.status === 'queued'
+                        ? <CheckCircleOutlined style={{ color: '#52c41a' }} />
+                        : <CloseCircleOutlined style={{ color: '#f5222d' }} />}
+                      <Text>{clusters.find((c) => c.id === r.clusterId)?.clusterName ?? r.clusterId}</Text>
+                      {r.error && <Text type="danger" style={{ fontSize: 12 }}>— {r.error}</Text>}
+                      {r.jobId && <Text type="secondary" style={{ fontSize: 12 }}>Job: {r.jobId.slice(0, 8)}…</Text>}
+                    </Space>
+                  </List.Item>
+                )}
+              />
+            }
+          />
+        ) : (
+          <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+            <Alert
+              message={`${selectedRowKeys.length} cluster(s) will be scheduled for upgrade`}
+              description={
+                <List
+                  size="small"
+                  style={{ marginTop: 8 }}
+                  dataSource={clusters.filter((c) => selectedRowKeys.includes(c.id))}
+                  renderItem={(c) => (
+                    <List.Item style={{ padding: '4px 0' }}>
+                      <Space>
+                        <Text strong>{c.clusterName}</Text>
+                        <Tag>{c.region}</Tag>
+                        <Tag color="blue">{c.eksVersion}</Tag>
+                        <Text type="secondary">→</Text>
+                        <Tag color="green">{bulkTargetVersion}</Tag>
+                      </Space>
+                    </List.Item>
+                  )}
+                />
+              }
+              type="info"
+              showIcon
+            />
+            <div>
+              <Text strong>Target Version: </Text>
+              <Select
+                value={bulkTargetVersion}
+                onChange={setBulkTargetVersion}
+                style={{ width: 120, marginLeft: 8 }}
+                options={availableVersions.map((v) => ({ value: v, label: v }))}
+              />
+            </div>
+            <Alert
+              message="Note: Clusters already on the target version or higher will be skipped automatically."
+              type="warning"
+              showIcon
+            />
+          </Space>
+        )}
+      </Modal>
     </div>
   );
 }
