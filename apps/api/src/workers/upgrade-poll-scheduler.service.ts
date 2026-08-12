@@ -7,10 +7,11 @@ import { Cron } from '@nestjs/schedule';
 import { UpgradeJobEntity } from '../database/entities/upgrade-job.entity';
 import { UpgradePollJobData } from './upgrade-poll.worker';
 
+const POLL_CRON = '*/1 * * * *'; // every minute
+
 @Injectable()
 export class UpgradePollSchedulerService {
   private readonly logger = new Logger(UpgradePollSchedulerService.name);
-  private readonly POLL_INTERVAL_SECONDS = 30;
   private readonly MAX_POLL_COUNT = 240; // 2 hours total
 
   constructor(
@@ -19,7 +20,7 @@ export class UpgradePollSchedulerService {
     private readonly upgradeRepository: Repository<UpgradeJobEntity>,
   ) {}
 
-  @Cron(`*/${Math.ceil(this.POLL_INTERVAL_SECONDS / 60)} * * * *`)
+  @Cron(POLL_CRON)
   async pollActiveUpgrades(): Promise<void> {
     const activeUpgrades = await this.upgradeRepository.find({
       where: { status: In(['IN_PROGRESS', 'PENDING']) as any },
