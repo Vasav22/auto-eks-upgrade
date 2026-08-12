@@ -19,9 +19,11 @@ interface ClusterSummary {
   id: string;
   clusterName: string;
   region: string;
-  currentVersion: string;
+  eksVersion: string;
   status: string;
   accountId: string;
+  accountName: string;
+  lastSyncedAt: string;
   latestHealthStatus?: string;
   latestHealthFindings?: number;
 }
@@ -102,7 +104,8 @@ export default function FleetDashboard() {
   const filteredClusters = clusters.filter((c) => {
     const matchText = !searchText ||
       c.clusterName.toLowerCase().includes(searchText.toLowerCase()) ||
-      c.accountId.includes(searchText);
+      c.accountName.toLowerCase().includes(searchText.toLowerCase()) ||
+      c.region.toLowerCase().includes(searchText.toLowerCase());
     const matchRegion = !regionFilter || c.region === regionFilter;
     return matchText && matchRegion;
   });
@@ -159,15 +162,35 @@ export default function FleetDashboard() {
 
   const columns = [
     {
-      title: 'Cluster', dataIndex: 'clusterName', key: 'clusterName',
+      title: 'Cluster Name', dataIndex: 'clusterName', key: 'clusterName',
+      sorter: (a: ClusterSummary, b: ClusterSummary) => a.clusterName.localeCompare(b.clusterName),
       render: (name: string, c: ClusterSummary) => (
-        <Button type="link" size="small" onClick={() => navigate(`/clusters/${c.id}`)}>
+        <Button type="link" size="small" style={{ padding: 0, fontWeight: 600 }} onClick={() => navigate(`/clusters/${c.id}`)}>
           {name}
         </Button>
       ),
     },
-    { title: 'Region', dataIndex: 'region', key: 'region', render: (r: string) => <Tag>{r}</Tag> },
-    { title: 'Version', dataIndex: 'currentVersion', key: 'version', render: (v: string) => <Tag color="blue">{v}</Tag> },
+    {
+      title: 'Account', dataIndex: 'accountName', key: 'account',
+      sorter: (a: ClusterSummary, b: ClusterSummary) => a.accountName.localeCompare(b.accountName),
+    },
+    {
+      title: 'Region', dataIndex: 'region', key: 'region',
+      sorter: (a: ClusterSummary, b: ClusterSummary) => a.region.localeCompare(b.region),
+      render: (r: string) => <Tag>{r}</Tag>,
+    },
+    {
+      title: 'EKS Version', dataIndex: 'eksVersion', key: 'version',
+      sorter: (a: ClusterSummary, b: ClusterSummary) => (a.eksVersion ?? '').localeCompare(b.eksVersion ?? ''),
+      render: (v: string) => <Tag color="blue">{v}</Tag>,
+    },
+    {
+      title: 'Status', dataIndex: 'status', key: 'status',
+      render: (s: string) => {
+        const color = s === 'ACTIVE' || s === 'discovered' ? 'success' : s === 'FAILED' ? 'error' : 'processing';
+        return <Tag color={color}>{s?.toUpperCase()}</Tag>;
+      },
+    },
     {
       title: 'Health', key: 'health',
       render: (_: unknown, c: ClusterSummary) => c.latestHealthStatus ? (
@@ -177,7 +200,12 @@ export default function FleetDashboard() {
         />
       ) : <Text type="secondary">Unknown</Text>,
     },
-    { title: 'Account', dataIndex: 'accountId', key: 'account', render: (a: string) => <Text code style={{ fontSize: 11 }}>{a}</Text> },
+    {
+      title: 'Last Synced', dataIndex: 'lastSyncedAt', key: 'lastSyncedAt',
+      sorter: (a: ClusterSummary, b: ClusterSummary) =>
+        new Date(a.lastSyncedAt).getTime() - new Date(b.lastSyncedAt).getTime(),
+      render: (d: string) => d ? new Date(d).toLocaleString() : '—',
+    },
     {
       title: 'Actions', key: 'actions',
       render: (_: unknown, c: ClusterSummary) => (

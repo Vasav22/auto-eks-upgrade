@@ -9,9 +9,11 @@ export interface ClusterSummary {
   id: string;
   clusterName: string;
   region: string;
-  currentVersion: string;
+  eksVersion: string;
   status: string;
   accountId: string;
+  accountName: string;
+  lastSyncedAt: Date | null;
   latestHealthStatus?: string;
   latestHealthFindings?: number;
   latestUpgradeStatus?: string;
@@ -71,7 +73,7 @@ export class FleetService {
       else if (health.overallHealth === 'CRITICAL') { critical++; }
       else { unknown++; }
 
-      versionDist[cluster.currentVersion] = (versionDist[cluster.currentVersion] ?? 0) + 1;
+      versionDist[cluster.eksVersion] = (versionDist[cluster.eksVersion] ?? 0) + 1;
       regionDist[cluster.region] = (regionDist[cluster.region] ?? 0) + 1;
     }
 
@@ -109,9 +111,11 @@ export class FleetService {
         id: c.id,
         clusterName: c.clusterName,
         region: c.region,
-        currentVersion: c.currentVersion,
+        eksVersion: c.eksVersion,
         status: c.status ?? 'ACTIVE',
         accountId: c.account?.awsAccountId ?? '',
+        accountName: c.account?.accountName ?? '',
+        lastSyncedAt: c.lastSyncedAt,
         latestHealthStatus: health?.overallHealth,
         latestHealthFindings: health?.totalFindings,
       };
