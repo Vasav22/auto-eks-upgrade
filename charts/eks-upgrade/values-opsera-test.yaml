@@ -73,7 +73,7 @@ redis:
     enabled: false       # no PVC needed in test
 
 migrations:
-  enabled: false  # API handles schema sync via TypeORM synchronize on startup
+  enabled: false
 
 networkPolicy:
   enabled: false         # relax network policy in test for easier debugging

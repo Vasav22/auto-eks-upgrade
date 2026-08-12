@@ -8,7 +8,7 @@ async function bootstrap(): Promise<void> {
   try {
     const app = await NestFactory.create(AppModule);
 
-    app.setGlobalPrefix('api');
+    app.setGlobalPrefix('api', { exclude: ['health', 'health/ready'] });
     app.enableCors({ origin: true, credentials: true });
 
     app.useGlobalFilters(new AllExceptionsFilter());
