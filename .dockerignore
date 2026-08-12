@@ -10,6 +10,10 @@ coverage
 node_modules
 dist
 test
+**/*.spec.ts
+**/*.test.ts
+jest.config.ts
+jest.preset.js
 *.md
 *.zip
 *.notes

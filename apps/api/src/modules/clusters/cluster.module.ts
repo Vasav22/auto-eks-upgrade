@@ -7,7 +7,6 @@ import { EncryptionService } from './services/encryption.service';
 import { VersionService } from './services/version.service';
 import { ValidationService } from './services/validation.service';
 import { ClusterController } from './controllers/cluster.controller';
-import { DiscoveryController } from './controllers/discovery.controller';
 import { AuditModule } from '../audit/audit.module';
 import { AuthModule } from '../../auth/auth.module';
 
@@ -18,7 +17,7 @@ import { AuthModule } from '../../auth/auth.module';
     AuthModule,
   ],
   providers: [ClusterService, EncryptionService, VersionService, ValidationService],
-  controllers: [ClusterController, DiscoveryController],
+  controllers: [ClusterController],
   exports: [ClusterService, EncryptionService, VersionService, ValidationService],
 })
 export class ClusterModule {}

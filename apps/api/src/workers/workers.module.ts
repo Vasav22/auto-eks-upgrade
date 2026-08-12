@@ -7,6 +7,7 @@ import { DiscoveryWorker } from './discovery.worker';
 import { DiscoverySchedulerService } from './discovery-scheduler.service';
 import { UpgradePollWorker } from './upgrade-poll.worker';
 import { UpgradePollSchedulerService } from './upgrade-poll-scheduler.service';
+import { DiscoveryController } from '../modules/clusters/controllers/discovery.controller';
 import { AuthModule } from '../auth/auth.module';
 import { AuditModule } from '../modules/audit/audit.module';
 import { ClusterModule } from '../modules/clusters/cluster.module';
@@ -36,6 +37,7 @@ import { UpgradeJobEntity } from '../database/entities/upgrade-job.entity';
     UpgradePollWorker,
     UpgradePollSchedulerService,
   ],
+  controllers: [DiscoveryController],
   exports: [PurgeSchedulerService, DiscoverySchedulerService, UpgradePollSchedulerService],
 })
 export class WorkersModule {}

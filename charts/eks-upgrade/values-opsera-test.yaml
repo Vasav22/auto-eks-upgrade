@@ -24,6 +24,10 @@ api:
     enabled: false       # disable HPA in test to save resources
   env:
     ENCRYPTION_KEY: "ObrqsXzNi6NCZ5pqBW6sG42vBgkc7kpPX1o8BrVyppE="
+    DATABASE_HOST: "postgresql.postgres.svc.cluster.local"
+    DATABASE_PORT: "5432"
+    DATABASE_USER: "postgres"
+    DATABASE_NAME: "eks_upgrade"
   resources:
     requests:
       cpu: 100m

@@ -20,5 +20,7 @@ data:
   {{- end }}
   {{- if .Values.redis.enabled }}
   REDIS_URL: {{ printf "redis://%s:%d" .Values.redis.name (.Values.redis.port | int) | quote }}
+  REDIS_HOST: {{ .Values.redis.name | quote }}
+  REDIS_PORT: {{ .Values.redis.port | quote }}
   {{- end }}
 {{- end }}
