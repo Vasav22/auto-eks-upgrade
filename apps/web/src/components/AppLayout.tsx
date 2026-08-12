@@ -1,5 +1,5 @@
 import { Layout, Menu, Spin } from 'antd';
-import { Outlet, Link, useLocation } from 'react-router-dom';
+import { Outlet, Link, useLocation, Navigate } from 'react-router-dom';
 import { Suspense } from 'react';
 import {
   DashboardOutlined,
@@ -10,11 +10,21 @@ import {
   AuditOutlined,
   CloudServerOutlined,
 } from '@ant-design/icons';
+import { useAuth } from '../contexts/AuthContext';
 
 const { Header, Sider, Content, Footer } = Layout;
 
 export function AppLayout(): JSX.Element {
   const location = useLocation();
+  const { isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) {
+    return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}><Spin size="large" /></div>;
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
 
   const menuItems = [
     {
