@@ -8,6 +8,7 @@ import { HealthController } from './controllers/health.controller';
 import { ClusterModule } from '../clusters/cluster.module';
 import { AuditModule } from '../audit/audit.module';
 import { GatewaysModule } from '../../gateways/gateways.module';
+import { AuthModule } from '../../auth/auth.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { GatewaysModule } from '../../gateways/gateways.module';
     ClusterModule,
     AuditModule,
     GatewaysModule,
+    AuthModule,
   ],
   controllers: [HealthController],
   providers: [HealthService, HealthCheckWorker],

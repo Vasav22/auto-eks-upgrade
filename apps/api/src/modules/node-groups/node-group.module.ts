@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { NodeGroupEntity } from '../../database/entities/node-group.entity';
+import { UpgradeJobEntity } from '../../database/entities/upgrade-job.entity';
 import { NodeGroupService } from './services/node-group.service';
 import { NodeGroupController } from './controllers/node-group.controller';
 import { ClusterModule } from '../clusters/cluster.module';
@@ -9,7 +10,7 @@ import { AuthModule } from '../../auth/auth.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([NodeGroupEntity]),
+    TypeOrmModule.forFeature([NodeGroupEntity, UpgradeJobEntity]),
     ClusterModule,
     AuditModule,
     AuthModule,

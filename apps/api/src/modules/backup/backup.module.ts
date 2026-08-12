@@ -8,6 +8,7 @@ import { BackupController, RestoreController } from './controllers/backup.contro
 import { AuditModule } from '../audit/audit.module';
 import { GatewaysModule } from '../../gateways/gateways.module';
 import { HealthModule } from '../health/health.module';
+import { AuthModule } from '../../auth/auth.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { HealthModule } from '../health/health.module';
     AuditModule,
     GatewaysModule,
     HealthModule,
+    AuthModule,
   ],
   controllers: [BackupController, RestoreController],
   providers: [BackupService],

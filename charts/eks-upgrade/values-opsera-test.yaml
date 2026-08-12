@@ -22,8 +22,17 @@ api:
   replicaCount: 1        # single replica for test
   hpa:
     enabled: false       # disable HPA in test to save resources
+  serviceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::440953937617:role/eks-upgrade-api-role
   env:
     ENCRYPTION_KEY: "ObrqsXzNi6NCZ5pqBW6sG42vBgkc7kpPX1o8BrVyppE="
+    DISABLE_AUTH: "true"
+    DATABASE_SYNCHRONIZE: "true"
+    DATABASE_HOST: "postgresql.postgres.svc.cluster.local"
+    DATABASE_PORT: "5432"
+    DATABASE_USER: "postgres"
+    DATABASE_NAME: "eks_upgrade"
   resources:
     requests:
       cpu: 100m
@@ -69,7 +78,7 @@ redis:
     enabled: false       # no PVC needed in test
 
 migrations:
-  enabled: false  # API handles schema sync via TypeORM synchronize on startup
+  enabled: false
 
 networkPolicy:
   enabled: false         # relax network policy in test for easier debugging

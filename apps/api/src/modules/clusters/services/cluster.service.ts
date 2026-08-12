@@ -15,7 +15,8 @@ import {
   ListClustersCommand,
   DescribeClusterCommand,
 } from '@aws-sdk/client-eks';
-import { STS, AssumeRoleCommand, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
+import { STS, AssumeRoleCommand, AssumeRoleWithWebIdentityCommand, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
+import * as fs from 'fs';
 import { v4 as uuidv4 } from 'uuid';
 
 export interface ClusterDiscoveryResult {
@@ -65,11 +66,12 @@ export class ClusterService {
       account = await this.accountRepository.save(account);
 
       await this.auditService.record({
-        type: AuditEventType.CLUSTER_ACCOUNT_UPDATED,
+        action: AuditEventType.CLUSTER_ACCOUNT_UPDATED,
         actorId,
-        targetType: 'cluster_account',
-        targetId: account.id,
-        metadata: { accountName: dto.accountName },
+        actorRole: 'cluster_admin',
+        resourceType: 'cluster_account',
+        resourceId: account.id,
+        changeDetail: { accountName: dto.accountName },
       });
 
       this.logger.log(
@@ -86,11 +88,12 @@ export class ClusterService {
       account = await this.accountRepository.save(account);
 
       await this.auditService.record({
-        type: AuditEventType.CLUSTER_ACCOUNT_REGISTERED,
+        action: AuditEventType.CLUSTER_ACCOUNT_REGISTERED,
         actorId,
-        targetType: 'cluster_account',
-        targetId: account.id,
-        metadata: { accountName: dto.accountName },
+        actorRole: 'cluster_admin',
+        resourceType: 'cluster_account',
+        resourceId: account.id,
+        changeDetail: { accountName: dto.accountName },
       });
 
       this.logger.log(
@@ -123,7 +126,10 @@ export class ClusterService {
       }),
     );
 
-    const regions = dto.regions || [account.defaultRegion];
+    const regions =
+      dto.regions && dto.regions.length > 0
+        ? dto.regions
+        : this.getAllEksRegions();
     const result: ClusterDiscoveryResult = {
       accountId: account.id,
       discovered: 0,
@@ -132,28 +138,36 @@ export class ClusterService {
       errors: [],
     };
 
-    for (const region of regions) {
-      try {
-        await this.discoverClustersInRegion(
-          account,
-          region,
-          credentials,
-          actorId,
-          result,
-        );
-      } catch (error) {
-        const errorMessage = `Failed to discover clusters in ${region}: ${error instanceof Error ? error.message : String(error)}`;
-        result.errors.push(errorMessage);
-        this.logger.error(errorMessage);
-      }
+    // Scan regions in parallel, 5 at a time, to avoid EKS rate limits
+    const CONCURRENCY = 5;
+    for (let i = 0; i < regions.length; i += CONCURRENCY) {
+      const batch = regions.slice(i, i + CONCURRENCY);
+      await Promise.all(
+        batch.map(async (region) => {
+          try {
+            await this.discoverClustersInRegion(
+              account,
+              region,
+              credentials,
+              actorId,
+              result,
+            );
+          } catch (error) {
+            const errorMessage = `Failed to discover clusters in ${region}: ${error instanceof Error ? error.message : String(error)}`;
+            result.errors.push(errorMessage);
+            this.logger.error(errorMessage);
+          }
+        }),
+      );
     }
 
     await this.auditService.record({
-      type: AuditEventType.CLUSTER_DISCOVERY_COMPLETED,
+      action: AuditEventType.CLUSTER_DISCOVERY_COMPLETED,
       actorId,
-      targetType: 'cluster_account',
-      targetId: account.id,
-      metadata: {
+      actorRole: 'cluster_admin',
+      resourceType: 'cluster_account',
+      resourceId: account.id,
+      changeDetail: {
         regions,
         discovered: result.discovered,
         registered: result.registered,
@@ -163,6 +177,64 @@ export class ClusterService {
     });
 
     return result;
+  }
+
+  /**
+   * Explicitly exchange the pod's IRSA web identity token for temporary
+   * credentials using the global STS endpoint (us-east-1).
+   * This bypasses the AWS SDK's built-in IRSA provider which uses the
+   * regional STS endpoint (injected as AWS_STS_REGIONAL_ENDPOINTS=regional
+   * by the EKS pod mutation webhook), which fails in regions where STS
+   * is not activated.
+   */
+  private async getIrsaCredentials(stsRegion: string): Promise<any> {
+    const tokenFile = process.env['AWS_WEB_IDENTITY_TOKEN_FILE'];
+    const roleArn = process.env['AWS_ROLE_ARN'];
+
+    if (!tokenFile || !roleArn) {
+      // Not running with IRSA — fall back to default provider
+      return undefined;
+    }
+
+    const webIdentityToken = fs.readFileSync(tokenFile, 'utf8').trim();
+    const sts = new STS({ region: stsRegion });
+    const response = await sts.send(
+      new AssumeRoleWithWebIdentityCommand({
+        RoleArn: roleArn,
+        RoleSessionName: `eks-upgrade-irsa-${Date.now()}`,
+        WebIdentityToken: webIdentityToken,
+        DurationSeconds: 3600,
+      }),
+    );
+
+    if (!response.Credentials) {
+      throw new Error('IRSA AssumeRoleWithWebIdentity returned no credentials');
+    }
+
+    return {
+      accessKeyId: response.Credentials.AccessKeyId!,
+      secretAccessKey: response.Credentials.SecretAccessKey!,
+      sessionToken: response.Credentials.SessionToken!,
+    };
+  }
+
+  /** All AWS commercial regions where EKS is available. */
+  private getAllEksRegions(): string[] {
+    return [
+      'us-east-1', 'us-east-2', 'us-west-1', 'us-west-2',
+      'ca-central-1', 'ca-west-1',
+      'eu-west-1', 'eu-west-2', 'eu-west-3',
+      'eu-central-1', 'eu-central-2',
+      'eu-north-1', 'eu-south-1', 'eu-south-2',
+      'ap-southeast-1', 'ap-southeast-2', 'ap-southeast-3', 'ap-southeast-4',
+      'ap-northeast-1', 'ap-northeast-2', 'ap-northeast-3',
+      'ap-south-1', 'ap-south-2',
+      'ap-east-1',
+      'me-south-1', 'me-central-1',
+      'sa-east-1',
+      'af-south-1',
+      'il-central-1',
+    ];
   }
 
   private async discoverClustersInRegion(
@@ -232,7 +304,7 @@ export class ClusterService {
             clusterName: clusterName,
             clusterArn: clusterData.arn || '',
             region: region,
-            eksVersion: clusterData.version || 'unknown',
+            eksVersion: clusterData.version || '',
             status: (clusterData.status as any) || 'UNKNOWN',
             endpoint: clusterData.endpoint || null,
             lastSyncedAt: new Date(),
@@ -241,11 +313,12 @@ export class ClusterService {
           result.registered++;
 
           await this.auditService.record({
-            type: AuditEventType.CLUSTER_DISCOVERED,
+            action: AuditEventType.CLUSTER_DISCOVERED,
             actorId,
-            targetType: 'cluster',
-            targetId: cluster.id,
-            metadata: {
+            actorRole: 'cluster_admin',
+            resourceType: 'cluster',
+            resourceId: cluster.id,
+            changeDetail: {
               clusterName: clusterName,
               region: region,
               eksVersion: cluster.eksVersion,
@@ -268,10 +341,26 @@ export class ClusterService {
     credentials: any,
     region: string,
   ): Promise<any> {
+    // Always use us-east-1 for STS calls — regional STS endpoints may not be
+    // activated in the account, but the global endpoint (us-east-1) always works.
+    const STS_REGION = 'us-east-1';
+
     if (credentials.roleArn) {
-      // Use ambient credentials (node role / IRSA / env vars) to assume the role.
-      // Do NOT pass explicit credentials to STS — SDK picks up the pod's identity automatically.
-      const stsConfig: any = { region };
+      // Determine the current account so we can skip role chaining for same-account roles.
+      // When the role is in the same account as the pod's IRSA identity, the pod already
+      // has direct EKS permissions — no need to assume an intermediate role.
+      const podAccountId = await this.getPodAccountId(STS_REGION);
+      const roleAccountId = credentials.roleArn.split(':')[4];
+
+      if (podAccountId && podAccountId === roleAccountId && !credentials.accessKeyId) {
+        this.logger.log(
+          `Same-account role ${credentials.roleArn} — obtaining IRSA credentials via global STS`,
+        );
+        return await this.getIrsaCredentials(STS_REGION);
+      }
+
+      // Cross-account: assume the role using ambient credentials (or provided static keys).
+      const stsConfig: any = { region: STS_REGION };
       if (credentials.accessKeyId && credentials.secretAccessKey) {
         stsConfig.credentials = {
           accessKeyId: credentials.accessKeyId,
@@ -312,6 +401,17 @@ export class ClusterService {
     return undefined;
   }
 
+  private async getPodAccountId(region: string): Promise<string | null> {
+    try {
+      // Use the provided region (caller should pass us-east-1 for the global endpoint)
+      const sts = new STS({ region });
+      const identity = await sts.send(new GetCallerIdentityCommand({}));
+      return identity.Account ?? null;
+    } catch {
+      return null;
+    }
+  }
+
   async getAccountById(id: string): Promise<ClusterAccountEntity> {
     const account = await this.accountRepository.findOne({ where: { id } });
     if (!account) {
@@ -339,9 +439,9 @@ export class ClusterService {
 
   async getClusterDetail(id: string): Promise<ClusterDetailDto> {
     const cluster = await this.getClusterById(id);
-    const versionInfo = this.versionService.computeEligibleVersions(
-      cluster.eksVersion,
-    );
+    const versionInfo = cluster.eksVersion
+      ? this.versionService.computeEligibleVersions(cluster.eksVersion)
+      : null;
     return ClusterDetailDto.fromEntity(cluster, versionInfo);
   }
 
@@ -357,5 +457,32 @@ export class ClusterService {
       relations: ['account'],
       order: { lastSyncedAt: 'DESC' },
     });
+  }
+
+  /**
+   * Returns an EKSClient scoped to the cluster's region with the correct IAM credentials.
+   * Used by upgrade executor and node-group services.
+   */
+  async getEksClientForCluster(clusterId: string): Promise<{ client: EKS; cluster: ClusterEntity }> {
+    const cluster = await this.getClusterById(clusterId);
+    const account = cluster.account;
+
+    if (!account) {
+      throw new NotFoundException(`Cluster ${clusterId} has no associated account`);
+    }
+
+    const rawCreds = this.encryptionService.decrypt({
+      ciphertext: account.encryptedCredentials,
+      nonce: account.credentialsNonce,
+      tag: account.credentialsTag,
+    });
+
+    const credentials = typeof rawCreds === 'string' ? JSON.parse(rawCreds) : rawCreds;
+    const awsCreds = await this.getAwsCredentials(credentials, cluster.region);
+
+    const clientConfig: any = { region: cluster.region, requestTimeout: 15000 };
+    if (awsCreds) clientConfig.credentials = awsCreds;
+
+    return { client: new EKS(clientConfig), cluster };
   }
 }

@@ -6,9 +6,10 @@ import { CredentialEncryptionService } from './services/credential-encryption.se
 import { CredentialRotationService } from './services/credential-rotation.service';
 import { IamController } from './controllers/iam.controller';
 import { AuditModule } from '../audit/audit.module';
+import { AuthModule } from '../../auth/auth.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([AwsCredentialEntity]), AuditModule],
+  imports: [TypeOrmModule.forFeature([AwsCredentialEntity]), AuditModule, AuthModule],
   controllers: [IamController],
   providers: [StsService, CredentialEncryptionService, CredentialRotationService],
   exports: [StsService, CredentialEncryptionService],

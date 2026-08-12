@@ -14,6 +14,8 @@ import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
 import { AuthenticatedUser } from '../interfaces/auth.interfaces';
 import { AUTH_CONFIG } from '../constants/auth-config';
 
+const AUTH_DISABLED = process.env['DISABLE_AUTH'] === 'true';
+
 export interface RequestWithUser extends Request {
   user?: AuthenticatedUser;
 }
@@ -36,6 +38,19 @@ export class AuthGuard implements CanActivate {
     ]);
 
     if (isPublic) {
+      return true;
+    }
+
+    if (AUTH_DISABLED) {
+      const request = context.switchToHttp().getRequest<RequestWithUser>();
+      request.user = {
+        id: '00000000-0000-0000-0000-000000000001',
+        oidcSubject: 'dev-user',
+        email: 'dev@local',
+        displayName: 'Dev User',
+        role: 'cluster_admin' as any,
+        idpGroups: [],
+      };
       return true;
     }
 

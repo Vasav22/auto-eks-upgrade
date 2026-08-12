@@ -21,6 +21,7 @@ const NodeGroupConfigPage = lazy(() => import('./pages/NodeGroupConfigPage'));
 const UpgradeForm = lazy(() => import('./pages/UpgradeForm'));
 const UpgradeProgressView = lazy(() => import('./pages/UpgradeProgressView'));
 const UpgradeJobDetail = lazy(() => import('./pages/UpgradeJobDetail'));
+const UpgradeJobs = lazy(() => import('./pages/UpgradeJobs'));
 const SchedulingPage = lazy(() => import('./pages/SchedulingPage'));
 const NotificationConfigPage = lazy(() => import('./pages/NotificationConfigPage'));
 const Login = lazy(() => import('./pages/Login'));
@@ -62,6 +63,10 @@ export const router = createBrowserRouter([
         element: <NodeGroupConfigPage />,
       },
       {
+        path: 'clusters/:clusterId/health',
+        element: <HealthDashboard />,
+      },
+      {
         path: 'clusters/:clusterId/upgrade',
         element: <UpgradeForm />,
       },
@@ -80,6 +85,10 @@ export const router = createBrowserRouter([
       {
         path: 'health',
         element: <HealthDashboard />,
+      },
+      {
+        path: 'upgrade-jobs',
+        element: <SuspenseWrap><UpgradeJobs /></SuspenseWrap>,
       },
       {
         path: 'campaigns',

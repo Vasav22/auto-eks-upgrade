@@ -7,38 +7,52 @@ import {
   ManyToOne,
   JoinColumn,
   Unique,
+  BeforeInsert,
+  PrimaryColumn,
 } from 'typeorm';
+import { v4 as uuidv4 } from 'uuid';
 import { ClusterAccount } from './cluster-account.entity';
 
 @Entity('clusters')
-@Unique(['name', 'accountId'])
+@Unique(['clusterName', 'accountId', 'region'])
 export class Cluster {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryColumn({ type: 'uuid' })
   id!: string;
 
-  @Column({ type: 'varchar', nullable: false })
-  name!: string;
+  @BeforeInsert()
+  generateId() {
+    if (!this.id) this.id = uuidv4();
+  }
 
-  @Column({ type: 'uuid', nullable: false, name: 'account_id' })
+  @Column({ type: 'varchar', nullable: false, name: 'cluster_name' })
+  clusterName!: string;
+
+  @Column({ type: 'varchar', nullable: true, name: 'cluster_arn' })
+  clusterArn!: string;
+
+  @Column({ type: 'uuid', nullable: true, name: 'account_id' })
   accountId!: string;
 
   @Column({ type: 'varchar', nullable: false })
   region!: string;
 
-  @Column({ type: 'varchar', nullable: false, name: 'current_version' })
-  currentVersion!: string;
+  @Column({ type: 'varchar', nullable: true, name: 'eks_version' })
+  eksVersion!: string;
 
   @Column({ type: 'varchar', nullable: false, default: 'discovered' })
   status!: string;
 
-  @Column({ type: 'varchar', nullable: false, name: 'environment_tag' })
-  environmentTag!: string;
+  @Column({ type: 'varchar', nullable: true })
+  endpoint!: string | null;
+
+  @Column({ type: 'varchar', nullable: true, name: 'environment_tag' })
+  environmentTag!: string | null;
 
   @Column({ type: 'jsonb', nullable: true, name: 'discovery_metadata' })
   discoveryMetadata!: Record<string, unknown> | null;
 
-  @Column({ type: 'timestamp', nullable: true, name: 'last_discovered_at' })
-  lastDiscoveredAt!: Date | null;
+  @Column({ type: 'timestamp', nullable: true, name: 'last_synced_at' })
+  lastSyncedAt!: Date | null;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt!: Date;

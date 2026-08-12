@@ -9,9 +9,12 @@ metadata:
     app.kubernetes.io/component: api
 data:
   NODE_ENV: {{ .Values.api.env.NODE_ENV | quote }}
+  DISABLE_AUTH: {{ .Values.api.env.DISABLE_AUTH | default "false" | quote }}
+  DATABASE_SYNCHRONIZE: {{ .Values.api.env.DATABASE_SYNCHRONIZE | default "false" | quote }}
   LOG_LEVEL: {{ .Values.api.env.LOG_LEVEL | quote }}
   PORT: {{ .Values.api.env.PORT | quote }}
   AWS_REGION: {{ .Values.api.env.AWS_REGION | quote }}
+  AWS_STS_REGIONAL_ENDPOINTS: "legacy"
   {{- if .Values.api.env.DATABASE_HOST }}
   DATABASE_HOST: {{ .Values.api.env.DATABASE_HOST | quote }}
   DATABASE_PORT: {{ .Values.api.env.DATABASE_PORT | default "5432" | quote }}
@@ -20,5 +23,7 @@ data:
   {{- end }}
   {{- if .Values.redis.enabled }}
   REDIS_URL: {{ printf "redis://%s:%d" .Values.redis.name (.Values.redis.port | int) | quote }}
+  REDIS_HOST: {{ .Values.redis.name | quote }}
+  REDIS_PORT: {{ .Values.redis.port | quote }}
   {{- end }}
 {{- end }}

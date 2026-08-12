@@ -5,9 +5,10 @@ import { AuditRecord } from '../audit/entities/audit-record.entity';
 import { HealthCheckEntity } from '../health/entities/health-check.entity';
 import { ComplianceService } from './services/compliance.service';
 import { ComplianceController } from './controllers/compliance.controller';
+import { AuthModule } from '../../auth/auth.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ClusterEntity, AuditRecord, HealthCheckEntity])],
+  imports: [TypeOrmModule.forFeature([ClusterEntity, AuditRecord, HealthCheckEntity]), AuthModule],
   controllers: [ComplianceController],
   providers: [ComplianceService],
   exports: [ComplianceService],

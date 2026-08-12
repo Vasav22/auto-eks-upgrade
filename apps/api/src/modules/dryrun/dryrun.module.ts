@@ -7,12 +7,14 @@ import { PdbAnalysisService } from './services/pdb-analysis.service';
 import { DryRunController } from './controllers/dryrun.controller';
 import { ClusterModule } from '../clusters/cluster.module';
 import { AuditModule } from '../audit/audit.module';
+import { AuthModule } from '../../auth/auth.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([NodeGroupEntity]),
     ClusterModule,
     AuditModule,
+    AuthModule,
   ],
   controllers: [DryRunController],
   providers: [DryRunService, DeprecatedApiScannerService, PdbAnalysisService],

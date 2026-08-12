@@ -1,4 +1,4 @@
-import { Layout, Menu, Spin } from 'antd';
+import { Layout, Menu } from 'antd';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { Suspense } from 'react';
 import {
@@ -9,6 +9,8 @@ import {
   DatabaseOutlined,
   AuditOutlined,
   CloudServerOutlined,
+  LoadingOutlined,
+  UnorderedListOutlined,
 } from '@ant-design/icons';
 
 const { Header, Sider, Content, Footer } = Layout;
@@ -31,6 +33,11 @@ export function AppLayout(): JSX.Element {
       key: '/health',
       icon: <HeartOutlined />,
       label: <Link to="/health">Health Dashboard</Link>,
+    },
+    {
+      key: '/upgrade-jobs',
+      icon: <UnorderedListOutlined />,
+      label: <Link to="/upgrade-jobs">Upgrade Jobs</Link>,
     },
     {
       key: '/campaigns',
@@ -88,7 +95,7 @@ export function AppLayout(): JSX.Element {
               minHeight: 280,
             }}
           >
-            <Suspense fallback={<div style={{ textAlign: 'center', padding: 48 }}><Spin size="large" /></div>}>
+            <Suspense fallback={<div style={{ textAlign: 'center', padding: 48 }}><LoadingOutlined style={{ fontSize: 32 }} spin /></div>}>
               <Outlet />
             </Suspense>
           </Content>

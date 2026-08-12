@@ -16,11 +16,11 @@ export class ClusterDetailDto {
     accountName: string;
     defaultRegion: string;
   };
-  versionInfo: ClusterVersionInfo;
+  versionInfo: ClusterVersionInfo | null;
 
   static fromEntity(
     cluster: ClusterEntity,
-    versionInfo: ClusterVersionInfo,
+    versionInfo: ClusterVersionInfo | null,
   ): ClusterDetailDto {
     return {
       id: cluster.id,

@@ -1,12 +1,14 @@
-# Runtime-only: no TypeScript compilation step.
-# Uses ts-node --transpile-only so type errors are ignored at build time.
+# syntax=docker/dockerfile:1
 FROM node:20-alpine
 
 WORKDIR /app
 
-# Install dependencies in a separate layer so it's cached between source changes
-COPY package.json package-lock.json* ./
-RUN npm ci --legacy-peer-deps --prefer-offline 2>/dev/null || npm install --legacy-peer-deps
+# Use the minimal API-only package.json + its lock file
+# npm ci uses the lock file — skips dependency resolution, much faster
+COPY apps/api/package.docker.json ./package.json
+COPY apps/api/package-lock.docker.json ./package-lock.json
+RUN --mount=type=cache,target=/root/.npm \
+    npm ci --legacy-peer-deps
 
 COPY tsconfig.base.json nx.json ./
 COPY apps/api ./apps/api
@@ -17,7 +19,6 @@ USER nodejs
 
 EXPOSE 3000
 
-# TS_NODE_PROJECT points ts-node at the app tsconfig so paths resolve correctly
 ENV TS_NODE_PROJECT=apps/api/tsconfig.app.json
 ENV TS_NODE_TRANSPILE_ONLY=true
 

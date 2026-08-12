@@ -42,6 +42,10 @@ export class OidcService {
     }
   }
 
+  isConfigured(): boolean {
+    return !!this.configService.get<string>('OIDC_ISSUER_URL');
+  }
+
   generatePKCEChallenge(): PKCEChallenge {
     const codeVerifier = this.base64URLEncode(crypto.randomBytes(32));
     const hash = crypto.createHash('sha256').update(codeVerifier).digest();
