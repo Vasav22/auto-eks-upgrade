@@ -180,8 +180,8 @@ export default function ClusterDetail() {
             </Descriptions.Item>
             <Descriptions.Item label="EKS Version">
               <Space>
-                <Text strong>{cluster.eksVersion}</Text>
-                {getSupportStatusTag(cluster.versionInfo.supportStatus)}
+                <Text strong>{cluster.eksVersion || '—'}</Text>
+                {cluster.versionInfo && getSupportStatusTag(cluster.versionInfo.supportStatus)}
               </Space>
             </Descriptions.Item>
             <Descriptions.Item label="Region">
@@ -210,86 +210,97 @@ export default function ClusterDetail() {
 
         <Card title="Version Information">
           <Space direction="vertical" size="middle" style={{ width: '100%' }}>
-            <div>
-              <Text strong>Current Version: </Text>
-              <Text>{cluster.versionInfo.currentVersion}</Text>
-              {' '}
-              {getSupportStatusTag(cluster.versionInfo.supportStatus)}
-            </div>
-
-            {cluster.versionInfo.supportStatus === 'deprecated' && (
+            {!cluster.versionInfo ? (
               <Alert
-                message="Version Deprecation Warning"
-                description="This EKS version will reach end-of-support soon. Consider upgrading to a newer version."
+                message="Version information unavailable"
+                description="The EKS version for this cluster could not be determined. Run a discovery sync to refresh."
                 type="warning"
                 showIcon
               />
-            )}
-
-            {cluster.versionInfo.supportStatus === 'unsupported' && (
-              <Alert
-                message="Unsupported Version"
-                description="This EKS version is no longer supported. Upgrade immediately to maintain security and support."
-                type="error"
-                showIcon
-              />
-            )}
-
-            <Divider />
-
-            {cluster.versionInfo.canUpgrade ? (
+            ) : (
               <>
-                <Title level={5}>Available Upgrade Paths</Title>
-                <Text type="secondary">
-                  Maximum version skip: {cluster.versionInfo.maxSkip}
-                </Text>
+                <div>
+                  <Text strong>Current Version: </Text>
+                  <Text>{cluster.versionInfo.currentVersion}</Text>
+                  {' '}
+                  {getSupportStatusTag(cluster.versionInfo.supportStatus)}
+                </div>
 
-                <Timeline
-                  items={cluster.versionInfo.eligibleVersions.map((v) => ({
-                    color: v.isRecommended ? 'green' : 'blue',
-                    dot: v.isRecommended ? <CheckCircleOutlined /> : undefined,
-                    children: (
-                      <Space direction="vertical" size="small">
-                        <Space>
-                          <Text strong>Version {v.version}</Text>
-                          {v.isRecommended && (
-                            <Tag color="green">Recommended</Tag>
-                          )}
-                          {!v.isSupported && (
-                            <Tag color="red">End of Support Reached</Tag>
-                          )}
-                        </Space>
-                        <Text type="secondary" style={{ fontSize: '12px' }}>
-                          Released: {new Date(v.releaseDate).toLocaleDateString()}
-                          {' | '}
-                          End of Support: {new Date(v.endOfSupport).toLocaleDateString()}
-                        </Text>
-                      </Space>
-                    ),
-                  }))}
-                />
-
-                {cluster.versionInfo.recommendedVersion && (
+                {cluster.versionInfo.supportStatus === 'deprecated' && (
                   <Alert
-                    message="Recommended Upgrade"
-                    description={`Upgrade to version ${cluster.versionInfo.recommendedVersion} for the most stable and secure experience.`}
-                    type="info"
+                    message="Version Deprecation Warning"
+                    description="This EKS version will reach end-of-support soon. Consider upgrading to a newer version."
+                    type="warning"
                     showIcon
-                    action={
-                      <Button type="primary" size="small">
-                        Start Upgrade
-                      </Button>
-                    }
+                  />
+                )}
+
+                {cluster.versionInfo.supportStatus === 'unsupported' && (
+                  <Alert
+                    message="Unsupported Version"
+                    description="This EKS version is no longer supported. Upgrade immediately to maintain security and support."
+                    type="error"
+                    showIcon
+                  />
+                )}
+
+                <Divider />
+
+                {cluster.versionInfo.canUpgrade ? (
+                  <>
+                    <Title level={5}>Available Upgrade Paths</Title>
+                    <Text type="secondary">
+                      Maximum version skip: {cluster.versionInfo.maxSkip}
+                    </Text>
+
+                    <Timeline
+                      items={cluster.versionInfo.eligibleVersions.map((v) => ({
+                        color: v.isRecommended ? 'green' : 'blue',
+                        dot: v.isRecommended ? <CheckCircleOutlined /> : undefined,
+                        children: (
+                          <Space direction="vertical" size="small">
+                            <Space>
+                              <Text strong>Version {v.version}</Text>
+                              {v.isRecommended && (
+                                <Tag color="green">Recommended</Tag>
+                              )}
+                              {!v.isSupported && (
+                                <Tag color="red">End of Support Reached</Tag>
+                              )}
+                            </Space>
+                            <Text type="secondary" style={{ fontSize: '12px' }}>
+                              Released: {new Date(v.releaseDate).toLocaleDateString()}
+                              {' | '}
+                              End of Support: {new Date(v.endOfSupport).toLocaleDateString()}
+                            </Text>
+                          </Space>
+                        ),
+                      }))}
+                    />
+
+                    {cluster.versionInfo.recommendedVersion && (
+                      <Alert
+                        message="Recommended Upgrade"
+                        description={`Upgrade to version ${cluster.versionInfo.recommendedVersion} for the most stable and secure experience.`}
+                        type="info"
+                        showIcon
+                        action={
+                          <Button type="primary" size="small">
+                            Start Upgrade
+                          </Button>
+                        }
+                      />
+                    )}
+                  </>
+                ) : (
+                  <Alert
+                    message="No Upgrades Available"
+                    description="This cluster is already running the latest available version."
+                    type="success"
+                    showIcon
                   />
                 )}
               </>
-            ) : (
-              <Alert
-                message="No Upgrades Available"
-                description="This cluster is already running the latest available version."
-                type="success"
-                showIcon
-              />
             )}
           </Space>
         </Card>
