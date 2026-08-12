@@ -273,8 +273,20 @@ export class ClusterService {
     region: string,
   ): Promise<any> {
     if (credentials.roleArn) {
-      // Use ambient credentials (node role / IRSA / env vars) to assume the role.
-      // Do NOT pass explicit credentials to STS — SDK picks up the pod's identity automatically.
+      // Determine the current account so we can skip role chaining for same-account roles.
+      // When the role is in the same account as the pod's IRSA identity, the pod already
+      // has direct EKS permissions — no need to assume an intermediate role.
+      const podAccountId = await this.getPodAccountId(region);
+      const roleAccountId = credentials.roleArn.split(':')[4];
+
+      if (podAccountId && podAccountId === roleAccountId && !credentials.accessKeyId) {
+        this.logger.log(
+          `Same-account role ${credentials.roleArn} — using ambient IRSA credentials directly`,
+        );
+        return undefined; // AWS SDK uses the default provider chain (IRSA)
+      }
+
+      // Cross-account: assume the role using ambient credentials (or provided static keys).
       const stsConfig: any = { region };
       if (credentials.accessKeyId && credentials.secretAccessKey) {
         stsConfig.credentials = {
@@ -314,6 +326,16 @@ export class ClusterService {
 
     // No credentials at all — return undefined so AWS SDK uses the default provider chain
     return undefined;
+  }
+
+  private async getPodAccountId(region: string): Promise<string | null> {
+    try {
+      const sts = new STS({ region });
+      const identity = await sts.send(new GetCallerIdentityCommand({}));
+      return identity.Account ?? null;
+    } catch {
+      return null;
+    }
   }
 
   async getAccountById(id: string): Promise<ClusterAccountEntity> {
