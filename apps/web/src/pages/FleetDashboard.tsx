@@ -272,12 +272,16 @@ export default function FleetDashboard() {
 
         {addStep === 1 && (
           <Form form={form} layout="vertical">
-            <Form.Item name="regions" label="Regions to scan (comma-separated, leave blank for default)">
-              <Input placeholder="us-east-1, us-east-2" />
+            <Form.Item
+              name="regions"
+              label="Regions to scan (optional — leave blank to scan all regions)"
+              extra="Comma-separated, e.g. us-east-1, eu-west-1. Defaults to all AWS commercial EKS regions."
+            >
+              <Input placeholder="us-east-1, us-east-2, eu-west-1" allowClear />
             </Form.Item>
             <Space style={{ width: '100%' }} direction="vertical">
               <Button type="primary" loading={addLoading} onClick={handleDiscoverClusters} block>
-                Discover Clusters
+                Discover Clusters in All Regions
               </Button>
               <Button onClick={() => { setAddStep(0); setRegisteredAccountId(null); }} block>
                 Back

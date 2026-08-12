@@ -125,7 +125,10 @@ export class ClusterService {
       }),
     );
 
-    const regions = dto.regions || [account.defaultRegion];
+    const regions =
+      dto.regions && dto.regions.length > 0
+        ? dto.regions
+        : this.getAllEksRegions();
     const result: ClusterDiscoveryResult = {
       accountId: account.id,
       discovered: 0,
@@ -134,20 +137,27 @@ export class ClusterService {
       errors: [],
     };
 
-    for (const region of regions) {
-      try {
-        await this.discoverClustersInRegion(
-          account,
-          region,
-          credentials,
-          actorId,
-          result,
-        );
-      } catch (error) {
-        const errorMessage = `Failed to discover clusters in ${region}: ${error instanceof Error ? error.message : String(error)}`;
-        result.errors.push(errorMessage);
-        this.logger.error(errorMessage);
-      }
+    // Scan regions in parallel, 5 at a time, to avoid EKS rate limits
+    const CONCURRENCY = 5;
+    for (let i = 0; i < regions.length; i += CONCURRENCY) {
+      const batch = regions.slice(i, i + CONCURRENCY);
+      await Promise.all(
+        batch.map(async (region) => {
+          try {
+            await this.discoverClustersInRegion(
+              account,
+              region,
+              credentials,
+              actorId,
+              result,
+            );
+          } catch (error) {
+            const errorMessage = `Failed to discover clusters in ${region}: ${error instanceof Error ? error.message : String(error)}`;
+            result.errors.push(errorMessage);
+            this.logger.error(errorMessage);
+          }
+        }),
+      );
     }
 
     await this.auditService.record({
@@ -166,6 +176,25 @@ export class ClusterService {
     });
 
     return result;
+  }
+
+  /** All AWS commercial regions where EKS is available. */
+  private getAllEksRegions(): string[] {
+    return [
+      'us-east-1', 'us-east-2', 'us-west-1', 'us-west-2',
+      'ca-central-1', 'ca-west-1',
+      'eu-west-1', 'eu-west-2', 'eu-west-3',
+      'eu-central-1', 'eu-central-2',
+      'eu-north-1', 'eu-south-1', 'eu-south-2',
+      'ap-southeast-1', 'ap-southeast-2', 'ap-southeast-3', 'ap-southeast-4',
+      'ap-northeast-1', 'ap-northeast-2', 'ap-northeast-3',
+      'ap-south-1', 'ap-south-2',
+      'ap-east-1',
+      'me-south-1', 'me-central-1',
+      'sa-east-1',
+      'af-south-1',
+      'il-central-1',
+    ];
   }
 
   private async discoverClustersInRegion(
