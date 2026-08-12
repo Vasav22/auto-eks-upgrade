@@ -1,6 +1,6 @@
 # EKS Upgrade Control Plane
 
-Enterprise-grade Kubernetes upgrade management platform with comprehensive authentication, auditing, and compliance features.
+Enterprise-grade Kubernetes upgrade management platform for EKS clusters — supporting cross-account discovery, control-plane queuing, and node-group upgrade management via IRSA.
 
 ## 🚀 Quick Start
 
@@ -24,177 +24,178 @@ npm run dev:web
 cd apps/health-agent && make run
 ```
 
-## 📋 Project Status
+## 📋 Features
 
-**✅ 23 Stories Completed** (20 P0 + 3 P1)  
-**✅ Production Ready** - Full authentication, security, and compliance  
-**✅ 23 Commits** - Comprehensive implementation
+### Cluster Discovery
+- **IRSA-based auth** — no static AWS keys; uses pod-attached IAM roles
+- **Cross-account discovery** — discovers clusters across multiple AWS accounts via `AssumeRole`
+- **All-region scan** — scans all ~30 AWS commercial EKS regions in parallel batches
+- **Live version info** — fetches current EKS version and support status from AWS on discovery
 
-See [BUILD_SUMMARY.md](./BUILD_SUMMARY.md) for detailed completion status.
+### Control Plane Upgrades
+- Queue upgrade jobs (DB-only, no live AWS execution until explicitly triggered)
+- View queued/in-progress/cancelled jobs per cluster
+- Cancel pending or in-progress jobs
+
+### Node Group Upgrades
+- Load live node groups from AWS (`ListNodegroups` + `DescribeNodegroup`)
+- Filter node groups by name or label key/value
+- Select individual groups or all
+- Queue one DB upgrade job per selected node group
+- View and cancel queued node-group jobs
+
+### Fleet Dashboard
+- View all discovered clusters across accounts and regions
+- Columns: cluster name, account, region, version, status, health, sync
+- Resizable table columns
+- Multi-cluster bulk upgrade selection
+
+### Security & Audit
+- OIDC + PKCE authentication (configurable, can be disabled for dev)
+- JWT sessions with httpOnly cookies
+- 5-role RBAC
+- Immutable audit trail with 7-year retention
 
 ## 🏗️ Architecture
 
-### Backend (NestJS)
-- **Authentication**: OIDC + PKCE, JWT sessions, 5-role RBAC
-- **Database**: PostgreSQL 16 with TypeORM, RLS, partitioning
-- **Caching**: Redis 7 with BullMQ job queues
-- **Security**: Rate limiting, brute-force protection, session management
+### Backend (NestJS API)
+- **Auth**: OIDC + PKCE, JWT, 5-role RBAC (`DISABLE_AUTH=true` for dev)
+- **Database**: PostgreSQL 16 + TypeORM
+- **Caching**: Redis 7 + BullMQ
+- **AWS**: `@aws-sdk/client-eks`, `@aws-sdk/client-sts` — IRSA + cross-account AssumeRole
 
 ### Frontend (React)
-- **Framework**: React 18 + Vite + TypeScript
-- **UI**: Ant Design 5
-- **State**: Zustand + React Context
-- **Real-time**: Socket.IO with auto-reconnect
+- React 18 + Vite + TypeScript
+- Ant Design 5
+- Axios for API calls
 
 ### Health Agent (Go)
-- **Runtime**: Go 1.22
-- **Integration**: Kubernetes client-go
-- **Monitoring**: Node & Pod health checks
+- Kubernetes `client-go`
+- Node & Pod health monitoring
 
-## 🔐 Security Features
+## 🐳 Docker & Deployment
 
-- ✅ OIDC authentication with PKCE flow
-- ✅ JWT with httpOnly cookies (15min access, 8hr refresh)
-- ✅ 5-role RBAC with permission matrix
-- ✅ Session timeouts (30min idle, 12hr absolute)
-- ✅ Brute-force lockout (5 attempts, 15min)
-- ✅ Rate limiting (10 req/min)
-- ✅ Server-side authorization enforcement
-- ✅ 1250+ security test cases
+### Build web image (pre-built approach)
+```bash
+# 1. Build frontend
+cd apps/web && npx vite build
 
-## 📊 Compliance & Audit
+# 2. Copy dist to build-output
+cp -r ../../dist/apps/web/* apps/web/build-output/
 
-- ✅ Immutable audit trail (7-year retention)
-- ✅ Monthly partitioned audit tables
-- ✅ Automated purge workers (90d/2yr/7yr policies)
-- ✅ GDPR/SOC2/SOX compliance
-- ✅ Read-only compliance reviewer role
+# 3. Build Docker image
+docker build -t eks-upgrade-web:latest -f apps/web/Dockerfile.prebuilt .
+
+# 4. Push to ECR
+AWS_PROFILE=opseraplatform aws ecr get-login-password --region us-east-2 \
+  | docker login --username AWS --password-stdin 440953937617.dkr.ecr.us-east-2.amazonaws.com
+docker push 440953937617.dkr.ecr.us-east-2.amazonaws.com/eks-upgrade-web:latest
+```
+
+### Build API image
+```bash
+docker build -f apps/api/Dockerfile -t eks-upgrade-api:latest .
+docker push 440953937617.dkr.ecr.us-east-2.amazonaws.com/eks-upgrade-api:latest
+```
+
+### Deploy via Helm
+```bash
+helm upgrade --install eks-upgrade ./charts/eks-upgrade \
+  -f charts/eks-upgrade/values.yaml \
+  -f charts/eks-upgrade/values-opsera-test.yaml \
+  --set api.env.DATABASE_PASSWORD="<password>" \
+  --namespace eks-upgrade \
+  --create-namespace
+```
+
+### Rollback
+```bash
+helm history eks-upgrade -n eks-upgrade
+helm rollback eks-upgrade <revision> -n eks-upgrade
+```
+
+## 🔑 Environment Variables
+
+### API (key ones)
+```env
+# Database
+DATABASE_HOST=postgresql.postgres.svc.cluster.local
+DATABASE_PORT=5432
+DATABASE_NAME=eks_upgrade
+DATABASE_USER=postgres
+DATABASE_PASSWORD=<secret>
+
+# Encryption (must be stable across restarts — 32-byte base64)
+ENCRYPTION_KEY=<base64-32-bytes>
+
+# Auth (set to true to bypass OIDC in dev/test)
+DISABLE_AUTH=true
+
+# OIDC (when auth is enabled)
+OIDC_ISSUER_URL=https://idp.example.com
+OIDC_CLIENT_ID=your-client-id
+OIDC_CLIENT_SECRET=your-client-secret
+```
+
+### IRSA (injected automatically by EKS pod mutation webhook)
+```env
+AWS_ROLE_ARN=arn:aws:iam::<account>:role/<role-name>
+AWS_WEB_IDENTITY_TOKEN_FILE=/var/run/secrets/eks.amazonaws.com/serviceaccount/token
+```
+
+> **Important**: `ENCRYPTION_KEY` must be set as a stable secret. Without it, an ephemeral key is used and encrypted credentials will be lost on pod restart.
+
+## 📦 IAM Requirements
+
+The API pod's IAM role needs:
+```json
+{
+  "Effect": "Allow",
+  "Action": [
+    "eks:ListClusters",
+    "eks:DescribeCluster",
+    "eks:ListNodegroups",
+    "eks:DescribeNodegroup",
+    "eks:UpdateClusterVersion",
+    "eks:UpdateNodegroupVersion",
+    "sts:GetCallerIdentity",
+    "sts:AssumeRole"
+  ],
+  "Resource": "*"
+}
+```
+
+For cross-account access, the target account's role must have a trust policy allowing the pod role to assume it.
+
+## 👥 RBAC Roles
+
+| Role | Permissions |
+|------|-------------|
+| `upgrade_operator` | View + non-prod mutations |
+| `sre_oncall` | + Non-destructive remediation approval |
+| `cluster_admin` | + Production mutations + backup management |
+| `change_coordinator` | + Scheduling + destructive approval |
+| `compliance_reviewer` | Read-only across all resources |
 
 ## 🛠️ Development
 
 ```bash
-# Run tests
-npm run test
-
-# Run security tests
-npm run test:security
-
-# Lint code
+# Lint
 npm run lint
 
-# Build for production
+# Build
 npm run build
-```
 
-## 🐳 Docker
-
-```bash
-# Build all images
-docker-compose build
-
-# Run services
-docker-compose up
-
-# Build individual service
-docker build -f apps/api/Dockerfile -t eks-api .
-docker build -f apps/web/Dockerfile -t eks-web .
-docker build -f apps/health-agent/Dockerfile -t eks-health .
-```
-
-## 📦 Deployment
-
-### Kubernetes
-See `k8s/` directory for Kubernetes manifests.
-
-### CI/CD
-GitHub Actions pipeline automatically:
-- Runs tests on PR
-- Builds multi-arch Docker images
-- Scans for vulnerabilities
-- Publishes to ghcr.io
-
-## 🔑 Environment Variables
-
-### API
-```env
-DATABASE_HOST=localhost
-DATABASE_PORT=5432
-DATABASE_NAME=eks_upgrade
-DATABASE_USER=eks_user
-DATABASE_PASSWORD=secret
-REDIS_HOST=localhost
-REDIS_PORT=6379
-JWT_SIGNING_KEY=your-secret-key
-OIDC_ISSUER_URL=https://idp.example.com
-OIDC_CLIENT_ID=your-client-id
-OIDC_CLIENT_SECRET=your-client-secret
-OIDC_REDIRECT_URI=http://localhost:3000/api/v1/auth/callback
-```
-
-### Health Agent
-```env
-CLUSTER_ID=production-us-east-1
-HTTP_PORT=8080
+# Tests
+npm run test
 ```
 
 ## 📚 Documentation
 
-- [BUILD_SUMMARY.md](./BUILD_SUMMARY.md) - Completed features
-- [Security Test Suite](./test/security/README.md) - Security validation
-- [API Documentation](./docs/API.md) - REST API reference (coming soon)
-
-## 👥 RBAC Roles
-
-1. **upgrade_operator** - View + non-prod mutations
-2. **sre_oncall** - + Non-destructive remediation approval
-3. **cluster_admin** - + Production mutations + backup management
-4. **change_coordinator** - + Scheduling + destructive approval
-5. **compliance_reviewer** - Read-only across all resources
-
-## 🧪 Testing
-
-```bash
-# Unit tests
-npm run test:unit
-
-# Integration tests
-npm run test:integration
-
-# Security tests
-npm run test:security
-
-# Coverage
-npm run test:cov
-```
-
-## 📈 Monitoring
-
-- Health checks: `GET /health/ready`
-- Metrics: Prometheus-compatible (coming soon)
-- Logs: Structured JSON logging
-- Audit trail: Immutable audit_records table
-
-## 🤝 Contributing
-
-1. Create feature branch
-2. Make changes with tests
-3. Run `npm run lint`
-4. Submit PR with conventional commit format
-5. Wait for CI checks to pass
+- [BUILD_SUMMARY.md](./BUILD_SUMMARY.md) — Completed features
+- `charts/eks-upgrade/` — Helm chart and values files
+- `apps/api/src/database/README.md` — Database schema notes
 
 ## 📄 License
 
-Proprietary - Opsera Inc.
-
-## 🏆 Achievement
-
-**Enterprise-grade production system delivered in single development session:**
-- 23 commits
-- 24,156+ files
-- Full authentication & security
-- Compliance-ready audit system
-- Real-time WebSocket streaming
-- Multi-service Docker deployment
-- Automated CI/CD pipeline
-
-Built with ❤️ for Kubernetes operators and SRE teams.
+Proprietary — Opsera Inc.
