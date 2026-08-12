@@ -219,7 +219,7 @@ export class ClusterService {
 
         if (cluster) {
           cluster.clusterArn = clusterData.arn || cluster.clusterArn;
-          cluster.eksVersion = clusterData.version || cluster.eksVersion;
+          cluster.currentVersion = clusterData.version || cluster.currentVersion;
           cluster.status = (clusterData.status as any) || cluster.status;
           cluster.endpoint = clusterData.endpoint || cluster.endpoint;
           cluster.lastSyncedAt = new Date();
@@ -235,7 +235,7 @@ export class ClusterService {
             clusterName: clusterName,
             clusterArn: clusterData.arn || '',
             region: region,
-            eksVersion: clusterData.version || 'unknown',
+            currentVersion: clusterData.version || 'unknown',
             status: (clusterData.status as any) || 'UNKNOWN',
             endpoint: clusterData.endpoint || null,
             lastSyncedAt: new Date(),
@@ -252,7 +252,7 @@ export class ClusterService {
             changeDetail: {
               clusterName: clusterName,
               region: region,
-              eksVersion: cluster.eksVersion,
+              eksVersion: cluster.currentVersion,
             },
           });
 

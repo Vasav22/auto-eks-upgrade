@@ -2,7 +2,6 @@ import {
   Entity,
   Column,
   PrimaryColumn,
-  CreateDateColumn,
   BeforeInsert,
 } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
@@ -44,6 +43,11 @@ export class AuditRecord {
   @Column({ type: 'uuid', nullable: true })
   request_id!: string | null;
 
-  @CreateDateColumn({ type: 'timestamptz' })
+  @Column({ type: 'timestamptz', nullable: false, default: () => 'NOW()' })
   occurred_at!: Date;
+
+  @BeforeInsert()
+  setOccurredAt() {
+    if (!this.occurred_at) this.occurred_at = new Date();
+  }
 }
