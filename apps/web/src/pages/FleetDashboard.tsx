@@ -1,12 +1,13 @@
-import React, { useEffect, useState, useCallback, useRef } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Card, Table, Tag, Button, Space, Typography, Spin, Alert,
-  Row, Col, Statistic, Badge, Input, Select, Progress, Tooltip,
+  Row, Col, Statistic, Badge, Input, Select, Tooltip,
   Modal, Form, Steps, message,
 } from 'antd';
-import { FixedSizeList as List } from 'react-window';
-import AutoSizer from 'react-virtualized-auto-sizer';
+import { Resizable } from 'react-resizable';
+import type { ResizeCallbackData } from 'react-resizable';
+import 'react-resizable/css/styles.css';
 import {
   ReloadOutlined, SearchOutlined, WifiOutlined, PlusOutlined,
 } from '@ant-design/icons';
@@ -14,6 +15,33 @@ import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { useAuth } from '../contexts/AuthContext';
 
 const { Title, Text } = Typography;
+
+const ResizableTitle = (
+  props: React.HTMLAttributes<HTMLElement> & {
+    onResize: (e: React.SyntheticEvent, data: ResizeCallbackData) => void;
+    width: number;
+  },
+) => {
+  const { onResize, width, ...restProps } = props;
+  if (!width) return <th {...restProps} />;
+  return (
+    <Resizable
+      width={width}
+      height={0}
+      handle={
+        <span
+          className="react-resizable-handle"
+          onClick={(e) => e.stopPropagation()}
+          style={{ position: 'absolute', right: -5, bottom: 0, zIndex: 1, width: 10, height: '100%', cursor: 'col-resize' }}
+        />
+      }
+      onResize={onResize}
+      draggableOpts={{ enableUserSelectHack: false }}
+    >
+      <th {...restProps} style={{ ...restProps.style, position: 'relative' }} />
+    </Resizable>
+  );
+};
 
 interface ClusterSummary {
   id: string;
@@ -56,6 +84,14 @@ export default function FleetDashboard() {
   const [searchText, setSearchText] = useState('');
   const [regionFilter, setRegionFilter] = useState<string | undefined>();
   const [liveUpdate, setLiveUpdate] = useState<string | null>(null);
+  const [colWidths, setColWidths] = useState<Record<string, number>>({
+    clusterName: 220, account: 110, region: 120, version: 110,
+    status: 90, health: 130, lastSynced: 160, actions: 130,
+  });
+
+  const handleResize = (key: string) => (_: React.SyntheticEvent, { size }: ResizeCallbackData) => {
+    setColWidths((prev) => ({ ...prev, [key]: size.width }));
+  };
 
   // Register account + discover modal
   const [addModalOpen, setAddModalOpen] = useState(false);
@@ -163,29 +199,41 @@ export default function FleetDashboard() {
   const columns = [
     {
       title: 'Cluster Name', dataIndex: 'clusterName', key: 'clusterName',
+      width: colWidths.clusterName, ellipsis: { showTitle: false },
+      onHeaderCell: () => ({ width: colWidths.clusterName, onResize: handleResize('clusterName') }),
       sorter: (a: ClusterSummary, b: ClusterSummary) => a.clusterName.localeCompare(b.clusterName),
       render: (name: string, c: ClusterSummary) => (
-        <Button type="link" size="small" style={{ padding: 0, fontWeight: 600 }} onClick={() => navigate(`/clusters/${c.id}`)}>
-          {name}
-        </Button>
+        <Tooltip title={name} placement="topLeft">
+          <Button type="link" size="small" style={{ padding: 0, fontWeight: 600, maxWidth: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} onClick={() => navigate(`/clusters/${c.id}`)}>
+            {name}
+          </Button>
+        </Tooltip>
       ),
     },
     {
       title: 'Account', dataIndex: 'accountName', key: 'account',
+      width: colWidths.account, ellipsis: { showTitle: true },
+      onHeaderCell: () => ({ width: colWidths.account, onResize: handleResize('account') }),
       sorter: (a: ClusterSummary, b: ClusterSummary) => a.accountName.localeCompare(b.accountName),
     },
     {
       title: 'Region', dataIndex: 'region', key: 'region',
+      width: colWidths.region,
+      onHeaderCell: () => ({ width: colWidths.region, onResize: handleResize('region') }),
       sorter: (a: ClusterSummary, b: ClusterSummary) => a.region.localeCompare(b.region),
       render: (r: string) => <Tag>{r}</Tag>,
     },
     {
       title: 'EKS Version', dataIndex: 'eksVersion', key: 'version',
+      width: colWidths.version,
+      onHeaderCell: () => ({ width: colWidths.version, onResize: handleResize('version') }),
       sorter: (a: ClusterSummary, b: ClusterSummary) => (a.eksVersion ?? '').localeCompare(b.eksVersion ?? ''),
-      render: (v: string) => <Tag color="blue">{v}</Tag>,
+      render: (v: string) => v ? <Tag color="blue">{v}</Tag> : <Text type="secondary">—</Text>,
     },
     {
       title: 'Status', dataIndex: 'status', key: 'status',
+      width: colWidths.status,
+      onHeaderCell: () => ({ width: colWidths.status, onResize: handleResize('status') }),
       render: (s: string) => {
         const color = s === 'ACTIVE' || s === 'discovered' ? 'success' : s === 'FAILED' ? 'error' : 'processing';
         return <Tag color={color}>{s?.toUpperCase()}</Tag>;
@@ -193,6 +241,8 @@ export default function FleetDashboard() {
     },
     {
       title: 'Health', key: 'health',
+      width: colWidths.health,
+      onHeaderCell: () => ({ width: colWidths.health, onResize: handleResize('health') }),
       render: (_: unknown, c: ClusterSummary) => c.latestHealthStatus ? (
         <Badge
           status={c.latestHealthStatus === 'HEALTHY' ? 'success' : c.latestHealthStatus === 'CRITICAL' ? 'error' : 'warning'}
@@ -202,12 +252,16 @@ export default function FleetDashboard() {
     },
     {
       title: 'Last Synced', dataIndex: 'lastSyncedAt', key: 'lastSyncedAt',
+      width: colWidths.lastSynced,
+      onHeaderCell: () => ({ width: colWidths.lastSynced, onResize: handleResize('lastSynced') }),
       sorter: (a: ClusterSummary, b: ClusterSummary) =>
         new Date(a.lastSyncedAt).getTime() - new Date(b.lastSyncedAt).getTime(),
       render: (d: string) => d ? new Date(d).toLocaleString() : '—',
     },
     {
       title: 'Actions', key: 'actions',
+      width: colWidths.actions, fixed: 'right' as const,
+      onHeaderCell: () => ({ width: colWidths.actions, onResize: handleResize('actions') }),
       render: (_: unknown, c: ClusterSummary) => (
         <Space>
           <Button size="small" onClick={() => navigate(`/clusters/${c.id}`)}>Details</Button>
@@ -342,13 +396,14 @@ export default function FleetDashboard() {
             columns={columns}
             rowKey="id"
             size="small"
+            components={{ header: { cell: ResizableTitle } }}
             pagination={{
               current: page,
               pageSize: 50,
               total,
               onChange: setPage,
             }}
-            scroll={{ y: 500 }}
+            scroll={{ x: 1100, y: 500 }}
           />
         )}
       </Card>
