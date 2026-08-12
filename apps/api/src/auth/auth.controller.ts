@@ -20,6 +20,13 @@ export class AuthController {
     private jwtService: JwtService,
   ) {}
 
+  @Get('sso-enabled')
+  @Public()
+  ssoEnabled(): { enabled: boolean } {
+    const issuer = this.oidcService.isConfigured();
+    return { enabled: issuer };
+  }
+
   @Get('authorize')
   @Public()
   async authorize(@Res() res: Response): Promise<void> {

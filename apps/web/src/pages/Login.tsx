@@ -37,19 +37,29 @@ export default function Login() {
     }
   };
 
-  const isDev = window.location.hostname !== 'production-host';
+  // Show SSO only when an OIDC client is configured (production).
+  // In the test environment OIDC_CLIENT_ID is not set, so the authorize
+  // endpoint returns authorization_failed — hide SSO to avoid confusion.
+  const [ssoAvailable, setSsoAvailable] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    fetch('/api/v1/auth/sso-enabled')
+      .then(r => r.ok ? r.json() : { enabled: false })
+      .then(d => setSsoAvailable(!!d.enabled))
+      .catch(() => setSsoAvailable(false));
+  }, []);
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: '#f0f2f5' }}>
       <Card style={{ width: 400, textAlign: 'center' }}>
         <h1>EKS Upgrade Control Plane</h1>
-        <p>Sign in with your corporate identity provider</p>
-        <Button type="primary" size="large" onClick={login} block style={{ marginBottom: 12 }}>
-          Sign In with SSO
+        <p>Sign in to continue</p>
+        <Button type="primary" size="large" onClick={devLogin} loading={loading} block style={{ marginBottom: 12 }}>
+          Sign In
         </Button>
-        {isDev && (
-          <Button size="large" onClick={devLogin} loading={loading} block>
-            Dev Login (bypass SSO)
+        {ssoAvailable && (
+          <Button size="large" onClick={login} block>
+            Sign In with SSO
           </Button>
         )}
       </Card>
