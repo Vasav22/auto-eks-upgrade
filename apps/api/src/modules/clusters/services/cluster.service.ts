@@ -301,11 +301,15 @@ export class ClusterService {
     credentials: any,
     region: string,
   ): Promise<any> {
+    // Always use us-east-1 for STS calls — regional STS endpoints may not be
+    // activated in the account, but the global endpoint (us-east-1) always works.
+    const STS_REGION = 'us-east-1';
+
     if (credentials.roleArn) {
       // Determine the current account so we can skip role chaining for same-account roles.
       // When the role is in the same account as the pod's IRSA identity, the pod already
       // has direct EKS permissions — no need to assume an intermediate role.
-      const podAccountId = await this.getPodAccountId(region);
+      const podAccountId = await this.getPodAccountId(STS_REGION);
       const roleAccountId = credentials.roleArn.split(':')[4];
 
       if (podAccountId && podAccountId === roleAccountId && !credentials.accessKeyId) {
@@ -316,7 +320,7 @@ export class ClusterService {
       }
 
       // Cross-account: assume the role using ambient credentials (or provided static keys).
-      const stsConfig: any = { region };
+      const stsConfig: any = { region: STS_REGION };
       if (credentials.accessKeyId && credentials.secretAccessKey) {
         stsConfig.credentials = {
           accessKeyId: credentials.accessKeyId,
@@ -359,6 +363,7 @@ export class ClusterService {
 
   private async getPodAccountId(region: string): Promise<string | null> {
     try {
+      // Use the provided region (caller should pass us-east-1 for the global endpoint)
       const sts = new STS({ region });
       const identity = await sts.send(new GetCallerIdentityCommand({}));
       return identity.Account ?? null;
