@@ -15,7 +15,8 @@ import {
   ListClustersCommand,
   DescribeClusterCommand,
 } from '@aws-sdk/client-eks';
-import { STS, AssumeRoleCommand, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
+import { STS, AssumeRoleCommand, AssumeRoleWithWebIdentityCommand, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
+import * as fs from 'fs';
 import { v4 as uuidv4 } from 'uuid';
 
 export interface ClusterDiscoveryResult {
@@ -178,6 +179,45 @@ export class ClusterService {
     return result;
   }
 
+  /**
+   * Explicitly exchange the pod's IRSA web identity token for temporary
+   * credentials using the global STS endpoint (us-east-1).
+   * This bypasses the AWS SDK's built-in IRSA provider which uses the
+   * regional STS endpoint (injected as AWS_STS_REGIONAL_ENDPOINTS=regional
+   * by the EKS pod mutation webhook), which fails in regions where STS
+   * is not activated.
+   */
+  private async getIrsaCredentials(stsRegion: string): Promise<any> {
+    const tokenFile = process.env['AWS_WEB_IDENTITY_TOKEN_FILE'];
+    const roleArn = process.env['AWS_ROLE_ARN'];
+
+    if (!tokenFile || !roleArn) {
+      // Not running with IRSA — fall back to default provider
+      return undefined;
+    }
+
+    const webIdentityToken = fs.readFileSync(tokenFile, 'utf8').trim();
+    const sts = new STS({ region: stsRegion });
+    const response = await sts.send(
+      new AssumeRoleWithWebIdentityCommand({
+        RoleArn: roleArn,
+        RoleSessionName: `eks-upgrade-irsa-${Date.now()}`,
+        WebIdentityToken: webIdentityToken,
+        DurationSeconds: 3600,
+      }),
+    );
+
+    if (!response.Credentials) {
+      throw new Error('IRSA AssumeRoleWithWebIdentity returned no credentials');
+    }
+
+    return {
+      accessKeyId: response.Credentials.AccessKeyId!,
+      secretAccessKey: response.Credentials.SecretAccessKey!,
+      sessionToken: response.Credentials.SessionToken!,
+    };
+  }
+
   /** All AWS commercial regions where EKS is available. */
   private getAllEksRegions(): string[] {
     return [
@@ -314,9 +354,9 @@ export class ClusterService {
 
       if (podAccountId && podAccountId === roleAccountId && !credentials.accessKeyId) {
         this.logger.log(
-          `Same-account role ${credentials.roleArn} — using ambient IRSA credentials directly`,
+          `Same-account role ${credentials.roleArn} — obtaining IRSA credentials via global STS`,
         );
-        return undefined; // AWS SDK uses the default provider chain (IRSA)
+        return await this.getIrsaCredentials(STS_REGION);
       }
 
       // Cross-account: assume the role using ambient credentials (or provided static keys).
