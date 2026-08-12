@@ -22,6 +22,9 @@ api:
   replicaCount: 1        # single replica for test
   hpa:
     enabled: false       # disable HPA in test to save resources
+  serviceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::440953937617:role/eks-upgrade-api-role
   env:
     ENCRYPTION_KEY: "ObrqsXzNi6NCZ5pqBW6sG42vBgkc7kpPX1o8BrVyppE="
     DISABLE_AUTH: "true"

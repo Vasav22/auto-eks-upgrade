@@ -1,17 +1,26 @@
 import {
   Entity,
   Column,
-  PrimaryGeneratedColumn,
+  PrimaryColumn,
   CreateDateColumn,
+  BeforeInsert,
 } from 'typeorm';
+import { v4 as uuidv4 } from 'uuid';
 import { AuditEventType } from '../enums/audit-event-type.enum';
 
 @Entity('audit_records')
 export class AuditRecord {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryColumn({ type: 'uuid' })
   id!: string;
 
-  @Column({ type: 'uuid' })
+  @BeforeInsert()
+  generateId() {
+    if (!this.id) {
+      this.id = uuidv4();
+    }
+  }
+
+  @Column({ type: 'varchar', length: 255 })
   actor_id!: string;
 
   @Column({ type: 'varchar', length: 50 })

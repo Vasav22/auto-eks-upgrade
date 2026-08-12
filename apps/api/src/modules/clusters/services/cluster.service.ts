@@ -65,11 +65,12 @@ export class ClusterService {
       account = await this.accountRepository.save(account);
 
       await this.auditService.record({
-        type: AuditEventType.CLUSTER_ACCOUNT_UPDATED,
+        action: AuditEventType.CLUSTER_ACCOUNT_UPDATED,
         actorId,
-        targetType: 'cluster_account',
-        targetId: account.id,
-        metadata: { accountName: dto.accountName },
+        actorRole: 'cluster_admin',
+        resourceType: 'cluster_account',
+        resourceId: account.id,
+        changeDetail: { accountName: dto.accountName },
       });
 
       this.logger.log(
@@ -86,11 +87,12 @@ export class ClusterService {
       account = await this.accountRepository.save(account);
 
       await this.auditService.record({
-        type: AuditEventType.CLUSTER_ACCOUNT_REGISTERED,
+        action: AuditEventType.CLUSTER_ACCOUNT_REGISTERED,
         actorId,
-        targetType: 'cluster_account',
-        targetId: account.id,
-        metadata: { accountName: dto.accountName },
+        actorRole: 'cluster_admin',
+        resourceType: 'cluster_account',
+        resourceId: account.id,
+        changeDetail: { accountName: dto.accountName },
       });
 
       this.logger.log(
@@ -149,11 +151,12 @@ export class ClusterService {
     }
 
     await this.auditService.record({
-      type: AuditEventType.CLUSTER_DISCOVERY_COMPLETED,
+      action: AuditEventType.CLUSTER_DISCOVERY_COMPLETED,
       actorId,
-      targetType: 'cluster_account',
-      targetId: account.id,
-      metadata: {
+      actorRole: 'cluster_admin',
+      resourceType: 'cluster_account',
+      resourceId: account.id,
+      changeDetail: {
         regions,
         discovered: result.discovered,
         registered: result.registered,
@@ -241,11 +244,12 @@ export class ClusterService {
           result.registered++;
 
           await this.auditService.record({
-            type: AuditEventType.CLUSTER_DISCOVERED,
+            action: AuditEventType.CLUSTER_DISCOVERED,
             actorId,
-            targetType: 'cluster',
-            targetId: cluster.id,
-            metadata: {
+            actorRole: 'cluster_admin',
+            resourceType: 'cluster',
+            resourceId: cluster.id,
+            changeDetail: {
               clusterName: clusterName,
               region: region,
               eksVersion: cluster.eksVersion,
