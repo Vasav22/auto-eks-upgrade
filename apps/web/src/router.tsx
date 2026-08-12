@@ -62,6 +62,10 @@ export const router = createBrowserRouter([
         element: <NodeGroupConfigPage />,
       },
       {
+        path: 'clusters/:clusterId/health',
+        element: <HealthDashboard />,
+      },
+      {
         path: 'clusters/:clusterId/upgrade',
         element: <UpgradeForm />,
       },

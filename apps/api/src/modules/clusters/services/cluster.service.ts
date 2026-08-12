@@ -252,7 +252,7 @@ export class ClusterService {
             changeDetail: {
               clusterName: clusterName,
               region: region,
-              eksVersion: cluster.currentVersion,
+              eksVersion: cluster.eksVersion,
             },
           });
 
@@ -365,9 +365,9 @@ export class ClusterService {
 
   async getClusterDetail(id: string): Promise<ClusterDetailDto> {
     const cluster = await this.getClusterById(id);
-    const versionInfo = this.versionService.computeEligibleVersions(
-      cluster.eksVersion,
-    );
+    const versionInfo = cluster.eksVersion
+      ? this.versionService.computeEligibleVersions(cluster.eksVersion)
+      : null;
     return ClusterDetailDto.fromEntity(cluster, versionInfo);
   }
 

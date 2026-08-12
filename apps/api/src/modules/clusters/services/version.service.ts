@@ -62,6 +62,26 @@ export class VersionService {
       releaseDate: '2025-02-10',
       endOfSupport: '2026-10-10',
     },
+    {
+      version: '1.32',
+      releaseDate: '2025-05-01',
+      endOfSupport: '2027-01-15',
+    },
+    {
+      version: '1.33',
+      releaseDate: '2025-08-01',
+      endOfSupport: '2027-04-15',
+    },
+    {
+      version: '1.34',
+      releaseDate: '2025-11-01',
+      endOfSupport: '2027-07-15',
+    },
+    {
+      version: '1.35',
+      releaseDate: '2026-02-01',
+      endOfSupport: '2027-10-15',
+    },
   ];
 
   private readonly MAX_VERSION_SKIP = 2;

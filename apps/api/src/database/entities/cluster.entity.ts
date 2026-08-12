@@ -37,7 +37,7 @@ export class Cluster {
   region!: string;
 
   @Column({ type: 'varchar', nullable: true, name: 'eks_version' })
-  currentVersion!: string;
+  eksVersion!: string;
 
   @Column({ type: 'varchar', nullable: false, default: 'discovered' })
   status!: string;
